@@ -1,3 +1,5 @@
+using Cinema.Server;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 
 namespace Cinema
@@ -9,9 +11,16 @@ namespace Cinema
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+
+            // NOTE: This is called dependency 
+            //builder.Services.AddScoped<IBillsService, BillsService>();
+
+            // Connecting to the database 
+            //builder.Services.AddDbContext<CinemaDBContext>(options =>
+            //    options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"))
+            //);
 
             var app = builder.Build();
 
