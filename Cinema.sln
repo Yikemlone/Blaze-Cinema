@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Server", "Cinema\Server\Cinema.Server.csproj", "{209C7DE6-C9E3-455F-B562-A5EDD3CB37E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Server", "Cinema\Server\Cinema.Server.csproj", "{209C7DE6-C9E3-455F-B562-A5EDD3CB37E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Client", "Cinema\Client\Cinema.Client.csproj", "{A2F40BC4-5B55-43D6-BFF2-F0AF42BABB79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Client", "Cinema\Client\Cinema.Client.csproj", "{A2F40BC4-5B55-43D6-BFF2-F0AF42BABB79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Shared", "Cinema\Shared\Cinema.Shared.csproj", "{E62FE815-5E33-450E-B42C-41ECEA803FD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Shared", "Cinema\Shared\Cinema.Shared.csproj", "{E62FE815-5E33-450E-B42C-41ECEA803FD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
