@@ -1,6 +1,6 @@
 ﻿namespace Cinema.Server.Models
 {
-    public class Transaction
+    public class MovieTransaction
     {
         public int ID { get; set; }
         public DateTime DateTime { get; set; }

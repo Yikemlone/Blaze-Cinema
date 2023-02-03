@@ -2,5 +2,7 @@
 {
     public interface IMovieService
     {
+        public Task GetMovies();
+
     }
 }
