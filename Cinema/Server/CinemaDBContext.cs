@@ -6,10 +6,6 @@ namespace Cinema.Server
 {
     public class CinemaDBContext : DbContext
     {
-        public CinemaDBContext(DbContextOptions options) : base(options)
-        {
-        }
-
         DbSet<Booking> Bookings { get; set; }
         DbSet<Customer> Customers { get; set; }
         DbSet<Employee> Employees { get; set; }
@@ -18,6 +14,10 @@ namespace Cinema.Server
         DbSet<Schedule> Schedules { get; set; }
         DbSet<Seat> Seats { get; set; }
         DbSet<MovieTransaction> Transactions { get; set; }
+
+        public CinemaDBContext(DbContextOptions options) : base(options)
+        {
+        }
 
     }
 }

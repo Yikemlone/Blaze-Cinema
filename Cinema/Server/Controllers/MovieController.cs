@@ -1,5 +1,7 @@
 ﻿using Cinema.Server.Services.Movies;
+using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Http.Description;
 
 namespace Cinema.Server.Controllers
 {
@@ -16,6 +18,7 @@ namespace Cinema.Server.Controllers
 
         // We use this to GET data from the database
         //[HttpGet]
+        //[ResponseType(typeof(MovieDTO))]
         //[Route("movie")]
         //public IEnumerable<WeatherForecast> Get()
         //{
