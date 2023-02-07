@@ -17,19 +17,33 @@ namespace Cinema.Server.Controllers
         }
 
         // We use this to GET data from the database
+
         //[HttpGet]
         //[ResponseType(typeof(MovieDTO))]
-        //[Route("movie")]
-        //public IEnumerable<WeatherForecast> Get()
+        //[Route("movies")]
+        //public async Task<IEnumerable<<MovieDTO>> GetMovies()
         //{
         //}
 
 
         // We will use POST to UPDATE, ADD and DELETE movies
+
         //[HttpPost]
         //public async Task UpdateBills([FromBody] BillDto updatedBills)
         //{
-        //    await _billsService.UpdateBills(updatedBills);
+        //    await _movieService.UpdateBills(updatedBills);
+        //}
+
+
+        // An example of getting a single movie from a GET request
+
+        //[HttpGet]
+        //[Route("movies/{nameOfMovie}")]
+        //public async Task<MovieDTO> GetMovie(int nameOfMovie)
+        //{
+        //    var personBills = await _movieService.GetMovie(nameOfMovie);
+        //    MovieDTO retVal = personBills;
+        //    return retVal;
         //}
     }
 }
