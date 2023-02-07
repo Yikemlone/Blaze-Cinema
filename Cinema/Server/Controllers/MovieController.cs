@@ -41,8 +41,8 @@ namespace Cinema.Server.Controllers
         //[Route("movies/{nameOfMovie}")]
         //public async Task<MovieDTO> GetMovie(int nameOfMovie)
         //{
-        //    var personBills = await _movieService.GetMovie(nameOfMovie);
-        //    MovieDTO retVal = personBills;
+        //    var movie = await _movieService.GetMovie(nameOfMovie);
+        //    MovieDTO retVal = movie;
         //    return retVal;
         //}
     }
