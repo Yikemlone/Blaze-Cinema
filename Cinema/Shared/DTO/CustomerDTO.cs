@@ -14,6 +14,7 @@ namespace Cinema.Shared.DTO
         public string Email { get; set; }
         public int Points { get; set; }
 
-        //public List<Booking>? Bookings { get; set; } NOTE: This could be an issue if we can't import files from the server here
+        //public List<Booking>? Bookings { get; set; } NOTE: This could be an issue if we can't import files from the server here.
+        //public List<BookingDTO> Bookings { get; set; } NOTE: We could do this instead, if this works.
     }
 }

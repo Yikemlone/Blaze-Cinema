@@ -21,6 +21,7 @@ namespace Cinema.Server.Services.Movies
         {
             //var movies = _context.Movies.Select(m => m);
             //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<IEnumerable<RoomDTO>> GetRooms()
