@@ -23,15 +23,16 @@ namespace Cinema.Server.Controllers
         //[Route("movies")]
         //public async Task<IEnumerable<<MovieDTO>> GetMovies()
         //{
+        //  var data = await _movieService.GetMovies();
         //}
 
 
         // We will use POST to UPDATE, ADD and DELETE movies
 
         //[HttpPost]
-        //public async Task UpdateBills([FromBody] BillDto updatedBills)
+        //public async Task UpdateMovie([FromBody] MovieDTO movie)
         //{
-        //    await _movieService.UpdateBills(updatedBills);
+        //    await _movieService.UpdateMovie(movie);
         //}
 
 

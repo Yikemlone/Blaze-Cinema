@@ -15,7 +15,7 @@ namespace Cinema
             builder.Services.AddRazorPages();
 
             // NOTE: This is called dependency 
-            //builder.Services.AddScoped<IBillsService, BillsService>();
+            //builder.Services.AddScoped<IMovieService, MovieService>();
 
             // Connecting to the database 
             //builder.Services.AddDbContext<CinemaDBContext>(options =>
