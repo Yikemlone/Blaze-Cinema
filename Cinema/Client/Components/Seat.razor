@@ -24,6 +24,7 @@
     [Parameter]
     public bool Booked { get; set; }
     public string Colour { get; set; } = "Green";
+    public bool Selected { get; set; } = false;
 
     public void ChangeColour() {
         // We must call this method when we update anything visually
@@ -37,7 +38,8 @@
         {
             Colour = "Green";
         }
-
+        
+        Selected = !Selected;
         StateHasChanged();
     }
 
