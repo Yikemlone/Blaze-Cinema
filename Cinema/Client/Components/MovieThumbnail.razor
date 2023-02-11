@@ -1,0 +1,17 @@
+﻿@using Cinema.Shared.DTO
+@inherits ComponentBase
+
+<div style="color: white; background-color: darkslategray; width: 250px">
+    <h1>Movie: @movieDTO.Name</h1>
+    <img src="images/@(movieDTO.ID).jpg" width="200px"> @* Make sure all files are the same. EX: .jpg *@
+</div>
+
+
+@code {
+    [Parameter]
+    public MovieDTO movieDTO { get; set; } = new MovieDTO { ID = 1, Name = "Puss in Boots: The last wish", AgeRating = "PG", Duration = 102, Trailer = "RqrXhwS33yc" };
+
+
+    // Create an onlick method to load another page to show the movie details component
+
+}

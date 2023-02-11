@@ -8,7 +8,10 @@
         public bool DisabiltySeat { get; set; }
 
         // FK to Room class
-        public int RoomID { get; set; }
-        public Room Room { get; set; }
+        public int BookingID { get; set; }
+        public Booking Booking { get; set; }
+
+        public int ScreeningID { get; set; }
+        public Screening Screening { get; set; }
     }
 }

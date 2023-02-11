@@ -1,6 +1,6 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home Page</PageTitle>
 
 <h1>Display all the movies here by default</h1>
 <br/>
@@ -12,4 +12,10 @@
 <br/>
 <h3>Rows and colums of the movies pulled from the DB</h3>
 
-<SurveyPrompt Title="We could use this for something" />
+<Movie></Movie>
+
+@{for(int i = 0; i < 5; i++) {
+        <Seat Booked=true></Seat>
+        <Seat Booked=false></Seat>
+    }
+}

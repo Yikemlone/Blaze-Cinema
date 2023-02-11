@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Shared\Cinema.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\public\" />
-  </ItemGroup>
-
 </Project>

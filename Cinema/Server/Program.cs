@@ -14,13 +14,15 @@ namespace Cinema
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
+            // NOTE: We can add auth checking here that uses the Identity Package.
+
             // NOTE: This is called dependency 
             //builder.Services.AddScoped<IMovieService, MovieService>();
 
-            // Connecting to the database 
-            //builder.Services.AddDbContext<CinemaDBContext>(options =>
-            //    options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"))
-            //);
+            //Connecting to the database
+            builder.Services.AddDbContext<CinemaDBContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"))
+            );
 
             var app = builder.Build();
 
