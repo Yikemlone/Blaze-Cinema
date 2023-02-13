@@ -13,10 +13,11 @@ namespace Cinema.Server.Services.Movies
         // Example of GETs
         public Task<IEnumerable<MovieDTO>> GetMovies(); // We could use IQueryable to be more efficent
         public Task<IEnumerable<RoomDTO>> GetRooms();
-      
+        public Task<MovieDTO> GetMovie(int movieID);
+
 
         // Example of POSTs 
-        // We can limit thses fucntions to certain authorization
+        // We can limit these functions with authorization, hopefully
         public Task AddMovie(MovieDTO movie);
         public Task RemoveMovie(MovieDTO movie);
         public Task UpdateMovie(MovieDTO movie);

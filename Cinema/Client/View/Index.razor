@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Cinema.Shared.DTO
 
 <PageTitle>Home Page</PageTitle>
 
@@ -12,10 +13,39 @@
 <br/>
 <h3>Rows and colums of the movies pulled from the DB</h3>
 
-<Movie></Movie>
 
-@{for(int i = 0; i < 5; i++) {
+<MovieThumbnail></MovieThumbnail>
+
+<br/>
+<br/>
+<br/>
+
+
+<MovieDetails></MovieDetails>
+
+
+@{
+    for (int i = 0; i < 5; i++) {
         <Seat Booked=true></Seat>
         <Seat Booked=false></Seat>
+    }
+}
+
+@code
+{
+    private const string API_URL = "api/movie";
+    private HttpClient Client { get; set; }
+    private List<MovieDTO> Movies { get; set; }
+    private List<ScreeningDTO> Screenings { get; set; } // This will used inside of the details page.
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Client = new HttpClient() { BaseAddress = new Uri("https://localhost:5001") };
+    }
+
+    public async Task<IEnumerable<MovieDTO>> GetMoviesAsync()
+    {
+        return await Client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 }

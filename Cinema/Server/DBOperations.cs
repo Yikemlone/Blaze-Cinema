@@ -15,7 +15,15 @@ namespace Cinema.Server
             _context = context;
         }
 
-        public async void AddMovies()
+        public async void RunOperations() 
+        {
+            await AddMovies();
+            await AddRooms();
+            await AddSeats();
+            await AddEmployees();
+        }
+
+        public async Task AddMovies()
         {
             // Check if the table is empty or not
             var movies = _context.Movies.Select(m => m);
@@ -35,7 +43,7 @@ namespace Cinema.Server
             await _context.SaveChangesAsync();
         }
 
-        public async void AddRooms() 
+        public async Task AddRooms() 
         {
             // Check if the table is empty or not
             var rooms = _context.Rooms.Select(r => r);
@@ -57,7 +65,7 @@ namespace Cinema.Server
             await _context.SaveChangesAsync();
         }
 
-        public async void AddSeats() 
+        public async Task AddSeats() 
         {
             // Check if the table is empty or not
             var seats = _context.Seats.Select(s => s);
@@ -79,7 +87,7 @@ namespace Cinema.Server
 
         }
 
-        public async void AddEmployees()
+        public async Task AddEmployees()
         {            
             // Check if the table is empty or not
             var employees = _context.Employees.Select(s => s);

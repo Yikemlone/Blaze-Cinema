@@ -19,6 +19,7 @@ namespace Cinema
             // NOTE: This is called dependency 
             //builder.Services.AddScoped<IMovieService, MovieService>();
 
+
             //Connecting to the database
             builder.Services.AddDbContext<CinemaDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"))

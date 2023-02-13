@@ -17,6 +17,11 @@ namespace Cinema.Server.Services.Movies
             throw new NotImplementedException();
         }
 
+        public Task<MovieDTO> GetMovie(int movieID)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<MovieDTO>> GetMovies()
         {
             //var movies = _context.Movies.Select(m => m);

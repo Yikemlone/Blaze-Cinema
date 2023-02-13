@@ -1,9 +1,10 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-<div style="color: white; background-color: darkslategray; width: 250px">
-    <h1>Movie: @movieDTO.Name</h1>
+<div style="color: white; background-color: darkslategray; width: 225px; gr: auto; align-content: center;">
+    <h4>Movie: @movieDTO.Name</h4>
     <img src="images/@(movieDTO.ID).jpg" width="200px"> @* Make sure all files are the same. EX: .jpg *@
+    <button value="Movie details"></button>
 </div>
 
 
@@ -13,5 +14,6 @@
 
 
     // Create an onlick method to load another page to show the movie details component
+    // or use a href and link the ID of movie to other page for there details 
 
 }
