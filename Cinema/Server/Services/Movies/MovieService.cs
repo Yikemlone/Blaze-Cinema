@@ -17,16 +17,39 @@ namespace Cinema.Server.Services.Movies
             throw new NotImplementedException();
         }
 
-        public Task<MovieDTO> GetMovie(int movieID)
+        public async Task<MovieDTO> GetMovie(int movieID)
         {
-            throw new NotImplementedException();
+            var movie = _context.Movies
+                 .Where(m => m.ID == movieID)
+                 .Select(m => new MovieDTO()
+                 {
+                    ID = m.ID,
+                    Name = m.Name,
+                    AgeRating = m.AgeRating,
+                    Duration = m.Duration,
+                    Trailer = m.Trailer,
+                    Description = m.Description
+                 })
+                 .SingleOrDefault();
+
+            return movie;
         }
 
-        public Task<IEnumerable<MovieDTO>> GetMovies()
+        public async Task<List<MovieDTO>> GetMovies()
         {
-            //var movies = _context.Movies.Select(m => m);
-            //throw new NotImplementedException();
-            throw new NotImplementedException();
+            List<MovieDTO> movies = _context.Movies
+                .Select(m => new MovieDTO() 
+                {
+                    ID = m.ID,
+                    Name = m.Name,
+                    AgeRating = m.AgeRating,
+                    Duration = m.Duration,
+                    Trailer = m.Trailer,
+                    Description = m.Description
+                    
+                }).ToList();
+
+            return movies;
         }
 
         public Task<IEnumerable<RoomDTO>> GetRooms()

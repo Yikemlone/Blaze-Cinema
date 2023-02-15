@@ -11,7 +11,7 @@ namespace Cinema.Server.Services.Movies
         // similar information and we will use inhertance to seperate it out.
 
         // Example of GETs
-        public Task<IEnumerable<MovieDTO>> GetMovies(); // We could use IQueryable to be more efficent
+        public Task<List<MovieDTO>> GetMovies(); // We could use IQueryable to be more efficent
         public Task<IEnumerable<RoomDTO>> GetRooms();
         public Task<MovieDTO> GetMovie(int movieID);
 

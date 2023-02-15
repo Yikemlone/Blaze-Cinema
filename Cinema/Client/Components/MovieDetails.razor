@@ -1,23 +1,40 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-<div style="color: white; background-color: darkslategray;">
-    <h1>Movie: @movieDTO.Name</h1>
-    <img src="images/@(movieDTO.ID).jpg" width="200px"> @* Make sure all files are the same. EX: .jpg *@
-    <p>Age Rating: @movieDTO.AgeRating</p>
-    <p>Duration: @movieDTO.Duration</p>
-    <p>Description: </p>
+@if (Movie != null) 
+{
+    <div>
+        <h1>Movie: @Movie.Name</h1>
+        <img src="images/@(Movie.ID).jpg" width="200px"> @* Make sure all files are the same. EX: .jpg *@
+        <p>Age Rating: @Movie.AgeRating</p>
+        <p>Duration: @Movie.Duration</p>
+        <p>Description: @Movie.Description</p>
 
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/@movieDTO.Trailer" 
+        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/@Movie.Trailer" 
             title="YouTube video player" 
             frameborder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
             allowfullscreen>
-    </iframe>
-</div>
-
+        </iframe>
+    </div>
+}
 
 @code {
     [Parameter]
-    public MovieDTO movieDTO { get; set; } = new MovieDTO { ID = 1, Name = "Puss in Boots: The last wish", AgeRating = "PG", Duration = 102, Trailer = "RqrXhwS33yc" };
+    public int MovieID { get; set; }
+    private const string API_URL = "api/movie";
+    private HttpClient _client;
+    public MovieDTO Movie { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        Movie = await GetMovieAsync();
+    }
+
+    public async Task<MovieDTO> GetMovieAsync()
+    {
+        return await _client.GetFromJsonAsync<MovieDTO>(API_URL + $"/movies/{MovieID}");
+    }
 }

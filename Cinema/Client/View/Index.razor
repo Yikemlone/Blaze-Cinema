@@ -1,51 +1,61 @@
 ﻿@page "/"
 @using Cinema.Shared.DTO
 
-<PageTitle>Home Page</PageTitle>
+<PageTitle>Blaze Cinema</PageTitle>
 
-<h1>Display all the movies here by default</h1>
-<br/>
-<br/>
-<br/>
-<h3>Movie search bar here</h3>
-<br/>
-<br/>
-<br/>
-<h3>Rows and colums of the movies pulled from the DB</h3>
+<h3>Movie Drop down box to here</h3>
 
-
-<MovieThumbnail></MovieThumbnail>
-
-<br/>
-<br/>
-<br/>
-
-
-<MovieDetails></MovieDetails>
-
-
-@{
-    for (int i = 0; i < 5; i++) {
-        <Seat Booked=true></Seat>
-        <Seat Booked=false></Seat>
-    }
-}
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudGrid>
+        @if (Movies.Count != 0)
+        {
+            @foreach(var movie in Movies)
+            {
+                <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Elevation="2" Class="pa-4" Style="height: 100%">
+                            <MovieThumbnail Movie=@movie/>
+                    </MudPaper>
+                </MudItem>
+            }
+        } else 
+        {
+            @for (var i = 0; i < 10; i++)
+            {
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard>
+                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px"/>
+                        <MudCardContent>
+                            <MudSkeleton Width="30%" Height="42px;" />
+                            <MudSkeleton Width="80%" />
+                            <MudSkeleton Width="100%" />
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+                            <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        }
+    </MudGrid>
+</MudContainer>
 
 @code
 {
     private const string API_URL = "api/movie";
-    private HttpClient Client { get; set; }
-    private List<MovieDTO> Movies { get; set; }
-    private List<ScreeningDTO> Screenings { get; set; } // This will used inside of the details page.
+    private HttpClient _client;
+    public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
+    public List<ScreeningDTO> Screenings { get; set; } // This will used inside of the movie details page.
 
 
     protected override async Task OnInitializedAsync()
     {
-        Client = new HttpClient() { BaseAddress = new Uri("https://localhost:5001") };
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        Movies = await GetMoviesAsync();
     }
 
-    public async Task<IEnumerable<MovieDTO>> GetMoviesAsync()
+    public async Task<List<MovieDTO>> GetMoviesAsync()
     {
-        return await Client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
+        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 }

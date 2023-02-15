@@ -1,7 +1,50 @@
 ﻿@page "/admin"
+@using Cinema.Shared.DTO
 
-<h3>Admin</h3>
+<PageTitle>Admin</PageTitle>
+
+@*
+    Ensure only admins can access this page.
+
+    This will have 3 button options:
+    -Update
+    -Delete
+    -Add
+    
+    The buttons will have a diloge pop up to add and edit.
+    When deleting a diloge will ask if you're sure.
+    Snackbars will be displayed to inform the user of each action being completed.
+*@
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.Large">
+    <MudGrid>
+
+        @if (Movies.Count != 0)
+        {
+            <MovieTable Movies=@Movies Loading=false></MovieTable>
+        }
+        else
+        {
+            <MovieTable Movies=@Movies Loading=true></MovieTable>
+        }
+    </MudGrid> 
+</MudContainer>
+
 
 @code {
+    // We can make a parent class or interface to inherit these varibles as we are gonna use these quite often in admin, index and manager 
+    private const string API_URL = "api/movie";
+    private HttpClient _client;
+    public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        Movies = await GetMoviesAsync();
+    }
+
+    public async Task<List<MovieDTO>> GetMoviesAsync()
+    {
+        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
+    }
 }
