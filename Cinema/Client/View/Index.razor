@@ -3,18 +3,21 @@
 
 <PageTitle>Blaze Cinema</PageTitle>
 
-<h3>Movie Drop down box to here</h3>
-
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+
+    <MudItem xs="12" sm="6" md="4">
+        <MovieSelect/>
+    </MudItem>
+
     <MudGrid>
         @if (Movies.Count != 0)
         {
             @foreach(var movie in Movies)
             {
                 <MudItem xs="12" sm="6" md="4">
-                    <MudPaper Elevation="2" Class="pa-4" Style="height: 100%">
+                    @*<MudPaper Elevation="2" Class="pa-4" Style="height: 100%">*@
                             <MovieThumbnail Movie=@movie/>
-                    </MudPaper>
+                    @*</MudPaper>*@
                 </MudItem>
             }
         } else 

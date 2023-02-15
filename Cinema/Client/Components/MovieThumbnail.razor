@@ -2,7 +2,7 @@
 @inherits ComponentBase
 
 <a href="movie/@Movie.ID">
-    <img src="images/1.jpg" width="100%"> @* Make sure all files are the same. EX: .jpg *@
+    <img src="images/@(Movie.ID).jpg" width="100%"> @* Make sure all files are the same. EX: .jpg *@
 </a>
 
 @*<MudButton Variant="Variant.Filled" FullWidth="true">Details</MudButton>*@
@@ -10,8 +10,4 @@
 @code {
     [Parameter]
     public MovieDTO Movie { get; set; }
-
-    // Create an onlick method to load another page to show the movie details component
-    // or use a href and link the ID of movie to other page for there details 
-
 }
