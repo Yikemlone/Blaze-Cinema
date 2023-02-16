@@ -13,7 +13,8 @@ namespace Cinema.Shared.DTO
         public string LastName { get; set; }
         public string Email { get; set; }
         public int Points { get; set; }
-
-        public List<BookingDTO>? Bookings { get; set; } // NOTE: We could do this instead, if this works.
+        
+        // NOTE: We could do this instead, if this works.
+        public List<BookingDTO>? Bookings { get; set; } 
     }
 }

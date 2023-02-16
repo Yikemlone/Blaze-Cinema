@@ -10,18 +10,28 @@ namespace Cinema.Server.Services.Movies
         // returend from this service, or we seperate those into a customer and employee service OR a Person service that can handle
         // similar information and we will use inhertance to seperate it out.
 
-        // Example of GETs
-        public Task<List<MovieDTO>> GetMoviesAsync(); // We could use IQueryable to be more efficent
-        public Task<IEnumerable<RoomDTO>> GetRoomsAsync();
+        // Example of GETs service funtions 
+        public Task<List<MovieDTO>> GetMoviesAsync();
         public Task<MovieDTO> GetMovieAsync(int movieID);
+
         //public Task<List<ScreeningDTO>> GetScreeningAsync();
+        //public Task<List<ScreeningDTO>> GetMovieScrenningsAsync(int movieID);
 
+        // Example of POSTs service funtions 
 
-        // Example of POSTs 
-        // We can limit these functions with authorization, hopefully
+        // Admin Functions
+        // Limit with authorization
         public Task AddMovieAsync(MovieDTO movie);
-        public Task RemoveMovie(MovieDTO movie);
-        public Task UpdateMovieAsync(MovieDTO movie);
-        
+        public Task RemoveMovie(int movieID);
+        public Task UpdateMovieAsync(MovieDTO movieID);
+
+        // Manager Functions
+        // Limit with authorization
+        //public Task<ScreeningDTO> AddScreeningAsync(ScreeningDTO screening);
+        //public Task DeleteScreeningAsync(int screeningID);
+        //public Task EditScreeningAsync(ScreeningDTO screening);
+        //public Task<List<RoomDTO>> GetRoomsAsync();
+        //public Task UpdateRoom(RoomDTO roomDTO);
+
     }
 }

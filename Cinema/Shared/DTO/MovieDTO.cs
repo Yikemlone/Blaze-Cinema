@@ -14,6 +14,8 @@ namespace Cinema.Shared.DTO
         public string Description { get; set; }
         public string AgeRating { get; set; }
         public string Trailer { get; set; }
+
+        public List<ScreeningDTO>? Screenings { get; set; }
     }
 }
 

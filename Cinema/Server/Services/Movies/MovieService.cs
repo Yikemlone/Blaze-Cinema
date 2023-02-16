@@ -12,7 +12,7 @@ namespace Cinema.Server.Services.Movies
             _context = context;
         }
 
-        public Task AddMovieAsync(MovieDTO movie)
+        public async Task AddMovieAsync(MovieDTO movie)
         {
             throw new NotImplementedException();
         }
@@ -52,12 +52,12 @@ namespace Cinema.Server.Services.Movies
             return movies;
         }
 
-        public Task<IEnumerable<RoomDTO>> GetRoomsAsync()
+        public async Task<List<RoomDTO>> GetRoomsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveMovie(MovieDTO movie)
+        public Task RemoveMovie(int movieID)
         {
             throw new NotImplementedException();
         }
