@@ -3,35 +3,62 @@
 
 @if (Movie != null) 
 {
-    <div>
-        <h1>Movie: @Movie.Name</h1>
-        <img src="images/@(Movie.ID).jpg" width="200px"> @* Make sure all files are the same. EX: .jpg *@
-        <p>Age Rating: @Movie.AgeRating</p>
-        <p>Duration: @Movie.Duration</p>
-        <p>Description: @Movie.Description</p>
+    <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+        <MudGrid>
 
-        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/@Movie.Trailer" 
-            title="YouTube video player" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowfullscreen>
-        </iframe>
-    </div>
+            <MudItem>
+                <MudText Typo="Typo.h3"> @Movie.Name </MudText>
+            </MudItem>
+
+            <MudItem>
+                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="200"/>
+            </MudItem>
+
+            <MudItem>
+                <MudGrid>
+                    <MudItem>
+                        <MudText Typo="Typo.subtitle1">Age Rating: @Movie.AgeRating</MudText>
+                    </MudItem>
+                    <MudItem>
+                        <MudText Typo="Typo.subtitle2">Duration: @Movie.Duration</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+
+            <MudItem>
+                <MudText Typo="Typo.body1">Description: @Movie.Description</MudText>
+            </MudItem>
+            
+            <MudItem>
+                <iframe src="https://www.youtube.com/embed/@Movie.Trailer"
+                    style="width: 100%!important;height: 100%!important;"
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
 }
 
 @code {
+
     [Parameter]
     public int MovieID { get; set; }
-    private const string API_URL = "api/movie";
-    private HttpClient _client;
-    public MovieDTO Movie { get; set; }
-    public List<ScreeningDTO> Screenings { get; set; } = new List<ScreeningDTO>();
 
+    private const string API_URL = "api/movie";
+    private string _imageURL;
+    private HttpClient _client;
+
+    public MovieDTO Movie { get; set; }
+    //public List<ScreeningDTO> Screenings { get; set; } = new List<ScreeningDTO>();
 
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         Movie = await GetMovieAsync();
+        _imageURL = $"images/{Movie.ID}.jpg";
         //Screenings = await GetScreening(Movie.ID);
     }
 
@@ -40,4 +67,3 @@
         return await _client.GetFromJsonAsync<MovieDTO>(API_URL + $"/movies/{MovieID}");
     }
 }
-s

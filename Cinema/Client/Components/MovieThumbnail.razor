@@ -1,13 +1,11 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-<a href="movie/@Movie.ID">
-    <img src="images/@(Movie.ID).jpg" width="100%"> @* Make sure all files are the same. EX: .jpg *@
+<a href="movie/@MovieID">
+    <img src="images/@(MovieID).jpg" width="100%"> @* Make sure all files are the same. EX: .jpg *@
 </a>
-
-@*<MudButton Variant="Variant.Filled" FullWidth="true">Details</MudButton>*@
 
 @code {
     [Parameter]
-    public MovieDTO Movie { get; set; }
+    public int MovieID { get; set; }
 }

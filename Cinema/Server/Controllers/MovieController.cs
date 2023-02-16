@@ -23,7 +23,7 @@ namespace Cinema.Server.Controllers
         public async Task<List<MovieDTO>> GetMovies()
         {
 
-            return await _movieService.GetMovies();
+            return await _movieService.GetMoviesAsync();
         }
 
         // Use a POST to UPDATE, ADD and DELETE movies
@@ -32,7 +32,7 @@ namespace Cinema.Server.Controllers
         [Route("update")]
         public async Task UpdateMovie([FromBody] MovieDTO movie)
         {
-            await _movieService.UpdateMovie(movie);
+            await _movieService.UpdateMovieAsync(movie);
         }
 
         // An example of getting a single movie from a GET request
@@ -42,12 +42,12 @@ namespace Cinema.Server.Controllers
         [Route("movies/{movieID}")]
         public async Task<MovieDTO> GetMovie(int movieID)
         {
-            return await _movieService.GetMovie(movieID);
+            return await _movieService.GetMovieAsync(movieID);
         }
-
 
         // Get employees
         // Get seats
         // Get screenings
+
     }
 }

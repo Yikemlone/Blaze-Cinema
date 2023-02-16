@@ -12,12 +12,12 @@ namespace Cinema.Server.Services.Movies
             _context = context;
         }
 
-        public Task AddMovie(MovieDTO movie)
+        public Task AddMovieAsync(MovieDTO movie)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<MovieDTO> GetMovie(int movieID)
+        public async Task<MovieDTO> GetMovieAsync(int movieID)
         {
             var movie = _context.Movies
                  .Where(m => m.ID == movieID)
@@ -35,7 +35,7 @@ namespace Cinema.Server.Services.Movies
             return movie;
         }
 
-        public async Task<List<MovieDTO>> GetMovies()
+        public async Task<List<MovieDTO>> GetMoviesAsync()
         {
             List<MovieDTO> movies = _context.Movies
                 .Select(m => new MovieDTO() 
@@ -52,7 +52,7 @@ namespace Cinema.Server.Services.Movies
             return movies;
         }
 
-        public Task<IEnumerable<RoomDTO>> GetRooms()
+        public Task<IEnumerable<RoomDTO>> GetRoomsAsync()
         {
             throw new NotImplementedException();
         }
@@ -62,7 +62,7 @@ namespace Cinema.Server.Services.Movies
             throw new NotImplementedException();
         }
 
-        public async Task UpdateMovie(MovieDTO movie)
+        public async Task UpdateMovieAsync(MovieDTO movie)
         {
             //MovieDTO oldMovie = await _context.Movies.Select(m => m).Where(m => m.ID == movie.ID);
             //oldMovie = movie;
