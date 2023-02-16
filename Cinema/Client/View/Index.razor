@@ -5,9 +5,9 @@
 
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
 
-    <MudItem xs="12" sm="6" md="4">
+@*    <MudItem xs="12" sm="6" md="4">
         <MovieSelect/>
-    </MudItem>
+    </MudItem>*@
 
     <MudGrid>
         @if (Movies.Count != 0)
@@ -48,7 +48,7 @@
     private const string API_URL = "api/movie";
     private HttpClient _client;
     public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
-    public List<ScreeningDTO> Screenings { get; set; } 
+    public List<ScreeningDTO> Screenings { get; set; } // This will used inside of the movie details page.
 
 
     protected override async Task OnInitializedAsync()

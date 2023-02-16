@@ -28,7 +28,8 @@
             LoadingProgressColor="Color.Secondary"
             Dense=true
             Filter="new Func<MovieDTO,bool>(FilterFunc1)" 
-            @bind-SelectedItem="selected">
+            @bind-SelectedItem="selected"
+            RowsPerPage="5">
             
             <ToolBarContent>
 
@@ -38,8 +39,8 @@
 
                 <MudSpacer />
                 <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" />
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" />
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled />
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled />
 
             </ToolBarContent>
 
@@ -52,11 +53,11 @@
             </HeaderContent>
 
             <RowTemplate>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Name" Style="width: 200px">@context.Name</MudTd>
                 <MudTd DataLabel="AgeRating">@context.AgeRating</MudTd>
                 <MudTd DataLabel="Duration">@context.Duration</MudTd>
                 <MudTd DataLabel="Trailer">@context.Trailer</MudTd>
-                <MudTd DataLabel="Description">@context.Description</MudTd>
+                <MudTd DataLabel="Description" Style="width: 550px">@context.Description</MudTd>
             </RowTemplate>
 
             <PagerContent >
@@ -75,6 +76,7 @@
     private MudTable<MovieDTO>? mudTable;
     private List<string> clickedEvents = new();
     private bool FilterFunc1(MovieDTO movie) => FilterFunc(movie, searchString1);
+    private bool _buttonDisabled = true;
 
 
     [Parameter]
@@ -85,6 +87,7 @@
     private void RowClickEvent(TableRowClickEventArgs<MovieDTO> tableRowClickEventArgs)
     {
         clickedEvents.Add("Row has been clicked");
+        StateHasChanged();
     }
 
     private string SelectedRowClassFunc(MovieDTO element, int rowNumber)
@@ -92,17 +95,20 @@
         if (selectedRowNumber == rowNumber)
         {
             selectedRowNumber = -1;
+            _buttonDisabled = true;
             clickedEvents.Add("Selected Row: None");
             return string.Empty;
         }
         else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
         {
             selectedRowNumber = rowNumber;
+            _buttonDisabled = false;
             clickedEvents.Add($"Selected Row: {rowNumber}");
             return "selected";
         }
         else
         {
+            //_buttonDisabled = !_buttonDisabled;
             return string.Empty;
         }
     }
