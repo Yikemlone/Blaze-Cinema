@@ -15,5 +15,7 @@ namespace Cinema.Server.Models
 
         public List<TicketType> TicketTypes { get; set; }
         public List<Seat> Seats { get; set; }
+
+        //????
     }
 }
