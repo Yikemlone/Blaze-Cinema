@@ -44,5 +44,10 @@ namespace Cinema.Server.Controllers
         {
             return await _movieService.GetMovie(movieID);
         }
+
+
+        // Get employees
+        // Get seats
+        // Get screenings
     }
 }

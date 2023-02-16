@@ -1,7 +1,4 @@
-﻿@using System.Net.Http.Json
-@using Cinema.Shared.DTO
-@using static MudBlazor.CategoryTypes
-@inject HttpClient httpClient
+﻿@using Cinema.Shared.DTO
 
 <style>
     .selected {
@@ -18,14 +15,8 @@
 </style>
 
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
-    <MudGrid>
-        <MudItem>
-            <MudSpacer></MudSpacer>
-            <MudChip Color="Color.Success">Add</MudChip>
-            <MudChip Color="Color.Warning">Edit</MudChip>
-            <MudChip Color="Color.Error">Delete</MudChip>
-        </MudItem>
 
+    <MudGrid>
         <MudTable Items="@Movies" 
             Hover="true" 
             Breakpoint="Breakpoint.Sm" 
@@ -34,11 +25,27 @@
             OnRowClick="RowClickEvent" 
             T="MovieDTO" 
             Loading=@Loading
-            LoadingProgressColor="Color.Secondary">
-    
+            LoadingProgressColor="Color.Secondary"
+            Dense=true
+            Filter="new Func<MovieDTO,bool>(FilterFunc1)" 
+            @bind-SelectedItem="selected">
+            
+            <ToolBarContent>
+
+                <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" 
+                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+                </MudTextField>
+
+                <MudSpacer />
+                <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" />
+
+            </ToolBarContent>
+
             <HeaderContent>
                 <MudTh>Name</MudTh>
-                <MudTh>AgeRating</MudTh>
+                <MudTh>Age Rating</MudTh>
                 <MudTh>Duration</MudTh>
                 <MudTh>Trailer</MudTh>
                 <MudTh>Description</MudTh>
@@ -52,14 +59,23 @@
                 <MudTd DataLabel="Description">@context.Description</MudTd>
             </RowTemplate>
 
+            <PagerContent >
+                <MudTablePager PageSizeOptions="new int[] { 5, 10, 20, int.MaxValue }" HorizontalAlignment="HorizontalAlignment.Center"/>
+            </PagerContent>
+
         </MudTable>
     </MudGrid>
+
 </MudContainer>
 
 @code {
+    private string searchString1 = "";
+    private MovieDTO selected = null;
     private int selectedRowNumber = -1;
     private MudTable<MovieDTO>? mudTable;
     private List<string> clickedEvents = new();
+    private bool FilterFunc1(MovieDTO movie) => FilterFunc(movie, searchString1);
+
 
     [Parameter]
     public IEnumerable<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
@@ -89,5 +105,16 @@
         {
             return string.Empty;
         }
+    }
+
+    private bool FilterFunc(MovieDTO movie, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (movie.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true; 
+        if (movie.ID.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
     }
 }

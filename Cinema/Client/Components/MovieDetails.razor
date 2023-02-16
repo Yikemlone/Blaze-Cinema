@@ -25,12 +25,14 @@
     private const string API_URL = "api/movie";
     private HttpClient _client;
     public MovieDTO Movie { get; set; }
+    public List<ScreeningDTO> Screenings { get; set; } = new List<ScreeningDTO>();
 
 
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         Movie = await GetMovieAsync();
+        //Screenings = await GetScreening(Movie.ID);
     }
 
     public async Task<MovieDTO> GetMovieAsync()
@@ -38,3 +40,4 @@
         return await _client.GetFromJsonAsync<MovieDTO>(API_URL + $"/movies/{MovieID}");
     }
 }
+s

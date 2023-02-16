@@ -1,5 +1,6 @@
 ﻿using Cinema.Server.Models;
 using Cinema.Shared.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cinema.Server.Services.Movies
 {
