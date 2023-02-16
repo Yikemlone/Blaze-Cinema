@@ -21,6 +21,8 @@ namespace Cinema.Server
             await AddRooms();
             await AddSeats();
             await AddEmployees();
+            await AddBookings();
+            await AddScreenings();
         }
 
         public async Task AddMovies()
@@ -105,5 +107,44 @@ namespace Cinema.Server
             await _context.Employees.AddRangeAsync(employeesToAdd);
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddBookings()
+        {
+            // Check if the table is empty or not
+            var bookings = _context.Bookings.Select(s => s);
+
+            if (bookings == null)
+            {
+                return;
+            }
+
+            List<Booking> bookingsToAdd = new List<Booking>
+            {
+                new Booking {Status = "Purchased", Time = new DateTime(17/02/2023), CustomerID = 1}
+            };
+
+            await _context.Bookings.AddRangeAsync(bookingsToAdd);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddScreenings()
+        {
+            // Check if the table is empty or not
+            var screenings = _context.Screenings.Select(s => s);
+
+            if (screenings == null)
+            {
+                return;
+            }
+
+            List<Screening> screeningsToAdd = new List<Screening>
+            {
+                new Screening { MovieID = 1, RoomID = 1}
+            };
+
+            await _context.Screenings.AddRangeAsync(screeningsToAdd);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

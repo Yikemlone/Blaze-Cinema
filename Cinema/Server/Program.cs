@@ -17,7 +17,6 @@ namespace Cinema
             builder.Services.AddRazorPages();
 
 
-
             // NOTE: We can add auth checking here that uses the Identity Package.
 
             // NOTE: This is called dependency 
