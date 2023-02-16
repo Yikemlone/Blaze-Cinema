@@ -8,14 +8,10 @@
 <MudLayout>
 
     <MudAppBar Elevation="1" Color="Color.Secondary">
-
         <NavMenu></NavMenu>
         <MudSpacer />
         <MudIconButton aria-label="Toggle light/dark theme" Icon="@GetThemeIcon()" Color="MudBlazor.Color.Inherit" OnClick="DarkMode"/>
-
     </MudAppBar>
-
-
 
     <MudMainContent>    
         <MudContainer MaxWidth="MaxWidth.Medium">
@@ -27,14 +23,8 @@
 
 
 @code{
-    private bool _drawerOpen = true;
     private MudTheme _theme = new();
     private bool _isDarkMode = true;
-
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
 
     private void DarkMode()
     {
