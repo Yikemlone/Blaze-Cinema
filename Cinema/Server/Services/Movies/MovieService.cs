@@ -73,17 +73,35 @@ namespace Cinema.Server.Services.Movies
             throw new NotImplementedException();
         }
 
-        public Task RemoveMovie(int movieID)
+        public Task RemoveMovie(MovieDTO movie)
         {
-            throw new NotImplementedException();
+            var Movie = _context.Movies.FirstOrDefault(x => x.ID == movie.ID);
+            if (Movie != null)
+            {
+                _context.Movies.Remove(Movie);
+                _context.SaveChanges();
+            }
+            return Task.CompletedTask;
         }
 
         public async Task UpdateMovieAsync(MovieDTO movie)
         {
-            //MovieDTO oldMovie = await _context.Movies.Select(m => m).Where(m => m.ID == movie.ID);
-            //oldMovie = movie;
+            var oldMovie = _context.Movies
+                 .Select(m => new MovieDTO()
+                 {
+                     ID = m.ID,
+                     Name = m.Name,
+                     AgeRating = m.AgeRating,
+                     Duration = m.Duration,
+                     Trailer = m.Trailer,
+                     Description = m.Description
+                 })
+                 .Where(m => m.ID == movie.ID)
+                 .SingleOrDefault();
 
-            //await _context.SaveChangesAsync();
+            oldMovie = movie;
+
+            await _context.SaveChangesAsync();
         }
     }
 }
