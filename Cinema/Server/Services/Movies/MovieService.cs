@@ -57,15 +57,14 @@ namespace Cinema.Server.Services.Movies
             throw new NotImplementedException();
         }
 
-        public Task RemoveMovie(MovieDTO movie)
+        public async Task RemoveMovie(int movieID)
         {
-            var Movie = _context.Movies.FirstOrDefault(x => x.ID == movie.ID);
+            var Movie = _context.Movies.FirstOrDefault(x => x.ID == movieID);
             if (Movie != null)
             {
                 _context.Movies.Remove(Movie);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
-            return Task.CompletedTask;
         }
 
         public async Task UpdateMovieAsync(MovieDTO movie)
