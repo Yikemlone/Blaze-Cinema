@@ -9,24 +9,37 @@
             <MudItem xs="6" sm="6" md="12">
                 <MudText Typo="Typo.h3"> @Movie.Name </MudText>
             </MudItem>
+            
+            <MudItem xs="6" sm="6" md="2">
+                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="200"/>
+            </MudItem>
 
-            <MudItem xs="8" sm="6" md="12">
-                <MudGrid>
-                    <MudItem xs="6" sm="6" md="6">
-                        <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="200"/>
-                    </MudItem>
-                    <MudItem xs ="8" sm="6" md="3">
+
+
+
+            <MudItem xs="8" sm="6" md="2">
+                <MudGrid Justify="Justify.SpaceEvenly">
+
+                    <MudItem xs ="8" sm="6" md="1">
                         <MudText Typo="Typo.subtitle2">Age Rating: @Movie.AgeRating</MudText>
                     </MudItem>
-                    <MudItem xs="8" sm="6" md="3">
+
+                    <MudItem xs="8" sm="6" md="1">
                         <MudText Typo="Typo.subtitle2">Duration: @Movie.Duration</MudText>
                     </MudItem>
+
                 </MudGrid>
             </MudItem>
 
-            <MudItem xs="8" sm="6" md="12">
-                <MudText Typo="Typo.body1">@Movie.Description</MudText>
+
+
+            <MudItem xs="8" sm="6" md="7">
+                <MudContainer>
+                    <MudText Typo="Typo.body1">@Movie.Description</MudText>
+                </MudContainer>
             </MudItem>
+
+
             
             <MudItem xs="6" sm="8" md="12">
                 <iframe src="https://www.youtube.com/embed/@Movie.Trailer"
@@ -37,6 +50,7 @@
                     allowfullscreen>
                 </iframe>
             </MudItem>
+
         </MudGrid>
     </MudContainer>
 }
