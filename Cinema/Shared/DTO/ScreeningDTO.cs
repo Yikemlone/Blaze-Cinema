@@ -9,8 +9,8 @@ namespace Cinema.Shared.DTO
     public class ScreeningDTO
     {
         public int ID { get; set; }
-        DateTime DateTime { get; set; }
-        public MovieDTO Movie { get; set; }
-        public RoomDTO Room { get; set; }
+        public DateTime DateTime { get; set; }
+        public int Movie { get; set; }
+        public int Room { get; set; }
     }
 }

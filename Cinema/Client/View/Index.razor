@@ -58,4 +58,9 @@
     {
         return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
+
+    public async Task<List<ScreeningDTO>> GetScreeningsAsync()
+    {
+        return await _client.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
+    }
 }

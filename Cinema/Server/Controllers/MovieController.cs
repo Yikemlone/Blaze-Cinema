@@ -44,5 +44,24 @@ namespace Cinema.Server.Controllers
         {
             return await _movieService.GetMovieAsync(movieID);
         }
+
+        //Get Screenings
+        [HttpGet]
+        [ResponseType(typeof(List<ScreeningDTO>))]
+        [Route("screenings")]
+        public async Task<List<ScreeningDTO>> GetScreenings()
+        {
+
+            return await _movieService.GetScreeningsAsync();
+        }
+
+        // Get Movie Screening
+        //[HttpGet]
+        //[ResponseType(typeof(ScreeningDTO))]
+        //[Route("screenings/{movieID}")]
+        //public async Task<ScreeningDTO> GetMovieScreening(int movieID)
+        //{
+        //    return await _movieService.GetMovieScreeningAsync(movieID);
+        //}
     }
 }

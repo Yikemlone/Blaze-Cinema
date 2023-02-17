@@ -3,7 +3,7 @@
     public class Screening
     {
         public int ID { get; set; }
-        DateTime DateTime { get; set; }
+        public DateTime DateTime { get; set; }
 
         public int MovieID { get; set; }
         public Movie Movie { get; set; }
