@@ -12,7 +12,6 @@ namespace Cinema.Server.Models
         public int? CustomerID { get; set; }
         public Customer? Customer { get; set; }
 
-        public List<TicketType> TicketTypes { get; set; }
         public List<Seat> Seats { get; set; }
     }
 }
