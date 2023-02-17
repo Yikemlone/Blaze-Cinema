@@ -14,7 +14,9 @@ namespace Cinema.Server.Services.Movies
         public Task<List<MovieDTO>> GetMoviesAsync();
         public Task<MovieDTO> GetMovieAsync(int movieID);
 
-        //public Task<List<ScreeningDTO>> GetScreeningAsync();
+        public Task<List<ScreeningDTO>> GetScreeningsAsync();
+
+        
         //public Task<List<ScreeningDTO>> GetMovieScrenningsAsync(int movieID);
 
         // Example of POSTs service funtions 

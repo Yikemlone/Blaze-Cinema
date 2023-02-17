@@ -52,6 +52,22 @@ namespace Cinema.Server.Services.Movies
             return movies;
         }
 
+        public async Task<List<ScreeningDTO>> GetScreeningsAsync()
+        {
+            List<ScreeningDTO> Screenings = _context.Screenings
+                .Select(m => new ScreeningDTO()
+                {
+                    ID = m.ID,
+                    Movie = m.MovieID,
+                    Room = m.RoomID,
+                    DateTime = m.DateTime
+                   
+
+                }).ToList();
+
+            return Screenings;
+        }
+
         public async Task<List<RoomDTO>> GetRoomsAsync()
         {
             throw new NotImplementedException();
