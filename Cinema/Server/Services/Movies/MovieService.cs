@@ -57,9 +57,15 @@ namespace Cinema.Server.Services.Movies
             throw new NotImplementedException();
         }
 
-        public Task RemoveMovie(int movieID)
+        public Task RemoveMovie(MovieDTO movie)
         {
-            throw new NotImplementedException();
+            var Movie = _context.Movies.FirstOrDefault(x => x.ID == movie.ID);
+            if (Movie != null)
+            {
+                _context.Movies.Remove(Movie);
+                _context.SaveChanges();
+            }
+            return Task.CompletedTask;
         }
 
         public async Task UpdateMovieAsync(MovieDTO movie)
