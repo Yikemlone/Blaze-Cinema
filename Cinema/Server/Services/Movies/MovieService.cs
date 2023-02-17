@@ -64,10 +64,22 @@ namespace Cinema.Server.Services.Movies
 
         public async Task UpdateMovieAsync(MovieDTO movie)
         {
-            //MovieDTO oldMovie = await _context.Movies.Select(m => m).Where(m => m.ID == movie.ID);
-            //oldMovie = movie;
+            var oldMovie = _context.Movies
+                 .Select(m => new MovieDTO()
+                 {
+                     ID = m.ID,
+                     Name = m.Name,
+                     AgeRating = m.AgeRating,
+                     Duration = m.Duration,
+                     Trailer = m.Trailer,
+                     Description = m.Description
+                 })
+                 .Where(m => m.ID == movie.ID)
+                 .SingleOrDefault();
 
-            //await _context.SaveChangesAsync();
+            oldMovie = movie;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

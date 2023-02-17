@@ -6,32 +6,31 @@
     <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
         <MudGrid>
 
-            <MudItem>
+            <MudItem xs="6" sm="6" md="12">
                 <MudText Typo="Typo.h3"> @Movie.Name </MudText>
             </MudItem>
 
-            <MudItem>
-                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="200"/>
-            </MudItem>
-
-            <MudItem>
+            <MudItem xs="8" sm="6" md="12">
                 <MudGrid>
-                    <MudItem>
-                        <MudText Typo="Typo.subtitle1">Age Rating: @Movie.AgeRating</MudText>
+                    <MudItem xs="6" sm="6" md="6">
+                        <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="200"/>
                     </MudItem>
-                    <MudItem>
+                    <MudItem xs ="8" sm="6" md="3">
+                        <MudText Typo="Typo.subtitle2">Age Rating: @Movie.AgeRating</MudText>
+                    </MudItem>
+                    <MudItem xs="8" sm="6" md="3">
                         <MudText Typo="Typo.subtitle2">Duration: @Movie.Duration</MudText>
                     </MudItem>
                 </MudGrid>
             </MudItem>
 
-            <MudItem>
-                <MudText Typo="Typo.body1">Description: @Movie.Description</MudText>
+            <MudItem xs="8" sm="6" md="12">
+                <MudText Typo="Typo.body1">@Movie.Description</MudText>
             </MudItem>
             
-            <MudItem>
+            <MudItem xs="6" sm="8" md="12">
                 <iframe src="https://www.youtube.com/embed/@Movie.Trailer"
-                    style="width: 100%!important;height: 100%!important;"
+                    style="width: 100%!important;height: 500px!important;"
                     title="YouTube video player" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
