@@ -9,14 +9,13 @@ namespace Cinema.Server.Controllers
     [Route("/api/[controller]")]
     public class MovieController
     {
-        private IMovieService _movieService;
+        private readonly IMovieService _movieService;
 
         public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
         }
 
-        // Use this to GET data from the database
         [HttpGet]
         [ResponseType(typeof(List<MovieDTO>))]
         [Route("movies")]
@@ -24,15 +23,6 @@ namespace Cinema.Server.Controllers
         {
 
             return await _movieService.GetMoviesAsync();
-        }
-
-        // Use a POST to UPDATE, ADD and DELETE movies
-        [HttpPost]
-        // Ensure the person using this is an Admin
-        [Route("update")]
-        public async Task UpdateMovie([FromBody] MovieDTO movie)
-        {
-            await _movieService.UpdateMovieAsync(movie);
         }
 
         // An example of getting a single movie from a GET request
@@ -45,7 +35,6 @@ namespace Cinema.Server.Controllers
             return await _movieService.GetMovieAsync(movieID);
         }
 
-        //Get Screenings
         [HttpGet]
         [ResponseType(typeof(List<ScreeningDTO>))]
         [Route("screenings")]
@@ -55,7 +44,6 @@ namespace Cinema.Server.Controllers
             return await _movieService.GetScreeningsAsync();
         }
 
-        // Get Movie Screening
         //[HttpGet]
         //[ResponseType(typeof(ScreeningDTO))]
         //[Route("screenings/{movieID}")]
