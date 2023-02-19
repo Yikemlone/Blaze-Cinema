@@ -6,7 +6,9 @@
         public string SeatNumber { get; set; }
         public bool DisabiltySeat { get; set; }
 
-        public int RoomID { get; set; }
-        public Room Room { get; set; }
+        public int? RoomID { get; set; }
+        public Room? Room { get; set; }
+
+        public List<SeatScreening>? SeatScreenings { get; set; }
     }
 }

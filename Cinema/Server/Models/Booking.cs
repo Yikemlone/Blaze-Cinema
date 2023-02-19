@@ -5,13 +5,14 @@ namespace Cinema.Server.Models
     public class Booking
     {
         public int ID { get; set; }
-        public string Status { get; set; } // Cancelled, Refunded, Pending, Confirmed
-        public DateTime Time { get; set; } 
+        public string Status { get; set; }
 
-        // All FK tables
+
         public int? CustomerID { get; set; }
         public Customer? Customer { get; set; }
 
-        public List<Seat> Seats { get; set; }
+        public List<TicketTypeBooking> TicketTypeBookings { get; set; } // Fix this in class diagram
+        public List<SeatScreening> SeatScreenings { get; set; }
+
     }
 }

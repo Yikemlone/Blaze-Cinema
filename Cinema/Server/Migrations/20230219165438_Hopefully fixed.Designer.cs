@@ -4,6 +4,7 @@ using Cinema.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cinema.Server.Migrations
 {
     [DbContext(typeof(CinemaDBContext))]
-    partial class CinemaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230219165438_Hopefully fixed")]
+    partial class Hopefullyfixed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,16 +196,11 @@ namespace Cinema.Server.Migrations
                     b.Property<bool>("DisabiltySeat")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("RoomID")
-                        .HasColumnType("int");
-
                     b.Property<string>("SeatNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("RoomID");
 
                     b.ToTable("Seats");
                 });
@@ -309,15 +307,6 @@ namespace Cinema.Server.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("Cinema.Server.Models.Seat", b =>
-                {
-                    b.HasOne("Cinema.Server.Models.Room", "Room")
-                        .WithMany("Seats")
-                        .HasForeignKey("RoomID");
-
-                    b.Navigation("Room");
-                });
-
             modelBuilder.Entity("Cinema.Server.Models.SeatScreening", b =>
                 {
                     b.HasOne("Cinema.Server.Models.Booking", "Booking")
@@ -382,8 +371,6 @@ namespace Cinema.Server.Migrations
             modelBuilder.Entity("Cinema.Server.Models.Room", b =>
                 {
                     b.Navigation("Screenings");
-
-                    b.Navigation("Seats");
                 });
 
             modelBuilder.Entity("Cinema.Server.Models.Seat", b =>
