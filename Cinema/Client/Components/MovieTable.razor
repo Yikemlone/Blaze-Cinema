@@ -1,4 +1,7 @@
-﻿@using Cinema.Shared.DTO
+﻿@using Cinema.Client.Dialogs
+@using Cinema.Shared.DTO
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 <style>
     .selected {
@@ -39,9 +42,9 @@
                 </MudTextField>
 
                 <MudSpacer />
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" />
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled />
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled />
+                <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
 
             </ToolBarContent>
 
@@ -79,11 +82,10 @@
     private bool FilterFunc1(MovieDTO movie) => FilterFunc(movie, searchString1);
     private bool _buttonDisabled = true;
 
+    private DialogOptions _options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large };
 
-    [Parameter]
-    public IEnumerable<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
-    [Parameter]
-    public bool Loading { get; set; }
+    [Parameter] public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
+    [Parameter] public bool Loading { get; set; }
 
     private void RowClickEvent(TableRowClickEventArgs<MovieDTO> tableRowClickEventArgs)
     {
@@ -109,7 +111,6 @@
         }
         else
         {
-            //_buttonDisabled = !_buttonDisabled;
             return string.Empty;
         }
     }
@@ -124,4 +125,26 @@
             return true;
         return false;
     }
+
+    private void OpenCreateDialog()
+    {
+        DialogService.Show<CreateDialog>("Add New Movie", _options);
+    }
+
+    private void OpenUpdateDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Movie", Movies[selectedRowNumber]);
+
+        DialogService.Show<UpdateDialog>("Update Movie Details", parameters, _options);
+    }
+
+    private void OpenDeleteDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("MovieID", Movies[selectedRowNumber]);
+
+        DialogService.Show<DeleteDialog>("Delete Movie", parameters, _options);
+    }
+
 }

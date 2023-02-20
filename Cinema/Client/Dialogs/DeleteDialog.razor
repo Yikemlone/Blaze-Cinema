@@ -1,0 +1,46 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        Are you sure you want to delete @Movie.Name?
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Close">Ok</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Close">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    private const string API_URL = "api/movie";
+    private HttpClient _client;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public MovieDTO Movie { get; set; }
+
+    public async Task Close()
+    {
+        Snackbar.Configuration.SnackbarVariant = Variant.Outlined;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("Movie Deleted", Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 1000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
+
+        await DeleteMovieAsync();
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    void Cancel()
+    {
+        MudDialog.Close(DialogResult.Cancel());
+    }
+
+    public async Task DeleteMovieAsync()
+    {
+        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/", Movie.ID);
+    }
+
+}

@@ -1,0 +1,51 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+
+    <DialogContent>
+        <MudGrid Spacing="3">
+            <MudStack>
+                <MudText Typo="Typo.subtitle2">@Movie.AgeRating</MudText>
+                <MudText Typo="Typo.subtitle2">@Movie.Duration minutes</MudText>
+            </MudStack>
+
+            <MudItem xs="8" sm="6" md="7">
+                <MudContainer>
+                    <MudText Typo="Typo.body1">@Movie.Description</MudText>
+                </MudContainer>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Close">Save</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+
+</MudDialog>
+
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public MovieDTO Movie { get; set; }
+
+    void Close() 
+    { 
+        Snackbar.Configuration.SnackbarVariant = Variant.Outlined;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("Movie Updated", Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 1000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    void Cancel() 
+    { 
+        MudDialog.Close(DialogResult.Cancel()); 
+    }
+
+}
