@@ -4,18 +4,18 @@
 <MudDialog>
 
     <DialogContent>
-        <MudGrid Spacing="3">
-            <MudStack>
-                <MudText Typo="Typo.subtitle2">@Movie.AgeRating</MudText>
-                <MudText Typo="Typo.subtitle2">@Movie.Duration minutes</MudText>
-            </MudStack>
-
-            <MudItem xs="8" sm="6" md="7">
-                <MudContainer>
-                    <MudText Typo="Typo.body1">@Movie.Description</MudText>
-                </MudContainer>
-            </MudItem>
-        </MudGrid>
+        <MudPaper>
+            <MudForm>
+                <MudStack Row=true>
+                    <MudTextField T="string" Label="Name" Variant="Variant.Filled" @bind-Movie=Movie.Name Value=@Movie.Name> </MudTextField>
+                    <MudTextField T="string" Label="Age Rating" Variant="Variant.Filled" @bind-Movie=Movie.AgeRating Value=@Movie.AgeRating></MudTextField>
+                    <MudTextField T="int" Label="Duration" Variant="Variant.Filled" @bind-Movie=@Movie.Duration Value=@Movie.Duration></MudTextField>
+                </MudStack>
+                <MudStack Row=true>
+                    <MudTextField T="string" Label="Description" Variant="Variant.Filled" @bind-Movie=Movie.Description Value=@Movie.Description Lines="5"></MudTextField>
+                </MudStack>
+            </MudForm>
+        </MudPaper>
     </DialogContent>
 
     <DialogActions>

@@ -82,7 +82,7 @@
     private bool FilterFunc1(MovieDTO movie) => FilterFunc(movie, searchString1);
     private bool _buttonDisabled = true;
 
-    private DialogOptions _options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large };
+    private DialogOptions _options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true};
 
     [Parameter] public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
     [Parameter] public bool Loading { get; set; }
