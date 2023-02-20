@@ -27,8 +27,16 @@
 
 
 @code {
+    private const string API_URL = "api/movie";
+    private HttpClient _client;
+
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public MovieDTO Movie { get; set; }
+    [Parameter] public MovieDTO Movie { get; set; } // Bind this value to the text fields
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+    }
 
     void Close() 
     { 
@@ -46,6 +54,11 @@
     void Cancel() 
     { 
         MudDialog.Close(DialogResult.Cancel()); 
+    }
+
+    private async Task UpdateMovieModel() 
+    {
+        await _client.PostAsJsonAsync<MovieDTO>(API_URL + $"/update/", Movie);
     }
 
 }

@@ -30,7 +30,7 @@ namespace Cinema.Server.Services.Employees
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteMovie(int movieID)
+        public async Task DeleteMovieAsync(int movieID)
         {
             var movie = _context.Movies.FirstOrDefault(x => x.ID == movieID);
             if (movie != null)

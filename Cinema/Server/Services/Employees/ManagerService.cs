@@ -5,11 +5,11 @@ namespace Cinema.Server.Services.Employees
 {
     public class ManagerService : IManagerService
     {
-        private readonly IManagerService _managerService;
+        private readonly CinemaDBContext _context;
 
-        public ManagerService(IManagerService managerService) 
+        public ManagerService(CinemaDBContext context) 
         {
-            _managerService = managerService;
+            _context = context;
         }
 
         public async Task<ScreeningDTO> AddScreeningAsync(ScreeningDTO screening)
@@ -17,7 +17,7 @@ namespace Cinema.Server.Services.Employees
             throw new NotImplementedException();
         }
 
-        public async Task DeleteScreening(int screeningID)
+        public async Task DeleteScreeningAsync(int screeningID)
         {
             throw new NotImplementedException();
         }
@@ -27,7 +27,7 @@ namespace Cinema.Server.Services.Employees
             throw new NotImplementedException();
         }
 
-        public async Task UpdateRoom(RoomDTO roomDTO)
+        public async Task UpdateRoomAsync(RoomDTO roomDTO)
         {
             throw new NotImplementedException();
         }

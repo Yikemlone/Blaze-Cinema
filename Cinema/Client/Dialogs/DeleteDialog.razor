@@ -3,21 +3,26 @@
 
 <MudDialog>
     <DialogContent>
-        Are you sure you want to delete @Movie.Name?
+        <p>Are you sure you want to delete @Movie.Name?</p> 
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Primary" OnClick="Close">Ok</MudButton>
-        <MudButton Color="Color.Secondary" OnClick="Close">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Close">Delete</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
 
 
 @code {
-    private const string API_URL = "api/movie";
+    private const string API_URL = "api/admin";
     private HttpClient _client;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MovieDTO Movie { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+    }
 
     public async Task Close()
     {
@@ -40,7 +45,7 @@
 
     public async Task DeleteMovieAsync()
     {
-        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/", Movie.ID);
+        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/{Movie.ID}", Movie.ID);
     }
 
 }

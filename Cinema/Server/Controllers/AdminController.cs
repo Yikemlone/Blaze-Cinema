@@ -34,7 +34,7 @@ namespace Cinema.Server.Controllers
         [Route("delete/{movieID}")]
         public async Task DeleteMovie(int movieID)
         {
-            await _adminService.DeleteMovie(movieID);
+            await _adminService.DeleteMovieAsync(movieID);
         }
     }
 }

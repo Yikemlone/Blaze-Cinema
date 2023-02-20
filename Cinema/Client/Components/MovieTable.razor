@@ -142,7 +142,7 @@
     private void OpenDeleteDialog()
     {
         var parameters = new DialogParameters();
-        parameters.Add("MovieID", Movies[selectedRowNumber]);
+        parameters.Add("Movie", Movies[selectedRowNumber]);
 
         DialogService.Show<DeleteDialog>("Delete Movie", parameters, _options);
     }

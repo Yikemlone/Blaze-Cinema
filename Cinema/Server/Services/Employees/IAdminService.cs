@@ -8,6 +8,6 @@ namespace Cinema.Server.Services.Employees
         // Limit with authorization
         public Task CreateMovieAsync(MovieDTO movie);
         public Task UpdateMovieAsync(MovieDTO movieID);
-        public Task DeleteMovie(int movieID);
+        public Task DeleteMovieAsync(int movieID);
     }
 }

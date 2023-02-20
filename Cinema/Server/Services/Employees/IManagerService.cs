@@ -8,10 +8,10 @@ namespace Cinema.Server.Services.Employees
         // Limit with authorization
         public Task<ScreeningDTO> AddScreeningAsync(ScreeningDTO screening);
         public Task UpdateScreeningAsync(ScreeningDTO screening);
-        public Task DeleteScreening(int screeningID);
+        public Task DeleteScreeningAsync(int screeningID);
 
 
         public Task<List<RoomDTO>> GetRoomsAsync();
-        public Task UpdateRoom(RoomDTO roomDTO);
+        public Task UpdateRoomAsync(RoomDTO roomDTO);
     }
 }
