@@ -14,5 +14,7 @@ namespace Cinema.Server.Services.Employees
         public Task<List<RoomDTO>> GetRoomsAsync();
         public Task UpdateRoomAsync(RoomDTO roomDTO);
         public Task<List<EmployeeDTO>> GetEmployeesAsync();
+
+        public Task<EmployeeDTO> GetEmployeeAsync(int empolyeeID);
     }
 }

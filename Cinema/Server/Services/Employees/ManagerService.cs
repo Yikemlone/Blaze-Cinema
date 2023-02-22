@@ -55,5 +55,25 @@ namespace Cinema.Server.Services.Employees
             return employees;
         }
 
+        //Get employee
+        public async Task<EmployeeDTO> GetEmployeeAsync(int employeeID)
+        {
+            var employee = _context.Employees
+                 .Where(m => m.ID == employeeID)
+                 .Select(m => new EmployeeDTO()
+                 {
+                     ID = m.ID,
+                     JobTitle = m.JobTitle,
+                     FirstName = m.FirstName,
+                     LastName = m.LastName,
+                     Username = m.Username,
+                     Password = m.Password
+
+                 })
+                 .SingleOrDefault();
+
+            return employee;
+        }
+
     }
 }
