@@ -51,5 +51,8 @@ namespace Cinema.Server.Controllers
         {
             return await _movieService.GetMovieScreeningAsync(movieID);
         }
+
+
+       
     }
 }

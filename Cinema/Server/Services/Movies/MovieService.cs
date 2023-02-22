@@ -79,5 +79,7 @@ namespace Cinema.Server.Services.Movies
             return Screening;
             
         }
+
+   
     }
 }
