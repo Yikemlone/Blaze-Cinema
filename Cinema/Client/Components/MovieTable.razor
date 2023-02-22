@@ -90,7 +90,15 @@
     private void RowClickEvent(TableRowClickEventArgs<MovieDTO> tableRowClickEventArgs)
     {
         clickedEvents.Add("Row has been clicked");
-        StateHasChanged();
+
+        if (selectedRowNumber != -1)
+        {
+            _buttonDisabled = false;
+        }
+        else 
+        { 
+            _buttonDisabled = true;
+        }
     }
 
     private string SelectedRowClassFunc(MovieDTO element, int rowNumber)
@@ -98,21 +106,15 @@
         if (selectedRowNumber == rowNumber)
         {
             selectedRowNumber = -1;
-            _buttonDisabled = true;
-            clickedEvents.Add("Selected Row: None");
             return string.Empty;
         }
         else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
         {
             selectedRowNumber = rowNumber;
-            _buttonDisabled = false;
-            clickedEvents.Add($"Selected Row: {rowNumber}");
             return "selected";
         }
-        else
-        {
-            return string.Empty;
-        }
+
+        return string.Empty;
     }
 
     private bool FilterFunc(MovieDTO movie, string searchString)

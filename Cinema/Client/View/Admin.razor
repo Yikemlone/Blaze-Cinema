@@ -20,11 +20,13 @@
     <MudGrid>
         @if (Movies.Count != 0)
         {
-            <MovieTable Movies=@Movies Loading=false></MovieTable>
+            @*<MovieTable Movies=@Movies Loading=false></MovieTable>*@
+            <MovieTable2 Movies=@Movies Loading=false></MovieTable2>
         }
         else
         {
-            <MovieTable Movies=@Movies Loading=true></MovieTable>
+            @*<MovieTable Movies=@Movies Loading=true></MovieTable>*@
+            <MovieTable2 Movies=@Movies Loading=true></MovieTable2>
         }
     </MudGrid> 
 </MudContainer>

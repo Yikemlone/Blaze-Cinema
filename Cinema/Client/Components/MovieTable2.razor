@@ -1,0 +1,245 @@
+﻿@using Cinema.Client.Dialogs
+@using Cinema.Shared.DTO
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<style>
+    .selected {
+        background-color: #ff4081 !important;
+    }
+
+        .selected > td {
+            color: white !important;
+        }
+
+            .selected > td .mud-input {
+                color: white !important;
+            }
+</style>
+@*
+        RowClassFunc="@SelectedRowClassFunc"
+        OnRowClick="RowClickEvent"
+        Hover="true"
+        Dense=true
+
+        <MudTable Class="mb-4" Loading="true" ServerData="@(new Func<TableState, Task<TableData<ClubResponse>>>(ServerReload))" @ref="clubTable"><ColGroup><MudHidden Breakpoint="Breakpoint.SmAndUp" Invert="true"><col style="width: 45%" /><col style="width: 45%" /><col style="width: 10%" /></MudHidden></ColGroup>
+*@
+@*<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudDataGrid 
+        T="MovieDTO"
+        Items="@Movies" 
+        Breakpoint="Breakpoint.Sm" 
+        Loading=@Loading
+        LoadingProgressColor="Color.Secondary"
+        QuickFilter="new Func<MovieDTO,bool>(FilterFunc1)" 
+        @bind-SelectedItem="selected"
+        Dense=true
+        RowsPerPage="5">
+
+        <ToolBarContent>
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" 
+                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+            </MudTextField>
+            <MudSpacer />
+            <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
+            <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
+        </ToolBarContent>
+
+        <Columns>
+            <Column T="MovieDTO" Field="Name" />
+            <Column T="MovieDTO" Field="AgeRating" Title="Age Rating" />
+            <Column T="MovieDTO" Field="Duration" />
+            <Column T="MovieDTO" Field="Trailer" />
+            <Column T="MovieDTO" Field="Description" />
+        </Columns>
+
+        <PagerContent>
+            <MudDataGridPager T="MovieDTO" />
+        </PagerContent>
+
+    </MudDataGrid>
+</MudContainer>
+*@
+
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudDataGrid 
+        T="MovieDTO" 
+        Items="@Movies" 
+        EditMode="DataGridEditMode.Form"
+        Breakpoint="Breakpoint.Sm"
+        Loading=@Loading
+        QuickFilter="new Func<MovieDTO,bool>(FilterFunc1)" 
+        LoadingProgressColor="Color.Secondary"
+        StartedEditingItem="@StartedEditingItem"
+        CanceledEditingItem="@CanceledEditingItem" 
+        CommittedItemChanges="@CommittedItemChanges"
+        Dense="true" 
+        EditTrigger="@DataGridEditTrigger.OnRowClick">
+
+        <ToolBarContent>
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" 
+                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+            </MudTextField>
+            <MudSpacer />
+            <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
+@*          <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled />
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />*@
+        </ToolBarContent>
+
+        <Columns>
+            <Column T="MovieDTO" Field="ID" IsEditable="false" />
+            <Column T="MovieDTO" Field="Name" />
+
+        @*    <Column T="MovieDTO" Field="AgeRating" Title="Age Rating">
+                <EditTemplate>
+                    <MudSelect @bind-Value="context.Item.AgeRating" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
+                        <MudSelectItem Value="@("G")">  G </MudSelectItem>
+                        <MudSelectItem Value="@("PG")"> PG </MudSelectItem>
+                        <MudSelectItem Value="@("12A")"> 12A </MudSelectItem>
+                        <MudSelectItem Value="@("15A")"> 15A </MudSelectItem>
+                        <MudSelectItem Value="@("16")"> 16 </MudSelectItem>
+                        <MudSelectItem Value="@("18")"> 18 </MudSelectItem>
+                    </MudSelect>
+                </EditTemplate>
+            </Column>*@
+
+            <Column T="MovieDTO" Field="Duration" />
+
+@*            <Column T="MovieDTO" Field="Description" Sortable="false" Filterable="false">
+                <EditTemplate>
+                    <MudTextField T="string" @bind-Value="context.Item.Description" Label="Description" Variant="Variant.Filled" Value=@context.Item.Description Lines="5"></MudTextField>
+                </EditTemplate>
+            </Column>*@
+
+        </Columns>
+
+        <PagerContent>
+            <MudDataGridPager T="MovieDTO" />
+        </PagerContent>
+
+    </MudDataGrid>
+</MudContainer>
+
+@*
+<MudDataGrid T="Element" Items="@Elements.Take(4)" ReadOnly="@_readOnly" EditMode="@(_isCellEditMode ? DataGridEditMode.Cell : DataGridEditMode.Form)"
+    StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+    Bordered="true" Dense="true" EditTrigger="@(_editTriggerRowClick ? DataGridEditTrigger.OnRowClick : DataGridEditTrigger.Manual)">
+    <Columns>
+        <Column T="Element" Field="Number" Title="Nr" IsEditable="false" />
+        <Column T="Element" Field="Sign" />
+        <Column T="Element" Field="Name" />
+        <Column T="Element" Field="Position">
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.Position" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
+                    <MudSelectItem Value="0">zero</MudSelectItem>
+                    <MudSelectItem Value="1">one</MudSelectItem>
+                    <MudSelectItem Value="17">seventeen</MudSelectItem>
+                </MudSelect>
+            </EditTemplate>
+        </Column>
+        <Column T="Element" Field="Molar" Title="Molar mass" />
+        <Column T="Element" Hidden="@(_isCellEditMode || _readOnly || _editTriggerRowClick)" CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItem" />
+            </CellTemplate>
+        </Column>
+    </Columns>
+</MudDataGrid>
+*@
+@code {
+    private string searchString1 = "";
+    private MovieDTO selected = null;
+    private int selectedRowNumber = -1;
+    private MudTable<MovieDTO>? mudTable;
+    private List<string> clickedEvents = new();
+    private bool FilterFunc1(MovieDTO movie) => FilterFunc(movie, searchString1);
+    private bool _buttonDisabled = true;
+
+    private DialogOptions _options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true};
+
+    [Parameter] public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
+    [Parameter] public bool Loading { get; set; }
+
+    private void RowClickEvent(TableRowClickEventArgs<MovieDTO> tableRowClickEventArgs)
+    {
+        clickedEvents.Add("Row has been clicked");
+
+        if (selectedRowNumber != -1)
+        {
+            _buttonDisabled = false;
+        }
+        else 
+        { 
+            _buttonDisabled = true;
+        }
+    }
+
+    private string SelectedRowClassFunc(MovieDTO element, int rowNumber)
+    {
+        if (selectedRowNumber == rowNumber)
+        {
+            selectedRowNumber = -1;
+            return string.Empty;
+        }
+        else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
+        {
+            selectedRowNumber = rowNumber;
+            return "selected";
+        }
+
+        return string.Empty;
+    }
+
+    private bool FilterFunc(MovieDTO movie, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (movie.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true; 
+        if (movie.ID.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void OpenCreateDialog()
+    {
+        DialogService.Show<CreateDialog>("Add New Movie", _options);
+    }
+
+    private void OpenUpdateDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Movie", Movies[selectedRowNumber]);
+
+        DialogService.Show<UpdateDialog>("Update Movie Details", parameters, _options);
+    }
+
+    private void OpenDeleteDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Movie", Movies[selectedRowNumber]);
+
+        DialogService.Show<DeleteDialog>("Delete Movie", parameters, _options);
+    }
+
+    private List<string> _events = new();
+
+    void StartedEditingItem(MovieDTO item)
+    {
+        _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(MovieDTO item)
+    {
+        _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CommittedItemChanges(MovieDTO item)
+    {
+
+        _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+}
