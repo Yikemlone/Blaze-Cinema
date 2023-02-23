@@ -40,15 +40,24 @@
             ServerData="UpdateData">
             
             <ToolBarContent>
+                <MudText Typo="Typo.h6">Movie List</MudText>
+                <MudSpacer />
 
                 <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" 
                     AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
                 </MudTextField>
 
                 <MudSpacer />
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
+
+                <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Secondary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
+                </MudTooltip>
+                <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Secondary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
+                </MudTooltip>
+                <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Secondary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
+                </MudTooltip>
 
             </ToolBarContent>
 

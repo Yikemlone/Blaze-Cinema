@@ -56,7 +56,7 @@
 
     async void Close() 
     { 
-        Snackbar.Configuration.SnackbarVariant = Variant.Outlined;
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
         Snackbar.Add("Movie Updated", Severity.Success, config =>
         {
@@ -79,7 +79,5 @@
         await _client.PostAsJsonAsync<MovieDTO>(API_URL + $"/update/", Movie);
         await MudTable.ReloadServerData();
     }
-
-
 
 }
