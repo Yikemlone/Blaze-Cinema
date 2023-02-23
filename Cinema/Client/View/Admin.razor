@@ -1,51 +1,27 @@
 ﻿@page "/admin"
 @using Cinema.Shared.DTO
 
-<PageTitle>Admin</PageTitle>
+<PageTitle>Admin Page</PageTitle>
 
-@*
-    Ensure only admins can access this page.
-
-    This will have 3 button options:
-    -Update
-    -Delete
-    -Add
-    
-    The buttons will have a diloge pop up to add and edit.
-    When deleting a diloge will ask if you're sure.
-    Snackbars will be displayed to inform the user of each action being completed.
-*@
-
-<MudPaper Class="pa-5 ma-2" Elevation="1">
+<MudPaper Class="pa-3 ma-2" Elevation="1">
     <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
 </MudPaper>
-@*
-<MudPaper Class="pa-12 ma-2" Elevation="3">
-    <MudText Typo="Typo.h3"> Welcome @_name </MudText>
-</MudPaper>*@
 
-<MudPaper Class="pa-5 ma-2" Elevation="2" >
-    <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraExtraLarge">
-        <MudGrid>
-            @if (Movies.Count != 0)
-            {
-                <MovieTable Movies=@Movies Loading=false></MovieTable>
-            }
-            else
-            {
-                <MovieTable Movies=@Movies Loading=true></MovieTable>
-            }
-        </MudGrid> 
-    </MudContainer>
+<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
+    <MudGrid Justify="Justify.Center" Spacing="5">
+
+        <MudItem xs="12">
+            <MudText Typo="Typo.h3"> Welcome @_name </MudText>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MovieTable/>
+        </MudItem>
+
+    </MudGrid> 
 </MudPaper>
 
-
-
 @code {
-    // We can make a parent class or interface to inherit these varibles as we are gonna use these quite often in admin, index and manager 
-    private const string API_URL = "api/movie";
-    private HttpClient _client;
-    public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
     private string _name = "Mikey";
 
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
@@ -53,15 +29,4 @@
         new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
         new BreadcrumbItem("Admin", href: "/admin", icon: Icons.Material.Filled.Lock)
     };
-
-    protected override async Task OnInitializedAsync()
-    {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-        Movies = await GetMoviesAsync();
-    }
-
-    public async Task<List<MovieDTO>> GetMoviesAsync()
-    {
-        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
-    }
 }
