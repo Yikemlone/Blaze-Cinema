@@ -16,5 +16,23 @@ namespace Cinema.Server.Controllers
         {
             _managerService = managerService;
         }
+
+        [HttpGet]
+        [ResponseType(typeof(List<EmployeeDTO>))]
+        [Route("employees")]
+        public async Task<List<EmployeeDTO>> GetEmployees()
+        {
+
+            return await _managerService.GetEmployeesAsync();
+        }
+
+        //get employee
+        [HttpGet]
+        [ResponseType(typeof(EmployeeDTO))]
+        [Route("employees/{employeeID}")]
+        public async Task<EmployeeDTO> GetEmployee(int employeeID)
+        {
+            return await _managerService.GetEmployeeAsync(employeeID);
+        }
     }
 }
