@@ -4,22 +4,19 @@
 @if (Movie != null) 
 {
     <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
-        <MudGrid Spacing="3">
+        <MudGrid Spacing="3" Justify="Justify.Center">
 
             <MudItem xs="6" sm="6" md="12">
                 <MudText Typo="Typo.h3"> @Movie.Name </MudText>
             </MudItem>
             
-            <MudItem xs="6" sm="6" md="2">
+            <MudItem xs="3" sm="3" md="3">
                 <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="200"/>
             </MudItem>
 
-            <MudStack>
+            <MudItem xs="9" sm="9" md="9">
                 <MudText Typo="Typo.subtitle2">@Movie.AgeRating</MudText>
                 <MudText Typo="Typo.subtitle2">@Movie.Duration minutes</MudText>
-            </MudStack>
-         
-            <MudItem xs="8" sm="6" md="7">
                 <MudContainer>
                     <MudText Typo="Typo.body1">@Movie.Description</MudText>
                 </MudContainer>

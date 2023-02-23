@@ -12,10 +12,7 @@ namespace Cinema.Server.Services.Employees
             _context = context;
         }
 
-        public async Task<ScreeningDTO> AddScreeningAsync(ScreeningDTO screening)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public async Task DeleteScreeningAsync(int screeningID)
         {
@@ -75,5 +72,9 @@ namespace Cinema.Server.Services.Employees
             return employee;
         }
 
+        public Task<ScreeningDTO> CreateMovieScreeningAsync(ScreeningDTO screening)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
