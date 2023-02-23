@@ -89,7 +89,7 @@
     private bool FilterFunc1(MovieDTO movie) => FilterFunc(movie, searchString1);
     private bool _buttonDisabled = true;
 
-    private DialogOptions _options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true};
+    private DialogOptions _options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true, DisableBackdropClick = true};
 
     [Parameter] public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
     [Parameter] public bool Loading { get; set; }
@@ -149,7 +149,7 @@
         var parameters = new DialogParameters();
         parameters.Add("Movie", selected);
 
-        DialogService.Show<DeleteDialog>("Delete Movie", parameters, _options);
+        DialogService.Show<DeleteDialog>("Delete Movie", parameters, new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true });
     }
 
 }

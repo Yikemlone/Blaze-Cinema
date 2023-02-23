@@ -6,9 +6,14 @@
     <DialogContent>
         <MudPaper>
             <MudForm>
+
                 <MudStack Row=true>
-                    <MudTextField T="string" Label="Name" Variant="Variant.Filled" @bind-Value=Movie.Name> </MudTextField>
-                    <MudSelect @bind-Value="Movie.AgeRating" Required RequiredError="You must select a Position!!!">
+                    <MudTextField T="string" Label="Name" Variant="Variant.Filled" Required RequiredError="You must enter a Name." @bind-Value=Movie.Name></MudTextField>
+                    <MudTextField T="int" Label="Duration" Variant="Variant.Filled" Required RequiredError="You must enter a Duration." @bind-Value=@Movie.Duration></MudTextField>
+                </MudStack>
+
+                <MudStack>
+                    <MudSelect @bind-Value="Movie.AgeRating" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
                         <MudSelectItem Value="@("G")">  G </MudSelectItem>
                         <MudSelectItem Value="@("PG")"> PG </MudSelectItem>
                         <MudSelectItem Value="@("12A")"> 12A </MudSelectItem>
@@ -16,11 +21,13 @@
                         <MudSelectItem Value="@("16")"> 16 </MudSelectItem>
                         <MudSelectItem Value="@("18")"> 18 </MudSelectItem>
                     </MudSelect>
-                    <MudTextField T="int" Label="Duration" Variant="Variant.Filled" @bind-Value=@Movie.Duration></MudTextField>
+                    <MudTextField T="string" Label="Trailer" Variant="Variant.Filled" Required RequiredError="You must enter a Trailer." @bind-Value=@Movie.Trailer></MudTextField>
                 </MudStack>
+
                 <MudStack Row=true>
-                    <MudTextField T="string" Label="Description" Variant="Variant.Filled" @bind-Value=Movie.Description Lines="5"></MudTextField>
+                    <MudTextField T="string" Label="Description" Variant="Variant.Filled" Required RequiredError="You must enter a Description." @bind-Value=Movie.Description Lines="5"></MudTextField>
                 </MudStack>
+
             </MudForm>
         </MudPaper>
     </DialogContent>
@@ -45,7 +52,7 @@
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
     }
 
-    void Close() 
+    async void Close() 
     { 
         Snackbar.Configuration.SnackbarVariant = Variant.Outlined;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;

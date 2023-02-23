@@ -12,7 +12,7 @@
                     <MudTextField T="int" Label="Duration" Variant="Variant.Filled" Required RequiredError="You must enter a Duration." @bind-Value=@Movie.Duration></MudTextField>
                 </MudStack>
 
-                <MudStack Row=true>
+                <MudStack>
                     <MudSelect @bind-Value="Movie.AgeRating" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
                         <MudSelectItem Value="@("G")">  G </MudSelectItem>
                         <MudSelectItem Value="@("PG")"> PG </MudSelectItem>
