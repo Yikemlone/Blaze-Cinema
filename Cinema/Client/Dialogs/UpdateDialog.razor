@@ -45,7 +45,9 @@
     private HttpClient _client;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] List<MovieDTO> Movies { get; set; }
     [Parameter] public MovieDTO Movie { get; set; } // Bind this value to the text fields
+    [Parameter] public MudTable<MovieDTO> MudTable { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,6 +77,9 @@
     private async Task UpdateMovieModel() 
     {
         await _client.PostAsJsonAsync<MovieDTO>(API_URL + $"/update/", Movie);
+        await MudTable.ReloadServerData();
     }
+
+
 
 }

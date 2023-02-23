@@ -36,7 +36,8 @@
             FixedHeader=true
             Style="width: 100%;"
             HorizontalScrollbar=true
-            RowsPerPage="5">
+            RowsPerPage="5"
+            ServerData="UpdateData">
             
             <ToolBarContent>
 
@@ -140,6 +141,7 @@
     {
         var parameters = new DialogParameters();
         parameters.Add("Movie", selected);
+        parameters.Add("MudTable", mudTable);
 
         DialogService.Show<UpdateDialog>("Update Movie Details", parameters, _options);
     }
@@ -150,6 +152,26 @@
         parameters.Add("Movie", selected);
 
         DialogService.Show<DeleteDialog>("Delete Movie", parameters, new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium, DisableBackdropClick = true });
+    }
+
+
+    private const string API_URL2 = "api/movie";
+    private HttpClient _client;
+
+    protected async Task<TableData<MovieDTO>> UpdateData(TableState movies)
+    {
+        var updatedMovies = await GetMoviesAsync();
+        return new TableData<MovieDTO>() { TotalItems = updatedMovies.Count , Items = updatedMovies };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+    }
+
+    public async Task<List<MovieDTO>> GetMoviesAsync()
+    {
+        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL2 + "/movies");
     }
 
 }
