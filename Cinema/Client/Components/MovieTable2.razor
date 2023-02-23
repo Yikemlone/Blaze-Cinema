@@ -1,0 +1,178 @@
+﻿@using Cinema.Client.Dialogs
+@using Cinema.Shared.DTO
+@using System.Collections.ObjectModel
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+
+@*
+    @ref="mygrid"
+    ServerData="@ServerReload"
+*@
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudDataGrid 
+        T="MovieDTO"
+        Items="@Movies" 
+        Breakpoint="Breakpoint.Sm"
+        QuickFilter="new Func<MovieDTO,bool>(FilterFunc1)" 
+        Dense="true" 
+        Hover="true"
+        EditTrigger="@DataGridEditTrigger.Manual"
+        EditMode=@DataGridEditMode.Form
+        RowsPerPage="5"
+        Loading=@Loading
+        LoadingProgressColor="Color.Secondary"
+        SelectedItemChanged="@SelectedItemChanged"
+        StartedEditingItem="edit"
+        ReadOnly="false"
+        Virtualize="true"
+        EditDialogOptions=@_options>
+
+        <ToolBarContent>
+            <MudTextField @bind-Value="_searchString1" Placeholder="Search" Adornment="Adornment.Start" 
+                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Immediate="true" Class="mt-0">
+            </MudTextField>
+            <MudSpacer />
+            <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
+            <MudIconButton Icon="@Icons.Material.Outlined.Refresh" Color="Color.Secondary" OnClick="OnServerReload" />
+        </ToolBarContent>
+
+
+        <ColGroup>
+            <col style="width: 60px;" />
+            <col style="width: 70px;" />
+            <col style="width: 20px;" />
+            <col />
+        </ColGroup>
+
+        <Columns>
+
+            <Column T="MovieDTO" Field="ID" IsEditable=false/>
+            <Column T="MovieDTO" Field="Name" />
+            <Column T="MovieDTO" Field="AgeRating" Title="Age Rating">
+                  <EditTemplate>
+                    <MudSelect @bind-Value="@context.Item.AgeRating" Required RequiredError="You must select a Position!!!">
+                        <MudSelectItem Value="@("G")">  G </MudSelectItem>
+                        <MudSelectItem Value="@("PG")"> PG </MudSelectItem>
+                        <MudSelectItem Value="@("12A")"> 12A </MudSelectItem>
+                        <MudSelectItem Value="@("15A")"> 15A </MudSelectItem>
+                        <MudSelectItem Value="@("16")"> 16 </MudSelectItem>
+                        <MudSelectItem Value="@("18")"> 18 </MudSelectItem>
+                    </MudSelect>
+                </EditTemplate>
+            </Column>
+
+            <Column T="MovieDTO" Field="Duration" />
+            <Column T="MovieDTO" Field="Trailer" />
+            @*<Column T="MovieDTO" Field="Description" Sortable="false" Filterable="false" CellStyleFunc=@ColStyleFunc/>*@
+            
+            <Column T="MovieDTO"> 
+                <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" OnClick="@context.Actions.StartEditingItem" />
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" OnClick="@(() => OpenDeleteDialog(@context.Item))" />
+                </CellTemplate>
+            </Column>
+
+        </Columns>
+
+        <PagerContent>
+            <MudDataGridPager T="MovieDTO" PageSizeOptions="new int[]{ 5, 10, 20}" />
+        </PagerContent>
+
+    </MudDataGrid>
+</MudContainer>
+
+@code {
+    private string _searchString1 = "";
+    private const string API_URL = "api/movie";
+
+    private MovieDTO _movie;
+    private HttpClient _client;
+    private MudDataGrid<MovieDTO> mygrid = new MudDataGrid<MovieDTO>();
+
+    private DialogOptions _options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true};
+
+    [Parameter] public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
+    [Parameter] public bool Loading { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        _movie = null;
+    }
+
+    private bool FilterFunc1(MovieDTO movie) => FilterFunc(movie, _searchString1);
+    private bool FilterFunc(MovieDTO movie, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (movie.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true; 
+        if (movie.ID.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private void OpenCreateDialog()
+    {
+        DialogService.Show<CreateDialog>("Add New Movie", _options);
+    }
+
+    private void OpenUpdateDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Movie", _movie);
+
+        DialogService.Show<UpdateDialog>("Update Movie Details", parameters, _options);
+    }
+
+    private void OpenDeleteDialog(MovieDTO movieDTO)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Movie", movieDTO);
+
+        var response = DialogService.Show<DeleteDialog>("Delete Movie", parameters, _options);
+
+        if (response.Result.Result.Data != null)
+        {
+            Movies.Remove(movieDTO);
+        }
+    }
+
+    private async void SelectedItemChanged(MovieDTO item)
+    {
+        _movie = item;
+    }
+
+    private string ColStyleFunc(MovieDTO x)
+    {
+        if (x.Equals(_movie))
+        {
+            return "background-color: #ff4081 !important;";
+        }
+
+        return "";
+    }
+
+    public async Task<List<MovieDTO>> GetMoviesAsync()
+    {
+        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
+    }
+
+    public async void OnServerReload() 
+    { 
+        _movie = null;
+        await mygrid.ReloadServerData();
+    }
+
+    void edit(MovieDTO movie) 
+    { 
+    
+    }
+
+    private async Task<GridData<MovieDTO>> ServerReload(GridState<MovieDTO> state)
+    {
+        return new GridData<MovieDTO>() { Items = await GetMoviesAsync() };
+    }
+}

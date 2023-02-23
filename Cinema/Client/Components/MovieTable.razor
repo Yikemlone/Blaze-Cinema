@@ -17,10 +17,11 @@
             }
 </style>
 
-<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.Medium">
 
     <MudGrid>
-        <MudTable Items="@Movies" 
+        <MudTable 
+            Items="@Movies" 
             Hover="true" 
             Breakpoint="Breakpoint.Sm" 
             @ref="mudTable" 
@@ -33,6 +34,8 @@
             Filter="new Func<MovieDTO,bool>(FilterFunc1)" 
             @bind-SelectedItem="selected"
             FixedHeader=true
+            Style="width: 100%;"
+            HorizontalScrollbar=true
             RowsPerPage="5">
             
             <ToolBarContent>
@@ -49,10 +52,10 @@
             </ToolBarContent>
 
             <HeaderContent>
-                <MudTh>Name</MudTh>
-                <MudTh>Age Rating</MudTh>
-                <MudTh>Duration</MudTh>
-                <MudTh>Trailer</MudTh>
+                <MudTh Style="width:auto">Name</MudTh>
+                <MudTh Style="width:auto">Age Rating</MudTh>
+                <MudTh Style="width:auto">Duration</MudTh>
+                <MudTh Style="width:auto">Trailer</MudTh>
                 <MudTh>Description</MudTh>
             </HeaderContent>
 
@@ -61,11 +64,15 @@
                 <MudTd DataLabel="AgeRating">@context.AgeRating</MudTd>
                 <MudTd DataLabel="Duration">@context.Duration</MudTd>
                 <MudTd DataLabel="Trailer">@context.Trailer</MudTd>
-                <MudTd DataLabel="Description" Style="width: 550px">@context.Description</MudTd>
+                <MudTd DataLabel="Description">
+                    <div style="overflow-x: auto; white-space: nowrap;">
+                        @context.Description
+                    </div>
+                </MudTd>
             </RowTemplate>
 
             <PagerContent >
-                <MudTablePager PageSizeOptions="new int[] { 5, 10, 20, int.MaxValue }" HorizontalAlignment="HorizontalAlignment.Center"/>
+                <MudTablePager PageSizeOptions="new int[] { 5, 10, 20, int.MaxValue }" oninput="RowSizeChange" HorizontalAlignment="HorizontalAlignment.Center"/>
             </PagerContent>
 
         </MudTable>
@@ -78,7 +85,7 @@
     private MovieDTO selected = null;
     private int selectedRowNumber = -1;
     private MudTable<MovieDTO>? mudTable;
-    private List<string> clickedEvents = new();
+
     private bool FilterFunc1(MovieDTO movie) => FilterFunc(movie, searchString1);
     private bool _buttonDisabled = true;
 
@@ -89,24 +96,22 @@
 
     private void RowClickEvent(TableRowClickEventArgs<MovieDTO> tableRowClickEventArgs)
     {
-        clickedEvents.Add("Row has been clicked");
-        StateHasChanged();
+        selected = tableRowClickEventArgs.Item;
+
+        if (selected != null)
+        {
+            _buttonDisabled = false;
+        }
+        else
+        {
+            _buttonDisabled = true;
+        }
     }
 
     private string SelectedRowClassFunc(MovieDTO element, int rowNumber)
     {
-        if (selectedRowNumber == rowNumber)
+        if (selected != null && selected.Equals(element))
         {
-            selectedRowNumber = -1;
-            _buttonDisabled = true;
-            clickedEvents.Add("Selected Row: None");
-            return string.Empty;
-        }
-        else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
-        {
-            selectedRowNumber = rowNumber;
-            _buttonDisabled = false;
-            clickedEvents.Add($"Selected Row: {rowNumber}");
             return "selected";
         }
         else
@@ -134,7 +139,7 @@
     private void OpenUpdateDialog()
     {
         var parameters = new DialogParameters();
-        parameters.Add("Movie", Movies[selectedRowNumber]);
+        parameters.Add("Movie", selected);
 
         DialogService.Show<UpdateDialog>("Update Movie Details", parameters, _options);
     }
@@ -142,7 +147,7 @@
     private void OpenDeleteDialog()
     {
         var parameters = new DialogParameters();
-        parameters.Add("Movie", Movies[selectedRowNumber]);
+        parameters.Add("Movie", selected);
 
         DialogService.Show<DeleteDialog>("Delete Movie", parameters, _options);
     }

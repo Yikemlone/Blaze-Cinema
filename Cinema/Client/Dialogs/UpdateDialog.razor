@@ -7,12 +7,19 @@
         <MudPaper>
             <MudForm>
                 <MudStack Row=true>
-                    <MudTextField T="string" Label="Name" Variant="Variant.Filled" @bind-Movie=Movie.Name Value=@Movie.Name> </MudTextField>
-                    <MudTextField T="string" Label="Age Rating" Variant="Variant.Filled" @bind-Movie=Movie.AgeRating Value=@Movie.AgeRating></MudTextField>
-                    <MudTextField T="int" Label="Duration" Variant="Variant.Filled" @bind-Movie=@Movie.Duration Value=@Movie.Duration></MudTextField>
+                    <MudTextField T="string" Label="Name" Variant="Variant.Filled" @bind-Value=Movie.Name> </MudTextField>
+                    <MudSelect @bind-Value="Movie.AgeRating" Required RequiredError="You must select a Position!!!">
+                        <MudSelectItem Value="@("G")">  G </MudSelectItem>
+                        <MudSelectItem Value="@("PG")"> PG </MudSelectItem>
+                        <MudSelectItem Value="@("12A")"> 12A </MudSelectItem>
+                        <MudSelectItem Value="@("15A")"> 15A </MudSelectItem>
+                        <MudSelectItem Value="@("16")"> 16 </MudSelectItem>
+                        <MudSelectItem Value="@("18")"> 18 </MudSelectItem>
+                    </MudSelect>
+                    <MudTextField T="int" Label="Duration" Variant="Variant.Filled" @bind-Value=@Movie.Duration></MudTextField>
                 </MudStack>
                 <MudStack Row=true>
-                    <MudTextField T="string" Label="Description" Variant="Variant.Filled" @bind-Movie=Movie.Description Value=@Movie.Description Lines="5"></MudTextField>
+                    <MudTextField T="string" Label="Description" Variant="Variant.Filled" @bind-Value=Movie.Description Lines="5"></MudTextField>
                 </MudStack>
             </MudForm>
         </MudPaper>
@@ -27,7 +34,7 @@
 
 
 @code {
-    private const string API_URL = "api/movie";
+    private const string API_URL = "api/admin";
     private HttpClient _client;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
@@ -47,6 +54,8 @@
             config.VisibleStateDuration = 1000;
             config.Icon = @Icons.Material.Outlined.Check;
         });
+
+        await UpdateMovieModel();
 
         MudDialog.Close(DialogResult.Ok(true));
     }
