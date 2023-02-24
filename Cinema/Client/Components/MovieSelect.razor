@@ -1,18 +1,21 @@
 ﻿@using Cinema.Shared.DTO
 
-<MudSelect T="string" Variant="Variant.Outlined" Label="Movies">
-   @foreach(var movie in Movies) 
-   {
-        <MudSelectItem Value="@(movie.Name)">@(movie.Name)</MudSelectItem>
-   }
-</MudSelect>
 
-<MudSelect T="string" Variant="Variant.Outlined" Label="Movies">
-    @foreach (var movie in Movies)
-    {
-        <MudSelectItem Value="@(movie.Name)">@(movie.Name)</MudSelectItem>
-    }
-</MudSelect>
+<MudStack Row=true Spacing="10">
+    <MudSelect T="string" Variant="Variant.Outlined" Label="Movies" Style="width 100%">
+       @foreach(var movie in Movies) 
+       {
+            <MudSelectItem Value="@(movie.Name)">@(movie.Name)</MudSelectItem>
+       }
+    </MudSelect>
+
+    <MudSelect T="string" Variant="Variant.Outlined" Label="Movies" Style="width 100%">
+        @foreach (var movie in Movies)
+        {
+            <MudSelectItem Value="@(movie.Name)">@(movie.Name)</MudSelectItem>
+        }
+    </MudSelect>
+</MudStack>
 
 @code {
     [Parameter]
