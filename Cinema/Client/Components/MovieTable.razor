@@ -217,7 +217,7 @@
     }
 
 
-    // Populting Table
+    // Server Reload Data
     protected async Task<TableData<MovieDTO>> ServerReload(TableState state)
     {
         IEnumerable<MovieDTO> updatedMovies = await GetMoviesAsync();
