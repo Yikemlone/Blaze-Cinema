@@ -5,40 +5,45 @@
 
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
 
-@*    <MudItem xs="12" sm="6" md="4">
-        <MovieSelect Movies="@Movies"/>
-    </MudItem>*@
+    <MudPaper Class="pa-5 ma-2" Elevation="2">
+        <MudItem xs="12" sm="6" md="4">
+            <MovieSelect Movies="@Movies"/>
+        </MudItem>
+    </MudPaper>
 
-    <MudGrid Spacing="3" Justify="Justify.Center">
-        @if (Movies.Count != 0)
-        {
-            @foreach(var movie in Movies)
+    <MudPaper Class="pa-10 ma-2" Elevation="2">
+        <MudGrid Spacing="3" Justify="Justify.Center">
+            @if (Movies.Count != 0)
             {
-                <MudItem xs="8" sm="6" md="3">
-                    <MovieThumbnail MovieID=@(movie.ID) />
-                </MudItem>
-            }
-        } else 
-        {
-            @for (var i = 0; i < 10; i++)
+                @foreach(var movie in Movies)
+                {
+                    <MudItem xs="8" sm="6" md="3">
+                        <MovieThumbnail MovieID=@(movie.ID) />
+                    </MudItem>
+                }
+            } 
+            else 
             {
-                <MudItem xs="8" sm="6" md="3">
-                    <MudCard>
-                        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px"/>
-                        <MudCardContent>
-                            <MudSkeleton Width="30%" Height="42px;" />
-                            <MudSkeleton Width="80%" />
-                            <MudSkeleton Width="100%" />
-                        </MudCardContent>
-                        <MudCardActions>
-                            <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
-                            <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
-                        </MudCardActions>
-                    </MudCard>
-                </MudItem>
+                @for (var i = 0; i < 10; i++)
+                {
+                    <MudItem xs="8" sm="6" md="3">
+                        <MudCard>
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px"/>
+                            <MudCardContent>
+                                <MudSkeleton Width="30%" Height="42px;" />
+                                <MudSkeleton Width="80%" />
+                                <MudSkeleton Width="100%" />
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+                                <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
             }
-        }
-    </MudGrid>
+        </MudGrid>
+    </MudPaper>
 </MudContainer>
 
 @code

@@ -45,8 +45,7 @@
     private HttpClient _client;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [CascadingParameter] List<MovieDTO> Movies { get; set; }
-    [Parameter] public MovieDTO Movie { get; set; } // Bind this value to the text fields
+    [Parameter] public MovieDTO Movie { get; set; }
     [Parameter] public MudTable<MovieDTO> MudTable { get; set; } 
 
     protected override async Task OnInitializedAsync()
@@ -56,6 +55,8 @@
 
     async void Close() 
     { 
+        await UpdateMovieModel();
+
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
         Snackbar.Add("Movie Updated", Severity.Success, config =>
@@ -63,8 +64,6 @@
             config.VisibleStateDuration = 1000;
             config.Icon = @Icons.Material.Outlined.Check;
         });
-
-        await UpdateMovieModel();
 
         MudDialog.Close(DialogResult.Ok(true));
     }

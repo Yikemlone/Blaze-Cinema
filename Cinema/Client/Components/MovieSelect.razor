@@ -1,9 +1,17 @@
 ﻿@using Cinema.Shared.DTO
 
-<MudSelect @bind-Value="@Movies" Variant="Variant.Outlined" Label="Movies">
-   @foreach(var movie in Movies) {
+<MudSelect T="string" Variant="Variant.Outlined" Label="Movies">
+   @foreach(var movie in Movies) 
+   {
         <MudSelectItem Value="@(movie.Name)">@(movie.Name)</MudSelectItem>
    }
+</MudSelect>
+
+<MudSelect T="string" Variant="Variant.Outlined" Label="Movies">
+    @foreach (var movie in Movies)
+    {
+        <MudSelectItem Value="@(movie.Name)">@(movie.Name)</MudSelectItem>
+    }
 </MudSelect>
 
 @code {

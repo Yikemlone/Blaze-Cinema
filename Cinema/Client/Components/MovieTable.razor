@@ -178,7 +178,10 @@
     // Dialogs
     private void OpenCreateDialog()
     {
-        DialogService.Show<CreateMovieDialog>("Create New Movie", _dialogOptions);
+        var parameters = new DialogParameters();
+        parameters.Add("MudTable", _mudTable);
+
+        DialogService.Show<CreateMovieDialog>("Create New Movie", parameters, _dialogOptions);
     }
 
     private void OpenUpdateDialog()
@@ -194,6 +197,7 @@
     {
         var parameters = new DialogParameters();
         parameters.Add("Movie", _selected);
+        parameters.Add("MudTable", _mudTable);
 
         DialogService.Show<DeleteMovieDialog>("Delete Movie", parameters, new DialogOptions() 
         { 

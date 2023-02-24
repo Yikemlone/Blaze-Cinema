@@ -14,10 +14,11 @@
 
 @code {
     private const string API_URL = "api/admin";
-    private HttpClient _client;
+    private HttpClient? _client;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MovieDTO Movie { get; set; }
+    [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -26,15 +27,15 @@
 
     public async Task Close()
     {
-        Snackbar.Configuration.SnackbarVariant = Variant.Outlined;
+        await DeleteMovieAsync();
+
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
         Snackbar.Add("Movie Deleted", Severity.Success, config =>
         {
             config.VisibleStateDuration = 1000;
             config.Icon = @Icons.Material.Outlined.Check;
         });
-
-        await DeleteMovieAsync();
 
         MudDialog.Close(DialogResult.Ok(true));
     }
@@ -47,6 +48,7 @@
     public async Task DeleteMovieAsync()
     {
         await _client.PostAsJsonAsync<int>(API_URL + $"/delete/{Movie.ID}", Movie.ID);
+        await MudTable.ReloadServerData();
     }
 
 }
