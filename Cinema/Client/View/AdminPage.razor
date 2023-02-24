@@ -1,0 +1,32 @@
+﻿@page "/admin"
+@using Cinema.Shared.DTO
+
+<PageTitle>Admin Page</PageTitle>
+
+<MudPaper Class="pa-3 ma-2" Elevation="1">
+    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+</MudPaper>
+
+<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
+    <MudGrid Justify="Justify.Center" Spacing="5">
+
+@*        <MudItem xs="12">
+            <MudText Typo="Typo.h3"> Welcome @_name </MudText>
+        </MudItem>
+*@
+        <MudItem xs="12">
+            <MovieTable/>
+        </MudItem>
+
+    </MudGrid> 
+</MudPaper>
+
+@code {
+    private string _name = "Mikey";
+
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
+        new BreadcrumbItem("Admin", href: "/admin", icon: Icons.Material.Filled.Lock)
+    };
+}

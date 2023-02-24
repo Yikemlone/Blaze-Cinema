@@ -1,6 +1,9 @@
 using Cinema.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
+using MudBlazor.Services;
+using Cinema.Server.Services.Movies;
+using Cinema.Server.Services.Employees;
 
 namespace Cinema
 {
@@ -14,11 +17,13 @@ namespace Cinema
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
+
             // NOTE: We can add auth checking here that uses the Identity Package.
 
             // NOTE: This is called dependency 
-            //builder.Services.AddScoped<IMovieService, MovieService>();
-
+            builder.Services.AddScoped<IMovieService, MovieService>();
+            builder.Services.AddScoped<IManagerService, ManagerService>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
 
             //Connecting to the database
             builder.Services.AddDbContext<CinemaDBContext>(options =>

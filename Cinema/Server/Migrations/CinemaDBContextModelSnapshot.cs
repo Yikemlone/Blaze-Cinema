@@ -37,9 +37,6 @@ namespace Cinema.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("ID");
 
                     b.HasIndex("CustomerID");
@@ -167,8 +164,8 @@ namespace Cinema.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("MmovieID")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("MovieID")
                         .HasColumnType("int");
@@ -193,16 +190,10 @@ namespace Cinema.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<bool>("Booked")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("BookingID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("DisabiltySeat")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ScreeningID")
+                    b.Property<int?>("RoomID")
                         .HasColumnType("int");
 
                     b.Property<string>("SeatNumber")
@@ -211,11 +202,40 @@ namespace Cinema.Server.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("RoomID");
+
+                    b.ToTable("Seats");
+                });
+
+            modelBuilder.Entity("Cinema.Server.Models.SeatScreening", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("Booked")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("BookingID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScreeningID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeatID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
                     b.HasIndex("BookingID");
 
                     b.HasIndex("ScreeningID");
 
-                    b.ToTable("Seats");
+                    b.HasIndex("SeatID");
+
+                    b.ToTable("SeatScreenings");
                 });
 
             modelBuilder.Entity("Cinema.Server.Models.TicketType", b =>
@@ -226,9 +246,6 @@ namespace Cinema.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int?>("BookingID")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -238,9 +255,30 @@ namespace Cinema.Server.Migrations
 
                     b.HasKey("ID");
 
+                    b.ToTable("TicketTypes");
+                });
+
+            modelBuilder.Entity("Cinema.Server.Models.TicketTypeBooking", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("BookingID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TicketTypeID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
                     b.HasIndex("BookingID");
 
-                    b.ToTable("TicketType");
+                    b.HasIndex("TicketTypeID");
+
+                    b.ToTable("TicketTypesBookings");
                 });
 
             modelBuilder.Entity("Cinema.Server.Models.Booking", b =>
@@ -273,11 +311,18 @@ namespace Cinema.Server.Migrations
 
             modelBuilder.Entity("Cinema.Server.Models.Seat", b =>
                 {
-                    b.HasOne("Cinema.Server.Models.Booking", "Booking")
+                    b.HasOne("Cinema.Server.Models.Room", "Room")
                         .WithMany("Seats")
-                        .HasForeignKey("BookingID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoomID");
+
+                    b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("Cinema.Server.Models.SeatScreening", b =>
+                {
+                    b.HasOne("Cinema.Server.Models.Booking", "Booking")
+                        .WithMany("SeatScreenings")
+                        .HasForeignKey("BookingID");
 
                     b.HasOne("Cinema.Server.Models.Screening", "Screening")
                         .WithMany()
@@ -285,23 +330,43 @@ namespace Cinema.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Cinema.Server.Models.Seat", "Seat")
+                        .WithMany("SeatScreenings")
+                        .HasForeignKey("SeatID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Booking");
 
                     b.Navigation("Screening");
+
+                    b.Navigation("Seat");
                 });
 
-            modelBuilder.Entity("Cinema.Server.Models.TicketType", b =>
+            modelBuilder.Entity("Cinema.Server.Models.TicketTypeBooking", b =>
                 {
-                    b.HasOne("Cinema.Server.Models.Booking", null)
-                        .WithMany("TicketTypes")
-                        .HasForeignKey("BookingID");
+                    b.HasOne("Cinema.Server.Models.Booking", "Booking")
+                        .WithMany("TicketTypeBookings")
+                        .HasForeignKey("BookingID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Server.Models.TicketType", "TicketType")
+                        .WithMany("TicketTypeBookings")
+                        .HasForeignKey("TicketTypeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("TicketType");
                 });
 
             modelBuilder.Entity("Cinema.Server.Models.Booking", b =>
                 {
-                    b.Navigation("Seats");
+                    b.Navigation("SeatScreenings");
 
-                    b.Navigation("TicketTypes");
+                    b.Navigation("TicketTypeBookings");
                 });
 
             modelBuilder.Entity("Cinema.Server.Models.Customer", b =>
@@ -317,6 +382,18 @@ namespace Cinema.Server.Migrations
             modelBuilder.Entity("Cinema.Server.Models.Room", b =>
                 {
                     b.Navigation("Screenings");
+
+                    b.Navigation("Seats");
+                });
+
+            modelBuilder.Entity("Cinema.Server.Models.Seat", b =>
+                {
+                    b.Navigation("SeatScreenings");
+                });
+
+            modelBuilder.Entity("Cinema.Server.Models.TicketType", b =>
+                {
+                    b.Navigation("TicketTypeBookings");
                 });
 #pragma warning restore 612, 618
         }

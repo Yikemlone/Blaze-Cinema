@@ -1,17 +1,46 @@
 ﻿@inherits LayoutComponentBase
+@inject ISnackbar Snackbar
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+<MudLayout>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+    <MudAppBar Elevation="1" Color="Color.Secondary">
+        <MudIconButton aria-label="Toggle light/dark theme" Icon="@GetThemeIcon()" Color="MudBlazor.Color.Inherit" OnClick="DarkMode"/>
+        <MudSpacer />
+        <NavMenu></NavMenu>
+    </MudAppBar>
+
+    <MudMainContent>    
+        <MudContainer MaxWidth="MaxWidth.Large">
+                @Body
+        </MudContainer>
+    </MudMainContent>
+
+</MudLayout>
+
+
+@code{
+    private MudTheme _theme = new();
+    private bool _isDarkMode = true;
+
+    private void DarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
+    }
+
+    private string GetThemeIcon()
+    {
+        if (_isDarkMode)
+        {
+            return Icons.Material.Outlined.LightMode;
+        }
+        else
+        {
+            return Icons.Material.Outlined.DarkMode;
+        }
+    }
+}
+

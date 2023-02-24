@@ -7,5 +7,6 @@
         public int SeatQty { get; set; }
 
         public List<Screening>? Screenings { get; set; }
+        public List<Seat> Seats { get; set; }
     }
 }

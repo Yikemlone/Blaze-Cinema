@@ -9,9 +9,11 @@ namespace Cinema.Shared.DTO
     public class SeatDTO
     {
         public int ID { get; set; }
-        public string SeatNumber { get; set; } // We may need this becuase of seat row and colum
+        public string SeatNumber { get; set; } 
         public bool Booked { get; set; }
         public bool DisabiltySeat { get; set; }
+
+        public BookingDTO Booking { get; set; }
         public RoomDTO Room { get; set; }
     }
 }

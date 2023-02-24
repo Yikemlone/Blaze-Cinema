@@ -1,0 +1,10 @@
+﻿@page "/movie/{ID:int}"
+
+<MudPaper Class="pa-10 ma-2" Elevation="2">
+    <MovieDetails MovieID=@ID/>
+</MudPaper> 
+
+@code
+{
+    [Parameter] public int ID { get; set; }
+}
