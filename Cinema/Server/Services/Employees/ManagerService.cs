@@ -8,12 +8,12 @@ namespace Cinema.Server.Services.Employees
     {
         private readonly CinemaDBContext _context;
 
-        public ManagerService(CinemaDBContext context) 
+        public ManagerService(CinemaDBContext context)
         {
             _context = context;
         }
 
-       
+
 
         public async Task DeleteScreeningAsync(int screeningID)
         {
@@ -30,10 +30,7 @@ namespace Cinema.Server.Services.Employees
             throw new NotImplementedException();
         }
 
-        public async Task UpdateScreeningAsync(ScreeningDTO screening)
-        {
-            throw new NotImplementedException();
-        }
+
 
         //Get all employees
         public async Task<List<EmployeeDTO>> GetEmployeesAsync()
@@ -81,11 +78,31 @@ namespace Cinema.Server.Services.Employees
                 DateTime = screening.DateTime,
                 MovieID = screening.MovieID,
                 RoomID = screening.RoomID
-              
+
             };
 
             await _context.AddAsync(newScreening);
             await _context.SaveChangesAsync();
+        }
+        //update movie screening
+        public async Task UpdateMovieScreeningAsync(ScreeningDTO screening)
+        {
+            var oldScreening = _context.Screenings
+             .Select(m => m)
+             .Where(m => m.ID == screening.ID)
+             .SingleOrDefault();
+
+            if (oldScreening == null) return;
+
+            oldScreening.ID = screening.ID;
+            oldScreening.DateTime = screening.DateTime;
+            oldScreening.MovieID = screening.MovieID;
+            oldScreening.RoomID = screening.RoomID;
+
+
+
+            await _context.SaveChangesAsync();
+
         }
     }
 }

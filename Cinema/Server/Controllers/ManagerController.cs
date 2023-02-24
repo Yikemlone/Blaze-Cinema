@@ -42,5 +42,13 @@ namespace Cinema.Server.Controllers
         {
             await _managerService.CreateMovieScreeningAsync(screening);
         }
+
+        // update moviescreening
+        [HttpPost]
+        [Route("update")]
+        public async Task UpdateScreening([FromBody] ScreeningDTO screening)
+        {
+            await _managerService.UpdateMovieScreeningAsync(screening);
+        }
     }
 }
