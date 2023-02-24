@@ -28,7 +28,7 @@
         @bind-SelectedItem="_selected"
         RowClassFunc="@SelectedRowClassFunc" 
         OnRowClick="RowClickEvent" 
-        Loading=@_loading
+        Loading="@(_movies == null ? true : false)"
         LoadingProgressColor="Color.Secondary"
         Hover="true" 
         Dense="true"
@@ -118,15 +118,14 @@
 
     private string _searchString;
     private bool _buttonDisabled;
-    private bool _loading { get; set; }
+    private int _totalItems;
+    private int[] _pageSizeOptions;
 
     private HttpClient _client;
     private MovieDTO? _selected;
     private MudTable<MovieDTO>? _mudTable;
     private DialogOptions _dialogOptions;
     private IEnumerable<MovieDTO>? _movies;
-    private int _totalItems;
-    private int[] _pageSizeOptions;
 
     // Set up
     public MovieTable()
