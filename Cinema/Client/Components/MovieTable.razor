@@ -21,30 +21,27 @@
 <MudGrid>
     <MudTable 
         Items="@_movies" 
-        Hover="true" 
+        T="MovieDTO" 
         Breakpoint="Breakpoint.Sm" 
+        Style="width: 100%"
         @ref="_mudTable" 
+        @bind-SelectedItem="_selected"
         RowClassFunc="@SelectedRowClassFunc" 
         OnRowClick="RowClickEvent" 
-        T="MovieDTO" 
         Loading=@_loading
         LoadingProgressColor="Color.Secondary"
+        Hover="true" 
         Dense="true"
         Bordered="true"
-        Filter="new Func<MovieDTO,bool>(FilterFunc1)" 
-        @bind-SelectedItem="_selected"
         FixedHeader="true"
-        Style="width: 100%;"
         HorizontalScrollbar="true"
-        RowsPerPage="5"
-        ServerData="ServerReload"
-        TotalItems=@(_movies != null ? _movies.Count : 0)>
-            
+        ServerData="ServerReload">
+        
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Movie List</MudText>
+            <MudText Typo="Typo.h6">Edit Movie Listings</MudText>
             <MudSpacer />
 
-            <MudTextField @bind-Value="_searchString1" Placeholder="Search" Adornment="Adornment.Start" 
+            <MudTextField T="string" Placeholder="Search" Adornment="Adornment.Start" ValueChanged="@(s=>OnSearch(s))" 
                 AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
             </MudTextField>
 
@@ -63,13 +60,24 @@
         </ToolBarContent>
 
         <HeaderContent>
-            <MudTh>Name</MudTh>
             <MudTh>
-                <div style="white-space: nowrap;">
-                    Age Rating
-                </div>
+                <MudTableSortLabel SortLabel="name" T="MovieDTO">
+                    Name
+                </MudTableSortLabel>
             </MudTh>
-            <MudTh>Duration</MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="age_rating" T="MovieDTO">
+                    <div style="white-space: nowrap;">
+                        Age Rating
+                    </div>
+                 </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="duration" T="MovieDTO">
+                    Duration
+                </MudTableSortLabel>
+            </MudTh>
+
             <MudTh>Trailer</MudTh>
             <MudTh>Description</MudTh>
         </HeaderContent>
@@ -90,7 +98,15 @@
             </MudTd>
         </RowTemplate>
 
-        <PagerContent >
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+
+        <PagerContent>
             <MudTablePager PageSizeOptions="@_pageSizeOptions" HorizontalAlignment="HorizontalAlignment.Center"/>
         </PagerContent>
 
@@ -100,7 +116,7 @@
 @code {
     private const string API_URL = "api/movie";
 
-    private string _searchString1;
+    private string _searchString;
     private bool _buttonDisabled;
     private bool _loading { get; set; }
 
@@ -108,16 +124,16 @@
     private MovieDTO? _selected;
     private MudTable<MovieDTO>? _mudTable;
     private DialogOptions _dialogOptions;
-    private List<MovieDTO>? _movies;
+    private IEnumerable<MovieDTO>? _movies;
+    private int _totalItems;
     private int[] _pageSizeOptions;
-
 
     // Set up
     public MovieTable()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _buttonDisabled = true;
-        _searchString1 = "";
+        _searchString = "";
         _pageSizeOptions = new int[] { 5, 10, 20 };
         _dialogOptions = new DialogOptions 
         { 
@@ -161,17 +177,10 @@
         }
     }
 
-    private bool FilterFunc1(MovieDTO movie) => FilterFunc(movie, _searchString1);
-
-    private bool FilterFunc(MovieDTO movie, string searchString)
+    private void OnSearch(string text)
     {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-        if (movie.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true; 
-        if (movie.ID.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        return false;
+        _searchString = text;
+        _mudTable.ReloadServerData();
     }
 
 
@@ -209,10 +218,39 @@
 
 
     // Populting Table
-    protected async Task<TableData<MovieDTO>> ServerReload(TableState movies)
+    protected async Task<TableData<MovieDTO>> ServerReload(TableState state)
     {
-        var updatedMovies = await GetMoviesAsync();
-        return new TableData<MovieDTO>() { TotalItems = updatedMovies.Count , Items = updatedMovies};
+        IEnumerable<MovieDTO> updatedMovies = await GetMoviesAsync();
+
+        updatedMovies = updatedMovies.Where(movie =>
+        {
+            if (string.IsNullOrWhiteSpace(_searchString))
+                return true;
+            if (movie.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (movie.ID.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        }).ToArray();
+
+        _totalItems = updatedMovies.Count();
+        Console.WriteLine(state.PageSize);
+
+        switch (state.SortLabel)
+        {
+            case "name":
+                updatedMovies = updatedMovies.OrderByDirection(state.SortDirection, m => m.Name);
+                break;
+            case "age_rating":
+                updatedMovies = updatedMovies.OrderByDirection(state.SortDirection, m => m.AgeRating);
+                break;
+            case "duration":
+                updatedMovies = updatedMovies.OrderByDirection(state.SortDirection, m => m.Duration);
+                break;
+        }
+
+        _movies = updatedMovies.Take(state.PageSize);
+        return new TableData<MovieDTO>() { TotalItems = _totalItems, Items = _movies };
     }
 
     public async Task<List<MovieDTO>> GetMoviesAsync()
