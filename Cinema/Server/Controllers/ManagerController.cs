@@ -50,5 +50,13 @@ namespace Cinema.Server.Controllers
         {
             await _managerService.UpdateMovieScreeningAsync(screening);
         }
+
+        // delete moviescreening
+        [HttpPost]
+        [Route("delete/{screeningID}")]
+        public async Task DeleteMovieScreening(int screeningID)
+        {
+            await _managerService.DeleteMovieScreeningAsync(screeningID);
+        }
     }
 }

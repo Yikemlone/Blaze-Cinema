@@ -104,5 +104,15 @@ namespace Cinema.Server.Services.Employees
             await _context.SaveChangesAsync();
 
         }
+        // delete movie screening
+        public async Task DeleteMovieScreeningAsync(int screeningID)
+        {
+            var screening = _context.Screenings.FirstOrDefault(x => x.ID == screeningID);
+            if (screening != null)
+            {
+                _context.Screenings.Remove(screening);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
