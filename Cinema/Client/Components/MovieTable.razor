@@ -1,5 +1,6 @@
 ﻿@using Cinema.Client.Dialogs.AdminDialogs
 @using Cinema.Shared.DTO
+@inherits ComponentBase
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
@@ -247,8 +248,8 @@
                 updatedMovies = updatedMovies.OrderByDirection(state.SortDirection, m => m.Duration);
                 break;
         }
-
-        _movies = updatedMovies.Take(state.PageSize);
+    
+        _movies = updatedMovies.Skip(state.Page * state.PageSize).Take(state.PageSize);
         return new TableData<MovieDTO>() { TotalItems = _totalItems, Items = _movies };
     }
 
