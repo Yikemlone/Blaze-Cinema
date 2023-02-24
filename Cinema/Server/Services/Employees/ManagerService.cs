@@ -1,4 +1,5 @@
-﻿using Cinema.Shared.DTO;
+﻿using Cinema.Server.Models;
+using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Services.Employees
@@ -71,10 +72,20 @@ namespace Cinema.Server.Services.Employees
 
             return employee;
         }
-
-        public Task<ScreeningDTO> CreateMovieScreeningAsync(ScreeningDTO screening)
+        // create screening
+        public async Task CreateMovieScreeningAsync(ScreeningDTO screening)
         {
-            throw new NotImplementedException();
+            var newScreening = new Screening()
+            {
+                ID = screening.ID,
+                DateTime = screening.DateTime,
+                MovieID = screening.MovieID,
+                RoomID = screening.RoomID
+              
+            };
+
+            await _context.AddAsync(newScreening);
+            await _context.SaveChangesAsync();
         }
     }
 }

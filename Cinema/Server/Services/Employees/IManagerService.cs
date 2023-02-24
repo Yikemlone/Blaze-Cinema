@@ -6,7 +6,7 @@ namespace Cinema.Server.Services.Employees
     {
         // Manager Functions
         // Limit with authorization
-        public Task<ScreeningDTO> CreateMovieScreeningAsync(ScreeningDTO screening);
+        public Task CreateMovieScreeningAsync(ScreeningDTO screening);
         public Task UpdateScreeningAsync(ScreeningDTO screening);
         public Task DeleteScreeningAsync(int screeningID);
 

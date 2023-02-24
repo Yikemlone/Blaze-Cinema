@@ -52,8 +52,8 @@ namespace Cinema.Server.Services.Movies
                 .Select(m => new ScreeningDTO()
                 {
                     ID = m.ID,
-                    Movie = m.MovieID,
-                    Room = m.RoomID,
+                    MovieID = m.MovieID,
+                    RoomID = m.RoomID,
                     DateTime = m.DateTime
                    
 
@@ -69,8 +69,8 @@ namespace Cinema.Server.Services.Movies
             .Select(m => new ScreeningDTO()
             {
                 ID = m.ID,
-                Movie = m.MovieID,
-                Room = m.RoomID,
+                MovieID = m.MovieID,
+                RoomID = m.RoomID,
                 DateTime = m.DateTime
 
             })

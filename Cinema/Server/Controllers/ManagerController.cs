@@ -34,5 +34,13 @@ namespace Cinema.Server.Controllers
         {
             return await _managerService.GetEmployeeAsync(employeeID);
         }
+
+        // Create moviescreening
+        [HttpPost]
+        [Route("create")]
+        public async Task CreateMovieScreening([FromBody] ScreeningDTO screening)
+        {
+            await _managerService.CreateMovieScreeningAsync(screening);
+        }
     }
 }
