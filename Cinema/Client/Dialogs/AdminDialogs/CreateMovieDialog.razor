@@ -55,7 +55,7 @@
     {
         await AddMovieModel();
 
-        Snackbar.Configuration.SnackbarVariant = Variant.Outlined;
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
         Snackbar.Add("Movie Added", Severity.Success, config =>
         {
