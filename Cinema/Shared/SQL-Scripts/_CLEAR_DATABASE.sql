@@ -1,3 +1,3 @@
 ﻿USE CinemaDB;
 
-TRUNCATE TABLE Seats;
+TRUNCATE TABLE Movies;
