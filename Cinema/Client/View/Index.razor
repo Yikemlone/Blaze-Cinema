@@ -1,15 +1,15 @@
 ﻿@page "/"
 @using Cinema.Shared.DTO
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject HttpClient Http
 
 <PageTitle>Blaze Cinema</PageTitle>
 
-<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+Hello
+@*<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
 
     <MudPaper Class="pa-5 ma-2" Elevation="2">
         <MudItem xs="12" sm="6" md="4">
-            <MovieSelect Movies="@Movies"/>
+            <MovieSelect Movies="@Movies" />
         </MudItem>
     </MudPaper>
 
@@ -17,20 +17,20 @@
         <MudGrid Spacing="3" Justify="Justify.Center">
             @if (Movies.Count != 0)
             {
-                @foreach(var movie in Movies)
+                @foreach (var movie in Movies)
                 {
                     <MudItem xs="8" sm="6" md="3">
                         <MovieThumbnail MovieID=@(movie.ID) />
                     </MudItem>
                 }
-            } 
-            else 
+            }
+            else
             {
                 @for (var i = 0; i < 10; i++)
                 {
                     <MudItem xs="8" sm="6" md="3">
                         <MudCard>
-                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px"/>
+                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
                             <MudCardContent>
                                 <MudSkeleton Width="30%" Height="42px;" />
                                 <MudSkeleton Width="80%" />
@@ -46,22 +46,16 @@
             }
         </MudGrid>
     </MudPaper>
-</MudContainer>
+</MudContainer>*@
 
 @code
 {
     private const string API_URL = "api/movie";
     public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
-    public List<ScreeningDTO> Screenings { get; set; }
+    //public List<ScreeningDTO> Screenings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
-        if (user != null && user.IsAuthenticated)
-        {
-            Console.WriteLine("Test");
-        }
-
         Movies = await GetMoviesAsync();
     }
 
@@ -70,8 +64,8 @@
         return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 
-    public async Task<List<ScreeningDTO>> GetScreeningsAsync()
-    {
-        return await Http.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
-    }
+    //public async Task<List<ScreeningDTO>> GetScreeningsAsync()
+    //{
+    //    return await Http.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
+    //}
 }

@@ -1,67 +1,85 @@
 ﻿@page "/manager"
 
-<PageTitle>Manager Page</PageTitle>
+<AuthorizeView Roles="Manager">
+    <Authorized>
+        @*
+        Manager Page
 
-<MudPaper Class="pa-3 ma-2" Elevation="1">
-    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
-</MudPaper>
+        A manager can perform many tasks.
 
-@*
-  Manager Page
+        Screening CRUD:
+        - Managers can Create film screenings
+        - Managers can Update film screenings
+        - Managers can Delete film screenings
 
-A manager can perform many tasks.
+        Decom a Room:
+        - This will return all the rooms
+        - This should cancel any screenings and bookings to this room
 
-Screening CRUD:
-- Managers can Create film screenings 
-- Managers can Update film screenings 
-- Managers can Delete film screenings 
+        Produce a weekly Report:
+        - Will produce a weekly report that will check all bookings, screenings seats booked
+        *@
 
-Decom a Room:
-- This will return all the rooms
-- This should cancel any screenings and bookings to this room
+        <PageTitle>Manager Page</PageTitle>
 
-Produce a weekly Report:
-- Will produce a weekly report that will check all bookings, screenings seats booked
-*@
+        <MudPaper Class="pa-3 ma-2" Elevation="1">
+            <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+        </MudPaper>
 
-<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-    <MudGrid Spacing="3" Justify="Justify.Center">
 
-        <MudItem xs="8" sm="6" md="3">
-            <MudCard>
-                <MudCardContent>
-                    <MudText>Create Screenings</MudText>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudIconButton Icon="@Icons.Material.Filled.Movie" Color="Color.Secondary"></MudIconButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
+        <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
+            <MudGrid Spacing="3" Justify="Justify.Center">
 
-        <MudItem xs="8" sm="6" md="3">
-            <MudCard>
-                <MudCardContent>
-                    <MudText>Create Weekly Report</MudText>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudIconButton Icon="@Icons.Material.Filled.Report" Color="Color.Secondary"></MudIconButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
+                <MudItem xs="8" sm="6" md="3">
+                    <MudCard>
+                        <MudCardContent>
+                            <MudText>Create Screenings</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.Movie" Color="Color.Secondary"></MudIconButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
 
-        <MudItem xs="8" sm="6" md="3">
-            <MudCard>
-                <MudCardContent>
-                    <MudText Typo="Typo.h5">Decomission Room</MudText>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudIconButton Icon="@Icons.Material.Filled.Handyman" Color="Color.Secondary"></MudIconButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
+                <MudItem xs="8" sm="6" md="3">
+                    <MudCard>
+                        <MudCardContent>
+                            <MudText>Create Weekly Report</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.Report" Color="Color.Secondary"></MudIconButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
 
-    </MudGrid>
-</MudPaper>
+                <MudItem xs="8" sm="6" md="3">
+                    <MudCard>
+                        <MudCardContent>
+                            <MudText Typo="Typo.h5">Decomission Room</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudIconButton Icon="@Icons.Material.Filled.Handyman" Color="Color.Secondary"></MudIconButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+
+            </MudGrid>
+        </MudPaper>
+
+    </Authorized>
+
+    <NotAuthorized>
+        @if (context.User.Identity?.IsAuthenticated != true)
+        {
+            <RedirectToLogin />
+        }
+        else
+        {
+            <p role="alert">You are not authorized to access this resource.</p>
+        }
+    </NotAuthorized>
+
+</AuthorizeView>
 
 @code {
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>

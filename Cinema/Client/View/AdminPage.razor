@@ -1,19 +1,34 @@
 ﻿@page "/admin"
 @using Cinema.Shared.DTO
 
-<PageTitle>Admin Page</PageTitle>
+<AuthorizeView Roles="Admin">
+        <Authorized>
+            <PageTitle>Admin Page</PageTitle>
 
-<MudPaper Class="pa-3 ma-2" Elevation="1">
-    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
-</MudPaper>
+            <MudPaper Class="pa-3 ma-2" Elevation="1">
+                <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+            </MudPaper>
 
-<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-    <MudGrid Justify="Justify.Center" Spacing="5">
-        <MudItem xs="12">
-            <MovieTable/>
-        </MudItem>
-    </MudGrid> 
-</MudPaper>
+            <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
+                <MudGrid Justify="Justify.Center" Spacing="5">
+                    <MudItem xs="12">
+                        <MovieTable />
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </Authorized>
+
+        <NotAuthorized>
+            @if (context.User.Identity?.IsAuthenticated != true)
+            {
+                <RedirectToLogin />
+            }
+            else
+            {
+                <p role="alert">You are not authorized to access this resource.</p>
+            }
+        </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private string _name = "Mikey";
