@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.ResponseCompression;
 using MudBlazor.Services;
 using Cinema.Server.Services.Movies;
 using Cinema.Server.Services.Employees;
+using Cinema.Server.Models;
+using Microsoft.AspNetCore.Authentication;
+using Duende.IdentityServer.EntityFramework.Options;
+using Microsoft.AspNetCore.Identity;
 
 namespace Cinema
 {
@@ -17,10 +21,7 @@ namespace Cinema
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-
-            // NOTE: We can add auth checking here that uses the Identity Package.
-
-            // NOTE: This is called dependency 
+            // NOTE: This is called dependency injection
             builder.Services.AddScoped<IMovieService, MovieService>();
             builder.Services.AddScoped<IManagerService, ManagerService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
@@ -29,6 +30,16 @@ namespace Cinema
             builder.Services.AddDbContext<CinemaDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"))
             );
+
+            // Setting up Identity Package
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<CinemaDBContext>();
+
+            builder.Services.AddIdentityServer()
+                .AddApiAuthorization<ApplicationUser, CinemaDBContext>();
+
+            builder.Services.AddAuthentication()
+                .AddIdentityServerJwt();
 
             var app = builder.Build();
 
@@ -51,6 +62,9 @@ namespace Cinema
 
             app.UseRouting();
 
+            app.UseIdentityServer();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapRazorPages();
             app.MapControllers();

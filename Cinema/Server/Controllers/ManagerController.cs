@@ -22,7 +22,6 @@ namespace Cinema.Server.Controllers
         [Route("employees")]
         public async Task<List<EmployeeDTO>> GetEmployees()
         {
-
             return await _managerService.GetEmployeesAsync();
         }
 

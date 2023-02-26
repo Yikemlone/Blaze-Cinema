@@ -1,5 +1,7 @@
 ﻿@page "/"
 @using Cinema.Shared.DTO
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient Http
 
 <PageTitle>Blaze Cinema</PageTitle>
 
@@ -49,23 +51,27 @@
 @code
 {
     private const string API_URL = "api/movie";
-    private HttpClient _client;
     public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
-    public List<ScreeningDTO> Screenings { get; set; } // This will used inside of the movie details page.
+    public List<ScreeningDTO> Screenings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
+        if (user != null && user.IsAuthenticated)
+        {
+            Console.WriteLine("Test");
+        }
+
         Movies = await GetMoviesAsync();
     }
 
     public async Task<List<MovieDTO>> GetMoviesAsync()
     {
-        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
+        return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 
     public async Task<List<ScreeningDTO>> GetScreeningsAsync()
     {
-        return await _client.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
+        return await Http.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
     }
 }

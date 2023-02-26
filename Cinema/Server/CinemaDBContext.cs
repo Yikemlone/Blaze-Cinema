@@ -1,10 +1,13 @@
 ﻿using Cinema.Server.Models;
+using Duende.IdentityServer.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System.Transactions;
 
 namespace Cinema.Server
 {
-    public class CinemaDBContext : DbContext
+    public class CinemaDBContext : ApiAuthorizationDbContext<ApplicationUser>
     {
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -17,9 +20,9 @@ namespace Cinema.Server
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<TicketTypeBooking> TicketTypesBookings { get; set; }
 
-        public CinemaDBContext(DbContextOptions options) : base(options)
+        public CinemaDBContext(DbContextOptions options, 
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
-
     }
 }

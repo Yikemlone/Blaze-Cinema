@@ -1,5 +1,6 @@
 ﻿@using Cinema.Shared.DTO
 @inject ISnackbar Snackbar
+@inject HttpClient Http
 
 <MudDialog>
     <DialogContent>
@@ -14,16 +15,10 @@
 
 @code {
     private const string API_URL = "api/admin";
-    private HttpClient? _client;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MovieDTO Movie { get; set; }
     [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-    }
 
     public async Task Close()
     {
@@ -47,7 +42,7 @@
 
     public async Task DeleteMovieAsync()
     {
-        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/{Movie.ID}", Movie.ID);
+        await Http.PostAsJsonAsync<int>(API_URL + $"/delete/{Movie.ID}", Movie.ID);
         await MudTable.ReloadServerData();
     }
 

@@ -25,8 +25,6 @@ namespace Cinema.Server.Controllers
             return await _movieService.GetMoviesAsync();
         }
 
-        // An example of getting a single movie from a GET request
-        // Use this for the single movie details page
         [HttpGet]
         [ResponseType(typeof(MovieDTO))]
         [Route("movies/{movieID}")]
@@ -51,8 +49,5 @@ namespace Cinema.Server.Controllers
         {
             return await _movieService.GetMovieScreeningAsync(movieID);
         }
-
-
-       
     }
 }
