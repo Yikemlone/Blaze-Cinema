@@ -1,10 +1,12 @@
 ﻿using Cinema.Server.Services.Employees;
 using Cinema.Server.Services.Movies;
 using Cinema.Shared.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("/api/[controller]")]
     public class AdminController

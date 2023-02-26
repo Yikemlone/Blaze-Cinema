@@ -1,11 +1,9 @@
 ﻿@page "/"
 @using Cinema.Shared.DTO
-@inject HttpClient Http
 
 <PageTitle>Blaze Cinema</PageTitle>
 
-Hello
-@*<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
 
     <MudPaper Class="pa-5 ma-2" Elevation="2">
         <MudItem xs="12" sm="6" md="4">
@@ -46,26 +44,28 @@ Hello
             }
         </MudGrid>
     </MudPaper>
-</MudContainer>*@
+</MudContainer>
 
 @code
 {
     private const string API_URL = "api/movie";
+    private HttpClient _client;
     public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
-    //public List<ScreeningDTO> Screenings { get; set; }
+    //public List<ScreeningDTO> Screenings { get; set; } // This will used inside of the movie details page.
 
     protected override async Task OnInitializedAsync()
     {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         Movies = await GetMoviesAsync();
     }
 
     public async Task<List<MovieDTO>> GetMoviesAsync()
     {
-        return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
+        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 
     //public async Task<List<ScreeningDTO>> GetScreeningsAsync()
     //{
-    //    return await Http.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
+    //    return await _client.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
     //}
 }
