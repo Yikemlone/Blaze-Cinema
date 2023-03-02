@@ -1,0 +1,72 @@
+﻿@page "/manager"
+
+<PageTitle>Manager Page</PageTitle>
+
+<MudPaper Class="pa-3 ma-2" Elevation="1">
+    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+</MudPaper>
+
+@*
+  Manager Page
+
+A manager can perform many tasks.
+
+Screening CRUD:
+- Managers can Create film screenings 
+- Managers can Update film screenings 
+- Managers can Delete film screenings 
+
+Decom a Room:
+- This will return all the rooms
+- This should cancel any screenings and bookings to this room
+
+Produce a weekly Report:
+- Will produce a weekly report that will check all bookings, screenings seats booked
+*@
+
+<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
+    <MudGrid Spacing="3" Justify="Justify.Center">
+
+        <MudItem xs="8" sm="6" md="3">
+            <MudCard>
+                <MudCardContent>
+                    <MudStack AlignItems="AlignItems.Center">
+                        <MudIconButton Size="Size.Large" Href="/manager/screenings" Icon="@Icons.Material.Filled.Movie" Color="Color.Secondary"></MudIconButton>
+                        <MudText Typo="Typo.caption">Create Screenings</MudText>
+                    </MudStack>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="8" sm="6" md="3">
+            <MudCard>
+                <MudCardContent>
+                    <MudStack AlignItems="AlignItems.Center">
+                        <MudIconButton Size="Size.Large" Href="/manager/report" Icon="@Icons.Material.Filled.Report" Color="Color.Secondary"></MudIconButton>
+                        <MudText Typo="Typo.caption">Weekly Report</MudText>
+                    </MudStack>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="8" sm="6" md="3">
+            <MudCard>
+                <MudCardContent>
+                    <MudStack AlignItems="AlignItems.Center">
+                        <MudIconButton Size="Size.Large" Href="/manager/decom" Icon="@Icons.Material.Filled.Handyman" Color="Color.Secondary"></MudIconButton>
+                        <MudText Typo="Typo.caption">Decomission Room</MudText>
+                    </MudStack>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+
+    </MudGrid>
+</MudPaper>
+
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
+        new BreadcrumbItem("Manager Dashboard", href: "/manager", icon: Icons.Material.Filled.Lock)
+    };
+}
