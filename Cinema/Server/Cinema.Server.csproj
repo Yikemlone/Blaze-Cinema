@@ -22,10 +22,5 @@
     <ProjectReference Include="..\Shared\Cinema.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Customers\" />
-    <Folder Include="Services\Employees\" />
-  </ItemGroup>
-
 
 </Project>

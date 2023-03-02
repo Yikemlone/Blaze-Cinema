@@ -13,6 +13,9 @@ namespace Cinema.Server
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Screening> Screenings { get; set; }
         public DbSet<Seat> Seats { get; set; }
+        public DbSet<SeatScreening> SeatScreenings { get; set; }
+        public DbSet<TicketType> TicketTypes { get; set; }
+        public DbSet<TicketTypeBooking> TicketTypesBookings { get; set; }
 
         public CinemaDBContext(DbContextOptions options) : base(options)
         {

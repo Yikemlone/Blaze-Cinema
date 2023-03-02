@@ -1,23 +1,66 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-<div style="color: white; background-color: darkslategray;">
-    <h1>Movie: @movieDTO.Name</h1>
-    <img src="images/@(movieDTO.ID).jpg" width="200px"> @* Make sure all files are the same. EX: .jpg *@
-    <p>Age Rating: @movieDTO.AgeRating</p>
-    <p>Duration: @movieDTO.Duration</p>
-    <p>Description: </p>
+@if (Movie != null) 
+{
+    <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+        <MudGrid Spacing="3" Justify="Justify.Center">
 
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/@movieDTO.Trailer" 
-            title="YouTube video player" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowfullscreen>
-    </iframe>
-</div>
+            <MudItem xs="12" sm="12" md="12">
+                <MudText Typo="Typo.h2" Align="Align.Left"><b> @Movie.Name </b></MudText>
+            </MudItem>
+            
+            <MudItem xs="3" sm="3" md="3">
+                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="260"/>
+            </MudItem>
 
+            <MudItem xs="9" sm="9" md="1">
+                <MudText Typo="Typo.subtitle2">@Movie.AgeRating</MudText>
+                <MudText Typo="Typo.subtitle2">@Movie.Duration minutes</MudText>
+            </MudItem>
+
+            <MudItem xs="9" sm="9" md="8">
+                <MudContainer Style="height:280px; overflow:auto">
+                    <MudText Typo="Typo.body1">@Movie.Description</MudText>
+                </MudContainer>
+            </MudItem>
+            
+            <MudItem xs="6" sm="8" md="12">
+                <iframe src="https://www.youtube.com/embed/@Movie.Trailer"
+                    style="width: 100%!important;height: 500px!important;"
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </MudItem>
+
+        </MudGrid>
+    </MudContainer>
+}
 
 @code {
+
     [Parameter]
-    public MovieDTO movieDTO { get; set; } = new MovieDTO { ID = 1, Name = "Puss in Boots: The last wish", AgeRating = "PG", Duration = 102, Trailer = "RqrXhwS33yc" };
+    public int MovieID { get; set; }
+
+    private const string API_URL = "api/movie";
+    private string _imageURL;
+    private HttpClient _client;
+
+    public MovieDTO Movie { get; set; }
+    //public List<ScreeningDTO> Screenings { get; set; } = new List<ScreeningDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        Movie = await GetMovieAsync();
+        _imageURL = $"images/{Movie.ID}.jpg";
+        //Screenings = await GetScreening(Movie.ID);
+    }
+
+    public async Task<MovieDTO> GetMovieAsync()
+    {
+        return await _client.GetFromJsonAsync<MovieDTO>(API_URL + $"/movies/{MovieID}");
+    }
 }

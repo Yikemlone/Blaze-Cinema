@@ -20,14 +20,20 @@
 
 
 @code{
-
     [Parameter]
     public bool Booked { get; set; }
     public string Colour { get; set; } = "Green";
     public bool Selected { get; set; } = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (Booked)
+        {
+            Colour = "Red";
+        }
+    }
+
     public void ChangeColour() {
-        // We must call this method when we update anything visually
         if (Booked) return;
 
         if (Colour.Equals("Green"))
@@ -40,22 +46,8 @@
         }
         
         Selected = !Selected;
+
+        // We must call this method when we update anything visually
         StateHasChanged();
-    }
-
-    // We don't have to use this method, but it can allow for more flexibilty if needed
-
-    //public override async Task SetParametersAsync(ParameterView parameters)
-    //{
-
-    //    await base.SetParametersAsync(parameters);
-    //}
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (Booked) 
-        {
-            Colour = "Red";    
-        }
     }
 }

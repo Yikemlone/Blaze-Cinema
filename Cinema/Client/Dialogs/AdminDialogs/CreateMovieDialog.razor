@@ -1,0 +1,79 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper>
+            <MudForm>
+
+                <MudStack Row=true>
+                    <MudTextField T="string" Label="Name" Variant="Variant.Filled" Required RequiredError="You must enter a Name." @bind-Value=_movie.Name></MudTextField>
+                    <MudTextField T="int" Label="Duration" Variant="Variant.Filled" Required RequiredError="You must enter a Duration." @bind-Value=@_movie.Duration></MudTextField>
+                </MudStack>
+
+                <MudStack>
+                    <MudSelect @bind-Value="_movie.AgeRating" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
+                        <MudSelectItem Value="@("G")">G</MudSelectItem>
+                        <MudSelectItem Value="@("PG")">PG</MudSelectItem>
+                        <MudSelectItem Value="@("12A")">12A</MudSelectItem>
+                        <MudSelectItem Value="@("15A")">15A</MudSelectItem>
+                        <MudSelectItem Value="@("16")">16</MudSelectItem>
+                        <MudSelectItem Value="@("18")">18</MudSelectItem>
+                    </MudSelect>
+                    <MudTextField T="string" Label="Trailer" Variant="Variant.Filled" Required RequiredError="You must enter a Trailer." @bind-Value=@_movie.Trailer></MudTextField>
+                </MudStack>
+
+                <MudStack Row=true>
+                    <MudTextField T="string" Label="Description" Variant="Variant.Filled" Required RequiredError="You must enter a Description." @bind-Value=_movie.Description Lines="5"></MudTextField>
+                </MudStack>
+
+            </MudForm>
+        </MudPaper>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Close">Save</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private const string API_URL = "api/admin";
+    private HttpClient? _client;
+    private MovieDTO? _movie;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        _movie = new MovieDTO();
+    }
+
+    private async void Close()
+    {
+        await AddMovieModel();
+
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("Movie Added", Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 1000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Close(DialogResult.Cancel());
+    }
+
+    private async Task AddMovieModel()
+    {
+        await _client.PostAsJsonAsync<MovieDTO>(API_URL + "/create/", _movie);
+        await MudTable.ReloadServerData();
+    }
+}
