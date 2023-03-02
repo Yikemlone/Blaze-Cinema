@@ -90,7 +90,7 @@
         </GroupHeaderTemplate>
 
         <RowTemplate>
-            <MudTd DataLabel="Room">@context.Screenings</MudTd>
+            <MudTd DataLabel="Room">@context.Screenings[0].RoomID</MudTd>
         </RowTemplate>
 
         <NoRecordsContent>
@@ -98,7 +98,7 @@
         </NoRecordsContent>
 
         <LoadingContent>
-            <MudText>Loading...</MudText>
+            <MudText>Loading..  .</MudText>
         </LoadingContent>
 
         <PagerContent>

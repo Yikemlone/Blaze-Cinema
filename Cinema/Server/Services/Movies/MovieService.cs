@@ -1,4 +1,5 @@
-﻿using Cinema.Shared.DTO;
+﻿using Cinema.Server.Models;
+using Cinema.Shared.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Server.Services.Movies
@@ -25,8 +26,18 @@ namespace Cinema.Server.Services.Movies
                     Trailer = m.Trailer,
                     Description = m.Description
                  })
-                 .Include(s => s.Screenings)
                  .SingleOrDefault();
+
+            movie.Screenings = _context.Screenings
+                .Where(s => s.ID == movie.ID)
+                .Select(s => new ScreeningDTO 
+                {
+                    ID = s.ID,
+                    DateTime = s.DateTime,
+                    MovieID = s.ID,
+                    RoomID = s.RoomID
+                })
+                .ToList();
 
             return movie;
         }
@@ -34,6 +45,7 @@ namespace Cinema.Server.Services.Movies
         public async Task<List<MovieDTO>> GetMoviesAsync()
         {
             List<MovieDTO> movies = _context.Movies
+                .Include(s => s.Screenings)
                 .Select(m => new MovieDTO() 
                 {
                     ID = m.ID,
@@ -42,8 +54,8 @@ namespace Cinema.Server.Services.Movies
                     Duration = m.Duration,
                     Trailer = m.Trailer,
                     Description = m.Description
-                    
-                }).ToList();
+                })
+                .ToList();
 
             return movies;
         }
@@ -57,7 +69,8 @@ namespace Cinema.Server.Services.Movies
                     MovieID = m.MovieID,
                     RoomID = m.RoomID,
                     DateTime = m.DateTime
-                }).ToList();
+                })
+                .ToList();
 
             return Screenings;
         }
