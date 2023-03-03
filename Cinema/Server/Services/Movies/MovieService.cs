@@ -57,6 +57,20 @@ namespace Cinema.Server.Services.Movies
                 })
                 .ToList();
 
+            foreach (var movie in movies)
+            {
+                movie.Screenings = _context.Screenings
+                    .Where(s => s.ID == movie.ID)
+                    .Select(s => new ScreeningDTO()
+                    {
+                        ID = s.ID,
+                        DateTime = s.DateTime,
+                        MovieID = s.ID,
+                        RoomID = s.RoomID
+                    })
+                    .ToList();  
+            }
+
             return movies;
         }
 

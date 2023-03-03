@@ -1,0 +1,76 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper>
+            <MudForm>
+                <MudStack Row=true>
+                    @*<MudTextField T="string" Label="Movie" Variant="Variant.Filled" Required RequiredError="You must enter a Name." @bind-Value=_screening.Name></MudTextField>*@
+                </MudStack>
+
+                <MudStack>
+                    <MudSelect Label="Movie" @bind-Value="_screening.MovieID" Placeholder="Select Movie" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
+                        @foreach (var movie in Movies)
+                        {
+                            <MudSelectItem Value="@movie.ID">@movie.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                    @*<MudTextField T="string" Label="Trailer" Variant="Variant.Filled" Required RequiredError="You must enter a Trailer." @bind-Value=@_screening.Trailer></MudTextField>*@
+                </MudStack>
+
+                <MudStack Row=true>
+                    @*<MudTextField T="string" Label="Description" Variant="Variant.Filled" Required RequiredError="You must enter a Description." @bind-Value=_screening.Description Lines="5"></MudTextField>*@
+                </MudStack>
+
+            </MudForm>
+        </MudPaper>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Close">Save</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private const string API_URL = "api/manager";
+    private HttpClient? _client;
+    private ScreeningDTO? _screening;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
+    [Parameter] public List<MovieDTO> Movies { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        _screening = new ScreeningDTO();
+    }
+
+    private async void Close()
+    {
+        await AddMovieModel();
+
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("Movie Added", Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 1000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Close(DialogResult.Cancel());
+    }
+
+    private async Task AddMovieModel()
+    {
+        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + "/create/", _screening);
+        await MudTable.ReloadServerData();
+    }
+}

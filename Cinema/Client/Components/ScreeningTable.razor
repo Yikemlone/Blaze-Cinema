@@ -1,4 +1,5 @@
 ﻿@using Cinema.Client.Dialogs.AdminDialogs
+@using Cinema.Client.Dialogs.ManagerDialogs
 @using Cinema.Shared.DTO
 @inherits ComponentBase
 @inject IDialogService DialogService
@@ -21,8 +22,8 @@
 
 <MudGrid>
     <MudTable 
-        Items="@_movies" 
-        T="MovieDTO" 
+        Items="@_screenings" 
+        T="ScreeningDTO" 
         Breakpoint="Breakpoint.Sm" 
         Style="width: 100%"
         @ref="_mudTable" 
@@ -67,30 +68,42 @@
             <col style="width: 60px;" />
             <col />
             <col />
-            <col />
-            <col />
-            <col />
         </ColGroup>
 
         <HeaderContent>
             <MudTh>
-                <MudTableSortLabel SortLabel="name" T="MovieDTO">
+                <MudTableSortLabel SortLabel="ID" T="ScreeningDTO">
+                    ID
+                 </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="room_ID" T="ScreeningDTO">
                     Room
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="age_rating" T="MovieDTO">
+                <MudTableSortLabel SortLabel="date_time" T="ScreeningDTO">
                     Date Time
                  </MudTableSortLabel>
             </MudTh>
         </HeaderContent>
 
         <GroupHeaderTemplate>
-            <MudTh Class="mud-table-cell-custom-group" colspan="5">@($"{context.Key}")</MudTh>
+            <MudTh Class="mud-table-cell-custom-group" colspan="5">
+                @foreach(var movie in _movies) 
+                {
+                    if (movie.ID == Int32.Parse(context.Key.ToString()))
+                    {
+                        @movie.Name                    
+                    }
+                }
+            </MudTh>
         </GroupHeaderTemplate>
 
         <RowTemplate>
-            <MudTd DataLabel="Room">@context.Screenings[0].RoomID</MudTd>
+            <MudTd DataLabel="ID">@context.ID</MudTd>
+            <MudTd DataLabel="RoomID">@context.RoomID</MudTd>
+            <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
         </RowTemplate>
 
         <NoRecordsContent>
@@ -117,18 +130,19 @@
     private int[] _pageSizeOptions;
 
     private HttpClient _client;
-    private MovieDTO? _selected;
-    private MudTable<MovieDTO>? _mudTable;
+    private ScreeningDTO? _selected;
+    private MudTable<ScreeningDTO>? _mudTable;
     private DialogOptions _dialogOptions;
+    private IEnumerable<ScreeningDTO> _screenings;
     private IEnumerable<MovieDTO>? _movies;
 
-    private TableGroupDefinition<MovieDTO> _groupDefinition = new()
+    private TableGroupDefinition<ScreeningDTO> _groupDefinition = new()
     {
         GroupName = "Movie",
         Indentation = false,
         Expandable = true,
         IsInitiallyExpanded = false,
-        Selector = (e) => e.Name
+        Selector = (e) => e.MovieID
     };
 
     // Set up
@@ -150,11 +164,12 @@
     protected override async Task OnInitializedAsync()
     {
         _movies = await GetMoviesAsync();
+        _screenings = await GetScreeningsAsync();
     }
 
 
     // Table Event Functions
-    private void RowClickEvent(TableRowClickEventArgs<MovieDTO> tableRowClickEventArgs)
+    private void RowClickEvent(TableRowClickEventArgs<ScreeningDTO> tableRowClickEventArgs)
     {
         _selected = tableRowClickEventArgs.Item;
 
@@ -168,7 +183,7 @@
         }
     }
 
-    private string SelectedRowClassFunc(MovieDTO element, int rowNumber)
+    private string SelectedRowClassFunc(ScreeningDTO element, int rowNumber)
     {
         if (_selected != null && _selected.Equals(element))
         {
@@ -192,8 +207,9 @@
     {
         var parameters = new DialogParameters();
         parameters.Add("MudTable", _mudTable);
+        parameters.Add("Movies", _movies);
 
-        DialogService.Show<CreateMovieDialog>("Create New Movie", parameters, _dialogOptions);
+        DialogService.Show<CreateScreeningDialog>("Create New Movie Screening", parameters, _dialogOptions);
     }
 
     private void OpenUpdateDialog()
@@ -221,39 +237,39 @@
 
 
     // Server Reload Data
-    protected async Task<TableData<MovieDTO>> ServerReload(TableState state)
+    protected async Task<TableData<ScreeningDTO>> ServerReload(TableState state)
     {
-        IEnumerable<MovieDTO> updatedMovies = await GetMoviesAsync();
+        IEnumerable<ScreeningDTO> updatedScreenings = await GetScreeningsAsync();
 
-        updatedMovies = updatedMovies.Where(movie =>
+        updatedScreenings = updatedScreenings.Where(screening =>
         {
             if (string.IsNullOrWhiteSpace(_searchString))
                 return true;
-            if (movie.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            if (screening.RoomID.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (movie.ID.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            if (screening.ID.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
             return false;
         }).ToArray();
 
-        _totalItems = updatedMovies.Count();
-        Console.WriteLine(state.PageSize);
+        _totalItems = updatedScreenings.Count();
 
         switch (state.SortLabel)
         {
-            case "name":
-                updatedMovies = updatedMovies.OrderByDirection(state.SortDirection, m => m.Name);
+            case "ID":
+                updatedScreenings = updatedScreenings.OrderByDirection(state.SortDirection, m => m.ID);
                 break;
-            case "age_rating":
-                updatedMovies = updatedMovies.OrderByDirection(state.SortDirection, m => m.AgeRating);
+            case "room_ID":
+                updatedScreenings = updatedScreenings.OrderByDirection(state.SortDirection, m => m.RoomID);
                 break;
-            case "duration":
-                updatedMovies = updatedMovies.OrderByDirection(state.SortDirection, m => m.Duration);
+            case "date_time":
+                updatedScreenings = updatedScreenings.OrderByDirection(state.SortDirection, m => m.DateTime);
                 break;
         }
 
-        _movies = updatedMovies.Skip(state.Page * state.PageSize).Take(state.PageSize);
-        return new TableData<MovieDTO>() { TotalItems = _totalItems, Items = _movies };
+        _screenings = updatedScreenings.Skip(state.Page * state.PageSize).Take(state.PageSize);
+
+        return new TableData<ScreeningDTO>() { TotalItems = _totalItems, Items = _screenings };
     }
 
     public async Task<List<MovieDTO>> GetMoviesAsync()
@@ -261,4 +277,8 @@
         return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 
+    public async Task<List<ScreeningDTO>> GetScreeningsAsync()
+    {
+        return await _client.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
+    }
 }

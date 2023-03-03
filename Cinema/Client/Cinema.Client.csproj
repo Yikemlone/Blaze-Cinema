@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dialogs\ManagerDialogs\" />
     <Folder Include="Dialogs\BookingDialogs\" />
   </ItemGroup>
 
