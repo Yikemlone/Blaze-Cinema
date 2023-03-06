@@ -17,7 +17,7 @@
                         }
                     </MudSelect>
                     
-@*                    <MudSelect Label="Room" @bind-Value="_rooms" Placeholder="Select Room" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
+@*                    <MudSelect Label="Room" @bind-Value="@_rooms" Placeholder="Select Room" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
                         @foreach (var room in _rooms)
                         {
                             <MudSelectItem Value="@room">Room.ID</MudSelectItem>
@@ -25,7 +25,8 @@
                     </MudSelect>*@
 
                     <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" AmPm="true" @bind-Time="@_time" />
-                    <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Date Format" HelperText="For custom cultures" DateFormat="dd/MM/yyyy" Date="@(new System.DateTime(2020,10,19))" />
+                    <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Date Format" DateFormat="dd/MM/yyyy" Date="@_screening.DateTime" />
+
                 </MudStack>
 
             </MudForm>
@@ -54,7 +55,7 @@
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _screening = new ScreeningDTO();
         _time = _screening.DateTime.TimeOfDay;
-        _rooms = GetRoomsModel()
+        //_rooms = GetRoomsModel()
     }
 
     private async void Close()
@@ -83,8 +84,8 @@
         await MudTable.ReloadServerData();
     }
 
-    private async Task GetRoomModelAsync()
+    private async Task<List<RoomDTO>> GetRoomModelAsync()
     {
-        return await _client.GetAsJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
+        return await _client.GetFromJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
     }
 }
