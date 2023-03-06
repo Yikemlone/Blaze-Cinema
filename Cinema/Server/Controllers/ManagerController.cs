@@ -58,5 +58,24 @@ namespace Cinema.Server.Controllers
         {
             await _managerService.DeleteMovieScreeningAsync(screeningID);
         }
+
+        //get room
+        [HttpGet]
+        [ResponseType(typeof(RoomDTO))]
+        [Route("rooms/{roomID}")]
+        public async Task<RoomDTO> GetRoom(int roomID)
+        {
+            return await _managerService.GetRoomAsync(roomID);
+        }
+
+        //get rooms
+        [HttpGet]
+        [ResponseType(typeof(List<RoomDTO>))]
+        [Route("rooms")]
+        public async Task<List<RoomDTO>> GetRooms()
+        {
+
+            return await _managerService.GetRoomsAsync();
+        }
     }
 }

@@ -54,7 +54,7 @@
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _screening = new ScreeningDTO();
         _time = _screening.DateTime.TimeOfDay;
-        _rooms = GetRoomsModel()
+        //_rooms = GetRoomsModel();
     }
 
     private async void Close()
@@ -83,8 +83,8 @@
         await MudTable.ReloadServerData();
     }
 
-    private async Task GetRoomModelAsync()
-    {
-        return await _client.GetAsJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
-    }
+    //private async Task GetRoomModelAsync()
+   // {
+     //   return await _client.GetAsJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
+   // }
 }
