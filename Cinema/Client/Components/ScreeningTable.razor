@@ -67,15 +67,9 @@
         <ColGroup>
             <col style="width: 60px;" />
             <col />
-            <col />
         </ColGroup>
 
         <HeaderContent>
-            <MudTh>
-                <MudTableSortLabel SortLabel="ID" T="ScreeningDTO">
-                    ID
-                 </MudTableSortLabel>
-            </MudTh>
             <MudTh>
                 <MudTableSortLabel SortLabel="room_ID" T="ScreeningDTO">
                     Room
@@ -101,7 +95,6 @@
         </GroupHeaderTemplate>
 
         <RowTemplate>
-            <MudTd DataLabel="ID">@context.ID</MudTd>
             <MudTd DataLabel="RoomID">@context.RoomID</MudTd>
             <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
         </RowTemplate>
@@ -111,12 +104,8 @@
         </NoRecordsContent>
 
         <LoadingContent>
-            <MudText>Loading..  .</MudText>
+            <MudText>Loading...</MudText>
         </LoadingContent>
-
-        <PagerContent>
-            <MudTablePager PageSizeOptions="@_pageSizeOptions" HorizontalAlignment="HorizontalAlignment.Center"/>
-        </PagerContent>
 
     </MudTable>
 </MudGrid>
@@ -247,8 +236,6 @@
                 return true;
             if (screening.RoomID.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (screening.ID.ToString().Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
             return false;
         }).ToArray();
 
@@ -256,9 +243,6 @@
 
         switch (state.SortLabel)
         {
-            case "ID":
-                updatedScreenings = updatedScreenings.OrderByDirection(state.SortDirection, m => m.ID);
-                break;
             case "room_ID":
                 updatedScreenings = updatedScreenings.OrderByDirection(state.SortDirection, m => m.RoomID);
                 break;
@@ -267,7 +251,7 @@
                 break;
         }
 
-        _screenings = updatedScreenings.Skip(state.Page * state.PageSize).Take(state.PageSize);
+        _screenings = updatedScreenings;
 
         return new TableData<ScreeningDTO>() { TotalItems = _totalItems, Items = _screenings };
     }

@@ -5,8 +5,8 @@
     <DialogContent>
         <MudPaper>
             <MudForm>
+
                 <MudStack Row=true>
-                    @*<MudTextField T="string" Label="Movie" Variant="Variant.Filled" Required RequiredError="You must enter a Name." @bind-Value=_screening.Name></MudTextField>*@
                 </MudStack>
 
                 <MudStack>
@@ -16,11 +16,16 @@
                             <MudSelectItem Value="@movie.ID">@movie.Name</MudSelectItem>
                         }
                     </MudSelect>
-                    @*<MudTextField T="string" Label="Trailer" Variant="Variant.Filled" Required RequiredError="You must enter a Trailer." @bind-Value=@_screening.Trailer></MudTextField>*@
-                </MudStack>
+                    
+@*                    <MudSelect Label="Room" @bind-Value="_rooms" Placeholder="Select Room" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
+                        @foreach (var room in _rooms)
+                        {
+                            <MudSelectItem Value="@room">Room.ID</MudSelectItem>
+                        }
+                    </MudSelect>*@
 
-                <MudStack Row=true>
-                    @*<MudTextField T="string" Label="Description" Variant="Variant.Filled" Required RequiredError="You must enter a Description." @bind-Value=_screening.Description Lines="5"></MudTextField>*@
+                    <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" AmPm="true" @bind-Time="@_time" />
+                    <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Date Format" HelperText="For custom cultures" DateFormat="dd/MM/yyyy" Date="@(new System.DateTime(2020,10,19))" />
                 </MudStack>
 
             </MudForm>
@@ -37,6 +42,8 @@
     private const string API_URL = "api/manager";
     private HttpClient? _client;
     private ScreeningDTO? _screening;
+    private TimeSpan? _time;
+    private List<RoomDTO> _rooms;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
@@ -46,15 +53,17 @@
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _screening = new ScreeningDTO();
+        _time = _screening.DateTime.TimeOfDay;
+        _rooms = GetRoomsModel()
     }
 
     private async void Close()
     {
-        await AddMovieModel();
+        await AddMovieModelAsync();
 
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-        Snackbar.Add("Movie Added", Severity.Success, config =>
+        Snackbar.Add("Screening Added", Severity.Success, config =>
         {
             config.VisibleStateDuration = 1000;
             config.Icon = @Icons.Material.Outlined.Check;
@@ -68,9 +77,14 @@
         MudDialog.Close(DialogResult.Cancel());
     }
 
-    private async Task AddMovieModel()
+    private async Task AddMovieModelAsync()
     {
         await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + "/create/", _screening);
         await MudTable.ReloadServerData();
+    }
+
+    private async Task GetRoomModelAsync()
+    {
+        return await _client.GetAsJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
     }
 }
