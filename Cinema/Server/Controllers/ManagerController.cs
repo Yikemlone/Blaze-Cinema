@@ -74,7 +74,6 @@ namespace Cinema.Server.Controllers
         [Route("rooms")]
         public async Task<List<RoomDTO>> GetRooms()
         {
-
             return await _managerService.GetRoomsAsync();
         }
     }

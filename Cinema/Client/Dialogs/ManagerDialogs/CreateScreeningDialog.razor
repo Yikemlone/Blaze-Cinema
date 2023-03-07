@@ -7,26 +7,24 @@
             <MudForm>
 
                 <MudStack Row=true>
-                </MudStack>
-
-                <MudStack>
-                    <MudSelect Label="Movie" @bind-Value="_screening.MovieID" Placeholder="Select Movie" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
+                    <MudSelect Label="Movie" @bind-Value="@_newScreening.MovieID" Text="Select Movie" Variant="Variant.Filled" Required RequiredError="You must select a Movie.">
                         @foreach (var movie in Movies)
                         {
                             <MudSelectItem Value="@movie.ID">@movie.Name</MudSelectItem>
                         }
                     </MudSelect>
                     
-@*                    <MudSelect Label="Room" @bind-Value="@_rooms" Placeholder="Select Room" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
+                    <MudSelect Label="Room" @bind-Value="@_newScreening.RoomID" Text="Select Room" Variant="Variant.Filled" Required RequiredError="You must select a Room.">
                         @foreach (var room in _rooms)
                         {
-                            <MudSelectItem Value="@room">Room.ID</MudSelectItem>
+                            <MudSelectItem Value="@room.ID">@room.ID</MudSelectItem>
                         }
-                    </MudSelect>*@
+                    </MudSelect>
+                </MudStack>
 
-                    <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" AmPm="true" @bind-Time="@_time" />
-                    <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Date Format" DateFormat="dd/MM/yyyy" Date="@_screening.DateTime" />
-
+                <MudStack Row="true">
+                    <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" AmPm="true" @bind-Time="@_time"/>
+                    <MudDatePicker Label="Date Format" PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy" @bind-Date="@_date" />
                 </MudStack>
 
             </MudForm>
@@ -42,25 +40,30 @@
 @code {
     private const string API_URL = "api/manager";
     private HttpClient? _client;
-    private ScreeningDTO? _screening;
+    private ScreeningDTO? _newScreening;
     private TimeSpan? _time;
-    private List<RoomDTO> _rooms;
+    private DateTime? _date;
+    private List<RoomDTO>? _rooms;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
     [Parameter] public List<MovieDTO> Movies { get; set; }
+    [Parameter] public List<ScreeningDTO> Screenings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-        _screening = new ScreeningDTO();
-        _time = _screening.DateTime.TimeOfDay;
-        _rooms = GetRoomsModel();
+        _newScreening = new ScreeningDTO();
+        _time = new TimeSpan();
+        _date = new DateTime();
+        _rooms = await GetRoomsModelAsync();
     }
 
     private async void Close()
     {
-        await AddMovieModelAsync();
+        if (!ValidateScreeningTime()) return;
+
+        await AddScreeningModelAsync();
 
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
@@ -78,14 +81,64 @@
         MudDialog.Close(DialogResult.Cancel());
     }
 
-    private async Task AddMovieModelAsync()
+    private bool ValidateScreeningTime() 
     {
-        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + "/create/", _screening);
+        // We must check if the currnet screenings confilct by
+        // - Room
+        // - Date
+        // - Time: before and after
+        // If none of these are false we can create that screening
+
+        // The formula for the previous or next movie:
+        // Movie Duration + Start Time + Cleaning Time = Free Movie Slot
+
+        int newScreeningMovieDuration = Movies.Where(m => m.ID == _newScreening.MovieID).FirstOrDefault().Duration;
+
+        foreach (var screening in Screenings)
+        {
+            if (_newScreening.RoomID != screening.RoomID) continue;
+            if (_date > screening.DateTime || _date < screening.DateTime) continue;
+
+            int movieDuration = Movies.Where(m => m.ID == screening.MovieID).FirstOrDefault().Duration;
+
+            var previousMovieEndTime = screening.DateTime.AddMinutes(movieDuration);
+            var nextMovieStartTime = screening.DateTime.TimeOfDay;
+
+            // We need to consider the previous movies duration too.
+            // If a movie starts at 11 and we check the time at 10:50, we will need to make sure that
+            // at no point does the new movie overlap at all.
+
+            // This means we will need to know the start and end times of movies and compare them all.
+
+            // I'll do this in the morning. I'm going to sleep.
+
+            //Current Movie: 12:00
+            //Duration: 60 mins
+
+            //Previous Movie Start Time: 11:00
+            //Previous Movie End Time: 12:00
+
+            //Next Movie Start Time: 1:30
+            //Next Movie End Time: 2:30
+
+            //if current_movie_start_time > previous_movie_end_time
+            //if current_movie_end_time < next_movie_start_time
+
+
+            //if (_time >= timeBefore || _time < nextMovieStartTime) continue;
+        }
+        
+        return true;
+    }
+
+    private async Task AddScreeningModelAsync()
+    {
+        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + "/create/", _newScreening);
         await MudTable.ReloadServerData();
     }
 
-    private async Task<List<RoomDTO>> GetRoomModelAsync()
+    private async Task<List<RoomDTO>> GetRoomsModelAsync()
     {
-        return await _client.GetAsJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
-   }
+        return await _client.GetFromJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
+    }
 }

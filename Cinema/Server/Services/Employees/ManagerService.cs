@@ -13,9 +13,7 @@ namespace Cinema.Server.Services.Employees
             _context = context;
         }
 
-
-        
-
+        // TODO: Updaete decom status of the room
         public async Task UpdateRoomAsync(RoomDTO roomDTO)
         {
             throw new NotImplementedException();
@@ -58,7 +56,8 @@ namespace Cinema.Server.Services.Employees
 
             return employee;
         }
-        // create screening
+
+        // Create screening
         public async Task CreateMovieScreeningAsync(ScreeningDTO screening)
         {
             var newScreening = new Screening()
@@ -73,7 +72,8 @@ namespace Cinema.Server.Services.Employees
             await _context.AddAsync(newScreening);
             await _context.SaveChangesAsync();
         }
-        //update movie screening
+
+        // Update movie screening
         public async Task UpdateMovieScreeningAsync(ScreeningDTO screening)
         {
             var oldScreening = _context.Screenings
@@ -89,10 +89,9 @@ namespace Cinema.Server.Services.Employees
             oldScreening.RoomID = screening.RoomID;
 
             await _context.SaveChangesAsync();
-
         }
 
-        // delete movie screening
+        // Delete movie screening
         public async Task DeleteMovieScreeningAsync(int screeningID)
         {
             var screening = _context.Screenings.FirstOrDefault(x => x.ID == screeningID);
