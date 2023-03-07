@@ -14,10 +14,7 @@ namespace Cinema.Server.Services.Employees
         }
 
 
-        public async Task<List<RoomDTO>> GetRoomsAsync()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public async Task UpdateRoomAsync(RoomDTO roomDTO)
         {
@@ -105,5 +102,38 @@ namespace Cinema.Server.Services.Employees
                 await _context.SaveChangesAsync();
             }
         }
+
+        //Get room
+        public async Task<RoomDTO> GetRoomAsync(int roomID)
+        {
+            var room = _context.Rooms
+                 .Where(m => m.ID == roomID)
+                 .Select(m => new RoomDTO()
+                 {
+                     ID = m.ID,
+                     Decom = m.Decom,
+                     SeatQty = m.SeatQty
+                     
+                 })
+                 .SingleOrDefault();
+
+            return room;
+        }
+
+        //Get rooms 
+        public async Task<List<RoomDTO>> GetRoomsAsync()
+        {
+            List<RoomDTO> rooms = _context.Rooms
+              .Select(m => new RoomDTO()
+              {
+                  ID = m.ID,
+                  Decom = m.Decom,
+                  SeatQty = m.SeatQty
+
+              }).ToList();
+
+            return rooms;
+        }
+        
     }
 }
