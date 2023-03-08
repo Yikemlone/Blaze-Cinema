@@ -4,29 +4,31 @@
 <MudDialog>
     <DialogContent>
         <MudPaper>
+
             <MudForm>
+                @if (Movies != null && Screenings != null && _rooms != null)
+                {
+                    <MudStack Row=true>
+                            <MudSelect Label="Movie" @bind-Value="_newScreening.MovieID" Text="Select Movie" Variant="Variant.Filled" Required RequiredError="You must select a Movie.">
+                            @foreach (var movie in Movies)
+                            {
+                                <MudSelectItem Value="@movie.ID">@movie.Name</MudSelectItem>
+                            }
+                        </MudSelect>
 
-                <MudStack Row=true>
-                    <MudSelect Label="Movie" @bind-Value="@_newScreening.MovieID" Text="Select Movie" Variant="Variant.Filled" Required RequiredError="You must select a Movie.">
-                        @foreach (var movie in Movies)
-                        {
-                            <MudSelectItem Value="@movie.ID">@movie.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                    
-                    <MudSelect Label="Room" @bind-Value="@_newScreening.RoomID" Text="Select Room" Variant="Variant.Filled" Required RequiredError="You must select a Room.">
-                        @foreach (var room in _rooms)
-                        {
-                            <MudSelectItem Value="@room.ID">@room.ID</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudStack>
+                            <MudSelect Label="Room" @bind-Value="_newScreening.RoomID" Text="Select Room" Variant="Variant.Filled" Required RequiredError="You must select a Room.">
+                            @foreach (var room in _rooms)
+                            {
+                                <MudSelectItem Value="@room.ID">@room.ID</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudStack>
 
-                <MudStack Row="true">
-                    <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" AmPm="true" @bind-Time="@_time"/>
-                    <MudDatePicker Label="Date Format" PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy" @bind-Date="@_date" />
-                </MudStack>
-
+                    <MudStack Row="true">
+                            <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" AmPm="true" @bind-Time="_time"/>
+                        <MudDatePicker Label="Date" PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy" @bind-Date="_date" />
+                    </MudStack>
+                }
             </MudForm>
         </MudPaper>
     </DialogContent>
@@ -43,21 +45,19 @@
     private ScreeningDTO? _newScreening;
     private List<RoomDTO>? _rooms;
 
-    private TimeSpan? _time;
-    private DateTime? _date;
+    TimeSpan? _time = new TimeSpan(12, 00, 00);
+    DateTime? _date = new DateTime(2023, 1, 1);
 
     [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
-    [Parameter] public MudTable<ScreeningDTO>? MudTable { get; set; }
-    [Parameter] public List<MovieDTO>? Movies { get; set; }
-    [Parameter] public List<ScreeningDTO>? Screenings { get; set; }
+    [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
+    [Parameter] public List<MovieDTO> Movies { get; set; }
+    [Parameter] public List<ScreeningDTO> Screenings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _newScreening = new ScreeningDTO();
-        _time = new TimeSpan();
-        _date = new DateTime();
         _rooms = await GetRoomsModelAsync();
     }
 
@@ -95,36 +95,42 @@
 
     private bool ValidateScreeningTime() 
     {
+        // Adding the selected values to the new screening
+        if (_date.HasValue && _time.HasValue)
+        {
+            TimeSpan time = (TimeSpan)_time;
+            DateTime date = (DateTime)_date;
 
-        Console.WriteLine("New Screening DateTime: " + _newScreening.DateTime.ToString());
-        Console.WriteLine("Selected Screening Date: " + _date.ToString());
-        Console.WriteLine("Selected Screening Time: " + _time.ToString());
+            _newScreening.DateTime = date;
+            _newScreening.DateTime = _newScreening.DateTime.Add(time);
+            Console.WriteLine("New Time and Date Screening Time: " + _newScreening.DateTime.ToString());
+        }
 
-        // We must check if the currnet screenings confilct by
-        // - Room
-        // - Date
-        // - Time: before and after
-        // If none of these are false we can create that screening
-
+        // Getting the new screening end time
         int newScreeningMovieDuration = Movies.Where(m => m.ID == _newScreening.MovieID).FirstOrDefault().Duration;
+        var newScreeningStartTime = _newScreening.DateTime.TimeOfDay;
+        var newScreeningEndTime = _newScreening.DateTime.AddMinutes(newScreeningMovieDuration).TimeOfDay;
 
         foreach (var screening in Screenings)
         {
+            // If the room or day are not the same, move on.
             if (_newScreening.RoomID != screening.RoomID) continue;
             if (_date > screening.DateTime || _date < screening.DateTime) continue;
 
+            // The current screening end time
             int movieDuration = Movies.Where(m => m.ID == screening.MovieID).FirstOrDefault().Duration;
-            var movieEndTime = screening.DateTime.AddMinutes(movieDuration).TimeOfDay;
-            
-            _newScreening.DateTime = (DateTime) _date;
+            var currentScreeningEndTime = screening.DateTime.AddMinutes(movieDuration).TimeOfDay;
+            var currentScreeningStartTime = screening.DateTime.TimeOfDay;
 
-            var newMovieEndTime = _newScreening.DateTime.AddMinutes(newScreeningMovieDuration).TimeOfDay;
+            // Current screening start and end
+            Console.WriteLine("movieStartTime: " + currentScreeningStartTime.ToString());
+            Console.WriteLine("movieEndTime: " + currentScreeningEndTime.ToString());
 
-            Console.WriteLine("movieDuration: " + movieDuration.ToString());
-            Console.WriteLine("movieEndTime: " + movieEndTime.ToString());
-            Console.WriteLine("newMovieEndTime: " + newMovieEndTime.ToString());
+            // New screening start and end
+            Console.WriteLine("newMovieStartTime: " + newScreeningStartTime.ToString());
+            Console.WriteLine("newMovieEndTime: " + newScreeningEndTime.ToString());
 
-            if (_time > movieEndTime && newMovieEndTime < screening.DateTime.TimeOfDay) continue;
+            if (newScreeningStartTime > currentScreeningEndTime) continue;
 
             return false;
         }

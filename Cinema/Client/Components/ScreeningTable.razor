@@ -20,8 +20,10 @@
 
 </style>
 
-<MudGrid>
-    <MudTable 
+@if(_movies != null && _screenings != null) 
+{
+    <MudGrid>
+        <MudTable 
         Items="@_screenings" 
         T="ScreeningDTO" 
         Breakpoint="Breakpoint.Sm" 
@@ -30,8 +32,6 @@
         @bind-SelectedItem="_selected"
         RowClassFunc="@SelectedRowClassFunc" 
         OnRowClick="RowClickEvent" 
-        Loading="@_loading"
-        LoadingProgressColor="Color.Secondary"
         Hover="true" 
         Dense="true"
         Bordered="true"
@@ -42,68 +42,123 @@
         GroupFooterClass="mb-4"
         ServerData="ServerReload">
 
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">Edit Movie Screenings</MudText>
-            <MudSpacer />
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Edit Movie Screenings</MudText>
+                <MudSpacer />
 
-            <MudTextField T="string" Placeholder="Search" Adornment="Adornment.Start" ValueChanged="@(s=>OnSearch(s))" 
+                <MudTextField T="string" Placeholder="Search" Adornment="Adornment.Start" ValueChanged="@(s=>OnSearch(s))" 
                 AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
-            </MudTextField>
+                </MudTextField>
 
-            <MudSpacer />
+                <MudSpacer />
 
-            <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Secondary">
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
-            </MudTooltip>
-            <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Secondary">
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
-            </MudTooltip>
-            <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Secondary">
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
-            </MudTooltip>
+                <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Secondary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
+                </MudTooltip>
+                <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Secondary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
+                </MudTooltip>
+                <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Secondary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
+                </MudTooltip>
 
-        </ToolBarContent>
+            </ToolBarContent>
 
-        <HeaderContent>
-            <MudTh>
-                <MudTableSortLabel SortLabel="room_ID" T="ScreeningDTO">
-                    Room
-                </MudTableSortLabel>
-            </MudTh>
-            <MudTh>
-                <MudTableSortLabel SortLabel="date_time" T="ScreeningDTO">
-                    Date Time
-                 </MudTableSortLabel>
-            </MudTh>
-        </HeaderContent>
+            <HeaderContent>
+                <MudTh>
+                    <MudTableSortLabel SortLabel="room_ID" T="ScreeningDTO">
+                        Room
+                    </MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortLabel="date_time" T="ScreeningDTO">
+                        Date Time
+                     </MudTableSortLabel>
+                </MudTh>
+            </HeaderContent>
 
-        <GroupHeaderTemplate>
-            <MudTh Class="mud-table-cell-custom-group" colspan="5">
-                @foreach(var movie in _movies) 
-                {
-                    if (movie.ID == Int32.Parse(context.Key.ToString()))
+            <GroupHeaderTemplate>
+                <MudTh Class="mud-table-cell-custom-group" colspan="5">
+                    @foreach (var movie in _movies)
                     {
-                        @movie.Name                    
+                        if (movie.ID == Int32.Parse(context.Key.ToString()))
+                        {
+                            @movie.Name                    
+                        }
                     }
-                }
-            </MudTh>
-        </GroupHeaderTemplate>
+                </MudTh>
+            </GroupHeaderTemplate>
 
-        <RowTemplate>
-            <MudTd DataLabel="RoomID">@context.RoomID</MudTd>
-            <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
-        </RowTemplate>
+            <RowTemplate>
+                <MudTd DataLabel="RoomID">@context.RoomID</MudTd>
+                <MudTd DataLabel="DateTime">@context.DateTime</MudTd>
+            </RowTemplate>
 
-        <NoRecordsContent>
-            <MudText>No matching records found</MudText>
-        </NoRecordsContent>
+            <NoRecordsContent>
+                <MudText>No matching records found</MudText>
+            </NoRecordsContent>
 
-        <LoadingContent>
-            <MudText>Loading...</MudText>
-        </LoadingContent>
+            <LoadingContent>
+                <MudText>Loading...</MudText>
+            </LoadingContent>
 
-    </MudTable>
-</MudGrid>
+        </MudTable>
+    </MudGrid>
+} else 
+{
+    <MudGrid>
+        <MudTable 
+            Items="@_screenings" 
+            T="ScreeningDTO" 
+            Breakpoint="Breakpoint.Sm" 
+            Style="width: 100%"
+            @ref="_mudTable" 
+            @bind-SelectedItem="_selected"
+            RowClassFunc="@SelectedRowClassFunc" 
+            OnRowClick="RowClickEvent" 
+            Loading="true"
+            LoadingProgressColor="Color.Secondary"
+            Hover="true" 
+            Dense="true"
+            Bordered="true"
+            FixedHeader="true"
+            HorizontalScrollbar="true"
+            GroupBy="@_groupDefinition"
+            GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+            GroupFooterClass="mb-4"
+            ServerData="ServerReload">
+
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Edit Movie Screenings</MudText>
+                <MudSpacer />
+
+                <MudTextField T="string" Placeholder="Search" Adornment="Adornment.Start" ValueChanged="@(s=>OnSearch(s))" 
+                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+                </MudTextField>
+
+                <MudSpacer />
+
+                <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Secondary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" Disabled="true" OnClick="OpenCreateDialog" />
+                </MudTooltip>
+                <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Secondary">
+                        <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled="true" OnClick="OpenUpdateDialog"/>
+                </MudTooltip>
+                <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Secondary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled="true" OnClick="OpenDeleteDialog" />
+                </MudTooltip>
+
+            </ToolBarContent>
+
+            <GroupHeaderTemplate>
+                <MudTh Class="mud-table-cell-custom-group" colspan="5">
+                    Loading...
+                </MudTh>
+            </GroupHeaderTemplate>
+        
+        </MudTable>
+    </MudGrid>
+}
 
 @code {
     private const string API_URL = "api/movie";
@@ -112,13 +167,12 @@
     private bool _buttonDisabled;
     private int _totalItems;
     private int[] _pageSizeOptions;
-    private bool _loading;
 
     private HttpClient _client;
     private ScreeningDTO? _selected;
     private MudTable<ScreeningDTO>? _mudTable;
     private DialogOptions _dialogOptions;
-    private IEnumerable<ScreeningDTO> _screenings;
+    private IEnumerable<ScreeningDTO>? _screenings;
     private IEnumerable<MovieDTO>? _movies;
 
     private TableGroupDefinition<ScreeningDTO> _groupDefinition = new()
@@ -134,7 +188,6 @@
     public ScreeningTable()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-        _loading = true;
         _buttonDisabled = true;
         _searchString = "";
         _dialogOptions = new DialogOptions
@@ -150,7 +203,6 @@
     {
         _movies = await GetMoviesAsync();
         _screenings = await GetScreeningsAsync();
-        _loading = false;
     }
 
 
@@ -194,7 +246,7 @@
         var parameters = new DialogParameters();
         parameters.Add("MudTable", _mudTable);
         parameters.Add("Movies", _movies.ToList());
-        parameters.Add("Screenings", _screenings);
+        parameters.Add("Screenings", _screenings.ToList());
 
         DialogService.Show<CreateScreeningDialog>("Create New Movie Screening", parameters, _dialogOptions);
     }
