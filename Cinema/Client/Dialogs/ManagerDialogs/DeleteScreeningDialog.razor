@@ -1,9 +1,9 @@
-﻿@*@using Cinema.Shared.DTO
+﻿@using Cinema.Shared.DTO
 @inject ISnackbar Snackbar
 
 <MudDialog>
     <DialogContent>
-        <p>Are you sure you want to delete <b>@Movie.Name?</b></p>
+        <p>Are you sure you want to screening <b>@Screening.DateTime?</b></p>
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="Close">Delete</MudButton>
@@ -13,12 +13,12 @@
 
 
 @code {
-    private const string API_URL = "api/admin";
+    private const string API_URL = "api/manager";
     private HttpClient? _client;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public MovieDTO Movie { get; set; }
-    [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
+    [Parameter] public ScreeningDTO Screening { get; set; }
+    [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,11 +27,11 @@
 
     public async Task Close()
     {
-        await DeleteMovieAsync();
+        await DeleteMovieScreeningAysnc();
 
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-        Snackbar.Add("Movie Deleted", Severity.Success, config =>
+        Snackbar.Add("Screening Deleted", Severity.Success, config =>
         {
             config.VisibleStateDuration = 1000;
             config.Icon = @Icons.Material.Outlined.Check;
@@ -45,11 +45,10 @@
         MudDialog.Close(DialogResult.Cancel());
     }
 
-    public async Task DeleteMovieAsync()
+    public async Task DeleteMovieScreeningAysnc()
     {
-        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/{Movie.ID}", Movie.ID);
+        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/{Screening.ID}", Screening.ID);
         await MudTable.ReloadServerData();
     }
 
 }
-*@
