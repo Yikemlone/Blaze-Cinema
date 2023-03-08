@@ -103,36 +103,35 @@
 
             _newScreening.DateTime = date;
             _newScreening.DateTime = _newScreening.DateTime.Add(time);
-            Console.WriteLine("New Time and Date Screening Time: " + _newScreening.DateTime.ToString());
         }
 
         // Getting the new screening end time
         int newScreeningMovieDuration = Movies.Where(m => m.ID == _newScreening.MovieID).FirstOrDefault().Duration;
-        var newScreeningStartTime = _newScreening.DateTime.TimeOfDay;
-        var newScreeningEndTime = _newScreening.DateTime.AddMinutes(newScreeningMovieDuration).TimeOfDay;
+        var newScreeningStartTime = _newScreening.DateTime;
+        var newScreeningEndTime = _newScreening.DateTime.AddMinutes(newScreeningMovieDuration);
 
         foreach (var screening in Screenings)
         {
             // If the room or day are not the same, move on.
             if (_newScreening.RoomID != screening.RoomID) continue;
-            if (_date > screening.DateTime || _date < screening.DateTime) continue;
+            if (_newScreening.DateTime.Date != screening.DateTime.Date) continue;
 
-            // The current screening end time
-            int movieDuration = Movies.Where(m => m.ID == screening.MovieID).FirstOrDefault().Duration;
-            var currentScreeningEndTime = screening.DateTime.AddMinutes(movieDuration).TimeOfDay;
-            var currentScreeningStartTime = screening.DateTime.TimeOfDay;
+            int currentMovieDuration = Movies.Where(m => m.ID == screening.MovieID).FirstOrDefault().Duration;
 
             // Current screening start and end
-            Console.WriteLine("movieStartTime: " + currentScreeningStartTime.ToString());
-            Console.WriteLine("movieEndTime: " + currentScreeningEndTime.ToString());
+            var currentScreeningStartTime = screening.DateTime;
+            var currentScreeningEndTime = screening.DateTime.AddMinutes(currentMovieDuration);
 
-            // New screening start and end
-            Console.WriteLine("newMovieStartTime: " + newScreeningStartTime.ToString());
-            Console.WriteLine("newMovieEndTime: " + newScreeningEndTime.ToString());
+            // Current screening start and end
+            Console.WriteLine("currentScreeningStartTime: " + currentScreeningStartTime.ToString());
+            Console.WriteLine("currentScreeningEndTime: " + currentScreeningEndTime.ToString());
+            Console.WriteLine(newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime);
 
-            if (newScreeningStartTime > currentScreeningEndTime) continue;
-
-            return false;
+            // This will make sure the screening times don't overlap at all
+            if (newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime) 
+            {
+                return false;
+            };
         }
         
         return true;
