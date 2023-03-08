@@ -30,7 +30,7 @@
         @bind-SelectedItem="_selected"
         RowClassFunc="@SelectedRowClassFunc" 
         OnRowClick="RowClickEvent" 
-        Loading="@(_movies == null ? true : false)"
+        Loading="@_loading"
         LoadingProgressColor="Color.Secondary"
         Hover="true" 
         Dense="true"
@@ -63,11 +63,6 @@
             </MudTooltip>
 
         </ToolBarContent>
-
-        <ColGroup>
-            <col style="width: 60px;" />
-            <col />
-        </ColGroup>
 
         <HeaderContent>
             <MudTh>
@@ -117,6 +112,7 @@
     private bool _buttonDisabled;
     private int _totalItems;
     private int[] _pageSizeOptions;
+    private bool _loading;
 
     private HttpClient _client;
     private ScreeningDTO? _selected;
@@ -138,22 +134,23 @@
     public ScreeningTable()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        _loading = true;
         _buttonDisabled = true;
         _searchString = "";
-        _pageSizeOptions = new int[] { 5, 10, 20 };
         _dialogOptions = new DialogOptions
-            {
-                CloseButton = true,
-                MaxWidth = MaxWidth.Medium,
-                FullWidth = true,
-                DisableBackdropClick = true
-            };
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = true,
+            DisableBackdropClick = true
+        };
     }
 
     protected override async Task OnInitializedAsync()
     {
         _movies = await GetMoviesAsync();
         _screenings = await GetScreeningsAsync();
+        _loading = false;
     }
 
 
@@ -196,7 +193,8 @@
     {
         var parameters = new DialogParameters();
         parameters.Add("MudTable", _mudTable);
-        parameters.Add("Movies", _movies);
+        parameters.Add("Movies", _movies.ToList());
+        parameters.Add("Screenings", _screenings);
 
         DialogService.Show<CreateScreeningDialog>("Create New Movie Screening", parameters, _dialogOptions);
     }
@@ -204,24 +202,25 @@
     private void OpenUpdateDialog()
     {
         var parameters = new DialogParameters();
-        parameters.Add("Movie", _selected);
         parameters.Add("MudTable", _mudTable);
+        parameters.Add("Movies", _movies);
+        parameters.Add("Screenings", _screenings);
 
-        DialogService.Show<UpdateMovieDialog>("Update Movie Details", parameters, _dialogOptions);
+        DialogService.Show<UpdateScreeningDialog>("Update Movie Details", parameters, _dialogOptions);
     }
 
     private void OpenDeleteDialog()
     {
         var parameters = new DialogParameters();
-        parameters.Add("Movie", _selected);
+        parameters.Add("Screening", _selected);
         parameters.Add("MudTable", _mudTable);
 
-        DialogService.Show<DeleteMovieDialog>("Delete Movie", parameters, new DialogOptions()
-            {
-                CloseButton = true,
-                MaxWidth = MaxWidth.Medium,
-                DisableBackdropClick = true
-            });
+        DialogService.Show<DeleteScreeningDialog>("Delete Movie", parameters, new DialogOptions()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium,
+            DisableBackdropClick = true
+        });
     }
 
 

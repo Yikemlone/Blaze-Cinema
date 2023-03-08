@@ -41,14 +41,16 @@
     private const string API_URL = "api/manager";
     private HttpClient? _client;
     private ScreeningDTO? _newScreening;
-    private TimeSpan? _time;
-    private DateTime? _date;
     private List<RoomDTO>? _rooms;
 
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
-    [Parameter] public List<MovieDTO> Movies { get; set; }
-    [Parameter] public List<ScreeningDTO> Screenings { get; set; }
+    private TimeSpan? _time;
+    private DateTime? _date;
+
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public MudTable<ScreeningDTO>? MudTable { get; set; }
+    [Parameter] public List<MovieDTO>? Movies { get; set; }
+    [Parameter] public List<ScreeningDTO>? Screenings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -61,19 +63,29 @@
 
     private async void Close()
     {
-        if (!ValidateScreeningTime()) return;
-
-        await AddScreeningModelAsync();
-
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+
+        if (!ValidateScreeningTime()) 
+        {
+            Snackbar.Add("Movie Overlap", Severity.Warning, config =>
+            {
+                config.VisibleStateDuration = 1000;
+                config.Icon = @Icons.Material.Outlined.Error;
+            });
+
+            return;
+        } 
+
+        await AddScreeningAsync();
+
         Snackbar.Add("Screening Added", Severity.Success, config =>
         {
             config.VisibleStateDuration = 1000;
             config.Icon = @Icons.Material.Outlined.Check;
         });
 
-        MudDialog.Close(DialogResult.Ok(true));
+        MudDialog?.Close(DialogResult.Ok(true));
     }
 
     private void Cancel()
@@ -83,14 +95,16 @@
 
     private bool ValidateScreeningTime() 
     {
+
+        Console.WriteLine("New Screening DateTime: " + _newScreening.DateTime.ToString());
+        Console.WriteLine("Selected Screening Date: " + _date.ToString());
+        Console.WriteLine("Selected Screening Time: " + _time.ToString());
+
         // We must check if the currnet screenings confilct by
         // - Room
         // - Date
         // - Time: before and after
         // If none of these are false we can create that screening
-
-        // The formula for the previous or next movie:
-        // Movie Duration + Start Time + Cleaning Time = Free Movie Slot
 
         int newScreeningMovieDuration = Movies.Where(m => m.ID == _newScreening.MovieID).FirstOrDefault().Duration;
 
@@ -100,38 +114,25 @@
             if (_date > screening.DateTime || _date < screening.DateTime) continue;
 
             int movieDuration = Movies.Where(m => m.ID == screening.MovieID).FirstOrDefault().Duration;
+            var movieEndTime = screening.DateTime.AddMinutes(movieDuration).TimeOfDay;
+            
+            _newScreening.DateTime = (DateTime) _date;
 
-            var previousMovieEndTime = screening.DateTime.AddMinutes(movieDuration);
-            var nextMovieStartTime = screening.DateTime.TimeOfDay;
+            var newMovieEndTime = _newScreening.DateTime.AddMinutes(newScreeningMovieDuration).TimeOfDay;
 
-            // We need to consider the previous movies duration too.
-            // If a movie starts at 11 and we check the time at 10:50, we will need to make sure that
-            // at no point does the new movie overlap at all.
+            Console.WriteLine("movieDuration: " + movieDuration.ToString());
+            Console.WriteLine("movieEndTime: " + movieEndTime.ToString());
+            Console.WriteLine("newMovieEndTime: " + newMovieEndTime.ToString());
 
-            // This means we will need to know the start and end times of movies and compare them all.
+            if (_time > movieEndTime && newMovieEndTime < screening.DateTime.TimeOfDay) continue;
 
-            // I'll do this in the morning. I'm going to sleep.
-
-            //Current Movie: 12:00
-            //Duration: 60 mins
-
-            //Previous Movie Start Time: 11:00
-            //Previous Movie End Time: 12:00
-
-            //Next Movie Start Time: 1:30
-            //Next Movie End Time: 2:30
-
-            //if current_movie_start_time > previous_movie_end_time
-            //if current_movie_end_time < next_movie_start_time
-
-
-            //if (_time >= timeBefore || _time < nextMovieStartTime) continue;
+            return false;
         }
         
         return true;
     }
 
-    private async Task AddScreeningModelAsync()
+    private async Task AddScreeningAsync()
     {
         await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + "/create/", _newScreening);
         await MudTable.ReloadServerData();
