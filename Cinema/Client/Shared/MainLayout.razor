@@ -6,6 +6,7 @@
 <MudSnackbarProvider/>
 
 <MudLayout>
+    <MudStack Class="flex-grow-1 gap-0" Style="min-height:100vh;">
 
     <MudAppBar Elevation="1" Color="Color.Secondary">
         <MudIconButton aria-label="Toggle light/dark theme" Icon="@GetThemeIcon()" Color="MudBlazor.Color.Inherit" OnClick="DarkMode"/>
@@ -19,9 +20,18 @@
         </MudContainer>
        
     </MudMainContent>
-    
+    <MudScrollToTop TopOffset="400" Style="z-index:2000;">
+            <MudFab Icon="@Icons.Material.Filled.KeyboardArrowUp" Color="MudBlazor.Color.Primary"/>
+        </MudScrollToTop>
+        <MudSpacer/>
+        <MudMainContent Class="flex-grow-0">
+            <MudContainer Fixed="true">
+                <ChildContent>
     <Footer/>
-  
+                </ChildContent>
+            </MudContainer>
+        </MudMainContent>
+    </MudStack>
 </MudLayout>
 
 
