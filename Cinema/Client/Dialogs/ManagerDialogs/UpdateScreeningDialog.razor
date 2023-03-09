@@ -25,7 +25,7 @@
                     </MudStack>
 
                     <MudStack Row="true">
-                        <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" AmPm="true" @bind-Time="_time" />
+                        <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" @bind-Time="_time" />
                         <MudDatePicker Label="Date" PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy" @bind-Date="_date" />
                     </MudStack>
                 }
@@ -44,8 +44,8 @@
     private HttpClient? _client;
     private List<RoomDTO>? _rooms;
 
-    TimeSpan? _time = new TimeSpan(12, 00, 00);
-    DateTime? _date = new DateTime(2023, 1, 1);
+    TimeSpan? _time;
+    DateTime? _date;
 
     [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
@@ -58,6 +58,9 @@
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _rooms = await GetRoomsModelAsync();
+
+        _time = Screening.DateTime.TimeOfDay;
+        _date = Screening.DateTime.Date;
     }
 
     async void Close()
