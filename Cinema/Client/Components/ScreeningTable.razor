@@ -256,8 +256,8 @@
         var parameters = new DialogParameters();
         parameters.Add("Screening", _selected);
         parameters.Add("MudTable", _mudTable);
-        parameters.Add("Movies", _movies);
-        //parameters.Add("Screenings", _screenings);
+        parameters.Add("Movies", _movies.ToList());
+        parameters.Add("Screenings", _screenings.ToList());
 
         DialogService.Show<UpdateScreeningDialog>("Update Movie Details", parameters, _dialogOptions);
     }

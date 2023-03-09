@@ -6,7 +6,7 @@
         <MudPaper>
 
             <MudForm>
-                @if (Movies != null && _rooms != null)
+                @if (Movies != null && Screenings != null && _rooms != null)
                 {
                     <MudStack Row=true>
                         <MudSelect Label="Movie" @bind-Value="Screening.MovieID" Text="Select Movie" Variant="Variant.Filled" Required RequiredError="You must select a Movie.">
@@ -52,16 +52,15 @@
     [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
     [Parameter] public List<MovieDTO> Movies { get; set; }
     [Parameter] public ScreeningDTO Screening { get; set; }
-    //[Parameter] public List<ScreeningDTO> Screenings { get; set; }
+    [Parameter] public List<ScreeningDTO> Screenings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-        Screening = new ScreeningDTO();
         _rooms = await GetRoomsModelAsync();
     }
 
-    private async void Close()
+    async void Close()
     {
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
@@ -77,9 +76,9 @@
             return;
         }
 
-        await UpdateScreeningAsync();
+        await UpdateMovieScreeningAsync();
 
-        Snackbar.Add("Screening Updated", Severity.Success, config =>
+        Snackbar.Add("Screening Added", Severity.Success, config =>
         {
             config.VisibleStateDuration = 1000;
             config.Icon = @Icons.Material.Outlined.Check;
@@ -88,14 +87,14 @@
         MudDialog?.Close(DialogResult.Ok(true));
     }
 
-    private void Cancel()
+    void Cancel()
     {
         MudDialog.Close(DialogResult.Cancel());
     }
 
     private bool ValidateScreeningTime()
     {
-        // Updating the selected values to the screening
+        // Adding the selected values to the new screening
         if (_date.HasValue && _time.HasValue)
         {
             TimeSpan time = (TimeSpan)_time;
@@ -104,7 +103,7 @@
             Screening.DateTime = date;
             Screening.DateTime = Screening.DateTime.Add(time);
         }
-        /*
+
         // Getting the new screening end time
         int newScreeningMovieDuration = Movies.Where(m => m.ID == Screening.MovieID).FirstOrDefault().Duration;
         var newScreeningStartTime = Screening.DateTime;
@@ -130,16 +129,16 @@
             // This will make sure the screening times don't overlap at all
             if (newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime)
             {
-                return false;
+                if (Screening.ID != screening.ID) return false;
             };
         }
-        */
+
         return true;
     }
 
-    private async Task UpdateScreeningAsync()
+    private async Task UpdateMovieScreeningAsync()
     {
-        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + "/update/", Screening);
+        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + $"/update/", Screening);
         await MudTable.ReloadServerData();
     }
 
