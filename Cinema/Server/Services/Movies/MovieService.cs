@@ -29,8 +29,8 @@ namespace Cinema.Server.Services.Movies
                  .SingleOrDefault();
 
             movie.Screenings = _context.Screenings
-                .Where(s => s.ID == movie.ID)
-                .Select(s => new ScreeningDTO 
+                .Where(s => s.MovieID == movie.ID)
+                .Select(s => new ScreeningDTO() 
                 {
                     ID = s.ID,
                     DateTime = s.DateTime,
@@ -45,7 +45,6 @@ namespace Cinema.Server.Services.Movies
         public async Task<List<MovieDTO>> GetMoviesAsync()
         {
             List<MovieDTO> movies = _context.Movies
-                .Include(s => s.Screenings)
                 .Select(m => new MovieDTO() 
                 {
                     ID = m.ID,
@@ -60,7 +59,7 @@ namespace Cinema.Server.Services.Movies
             foreach (var movie in movies)
             {
                 movie.Screenings = _context.Screenings
-                    .Where(s => s.ID == movie.ID)
+                    .Where(s => s.MovieID == movie.ID)
                     .Select(s => new ScreeningDTO()
                     {
                         ID = s.ID,

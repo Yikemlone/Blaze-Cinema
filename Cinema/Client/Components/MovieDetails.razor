@@ -25,6 +25,17 @@
                 </MudContainer>
             </MudItem>
             
+            <MudItem xs="9" sm="9" md="8">
+                <MudGrid Spacing="3" Justify="Justify.Center">
+                    @foreach (var screening in Movie.Screenings)
+                    {
+                        <MudItem xs="9" sm="9" md="8">
+                            <MudText Typo="Typo.subtitle2">@screening.DateTime</MudText>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudItem>
+
             <MudItem xs="6" sm="8" md="12">
                 <iframe src="https://www.youtube.com/embed/@Movie.Trailer"
                     style="width: 100%!important;height: 500px!important;"

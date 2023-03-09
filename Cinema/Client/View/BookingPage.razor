@@ -1,4 +1,6 @@
-﻿<h3>Booking</h3>
+﻿@page "/booking/{ID:int}"
+
+<h3>Booking</h3>
 
 <PageTitle>Booking Page</PageTitle>
 
@@ -17,5 +19,5 @@
 </MudPaper>
 
 @code {
-
+    [Parameter] public int ID { get; set; }
 }
