@@ -25,7 +25,7 @@
                     </MudStack>
 
                     <MudStack Row="true">
-                            <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" @bind-Time="_time"/>
+                        <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" @bind-Time="_time"/>
                         <MudDatePicker Label="Date" PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy" @bind-Date="_date" />
                     </MudStack>
                 }
@@ -45,8 +45,10 @@
     private ScreeningDTO? _newScreening;
     private List<RoomDTO>? _rooms;
 
-    TimeSpan? _time = new TimeSpan(12, 00, 00);
-    DateTime? _date = new DateTime(2023, 1, 1);
+    private TimeSpan? _time = new TimeSpan(12, 00, 00);
+    private DateTime? _date = new DateTime(2023, 1, 1);
+
+    private DateTime _overlapDateTime;
 
     [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
@@ -73,6 +75,8 @@
                 config.VisibleStateDuration = 1000;
                 config.Icon = @Icons.Material.Outlined.Error;
             });
+
+
 
             return;
         } 
@@ -123,13 +127,14 @@
             var currentScreeningEndTime = screening.DateTime.AddMinutes(currentMovieDuration);
 
             // Current screening start and end
-            Console.WriteLine("currentScreeningStartTime: " + currentScreeningStartTime.ToString());
-            Console.WriteLine("currentScreeningEndTime: " + currentScreeningEndTime.ToString());
-            Console.WriteLine(newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime);
+            //Console.WriteLine("currentScreeningStartTime: " + currentScreeningStartTime.ToString());
+            //Console.WriteLine("currentScreeningEndTime: " + currentScreeningEndTime.ToString());
+            //Console.WriteLine(newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime);
 
             // This will make sure the screening times don't overlap at all
             if (newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime) 
             {
+                _overlapDateTime = screening.DateTime;
                 return false;
             };
         }
