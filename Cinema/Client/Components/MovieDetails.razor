@@ -15,14 +15,16 @@
             </MudItem>
 
             <MudItem xs="9" sm="9" md="1">
-                <MudText Typo="Typo.subtitle2">@Movie.AgeRating</MudText>
-                <MudText Typo="Typo.subtitle2">@Movie.Duration minutes</MudText>
+                <MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>
+                <MudText Inline="true" Typo="Typo.subtitle2">@Movie.Duration Minutes</MudText>
             </MudItem>
 
             <MudItem xs="9" sm="9" md="8">
-                <MudContainer Style="height:280px; overflow:auto">
+                <MudPaper Class="d-flex align-content-end flex-wrap flex-grow-1 gap-4" Height="380px" Elevation="0" Style="overflow:auto">
+                    <MudPaper Height="@(Movie.Description.Length > 500? "380px":"150px")" Elevation="0">
                     <MudText Typo="Typo.body1">@Movie.Description</MudText>
-                </MudContainer>
+                    </MudPaper>
+                </MudPaper>
             </MudItem>
             
             <MudItem xs="9" sm="9" md="8">

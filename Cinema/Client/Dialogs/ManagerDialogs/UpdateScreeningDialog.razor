@@ -1,33 +1,34 @@
-﻿@*@using Cinema.Shared.DTO
+﻿@using Cinema.Shared.DTO
 @inject ISnackbar Snackbar
 
 <MudDialog>
-
     <DialogContent>
         <MudPaper>
+
             <MudForm>
+                @if (Movies != null && Screenings != null && _rooms != null)
+                {
+                    <MudStack Row=true>
+                        <MudSelect Label="Movie" @bind-Value="Screening.MovieID" Text="Select Movie" Variant="Variant.Filled" Required RequiredError="You must select a Movie.">
+                        @foreach (var movie in Movies)
+                            {
+                                <MudSelectItem Value="@movie.ID">@movie.Name</MudSelectItem>
+                            }
+                        </MudSelect>
 
-                <MudStack Row=true>
-                    <MudTextField T="string" Label="Name" Variant="Variant.Filled" Required RequiredError="You must enter a Name." @bind-Value=Movie.Name></MudTextField>
-                    <MudTextField T="int" Label="Duration" Variant="Variant.Filled" Required RequiredError="You must enter a Duration." @bind-Value=@Movie.Duration></MudTextField>
-                </MudStack>
+                        <MudSelect Label="Room" @bind-Value="Screening.RoomID" Text="Select Room" Variant="Variant.Filled" Required RequiredError="You must select a Room.">
+                        @foreach (var room in _rooms)
+                            {
+                                <MudSelectItem Value="@room.ID">@room.ID</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudStack>
 
-                <MudStack>
-                    <MudSelect @bind-Value="Movie.AgeRating" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
-                        <MudSelectItem Value="@("G")">  G </MudSelectItem>
-                        <MudSelectItem Value="@("PG")"> PG </MudSelectItem>
-                        <MudSelectItem Value="@("12A")"> 12A </MudSelectItem>
-                        <MudSelectItem Value="@("15A")"> 15A </MudSelectItem>
-                        <MudSelectItem Value="@("16")"> 16 </MudSelectItem>
-                        <MudSelectItem Value="@("18")"> 18 </MudSelectItem>
-                    </MudSelect>
-                    <MudTextField T="string" Label="Trailer" Variant="Variant.Filled" Required RequiredError="You must enter a Trailer." @bind-Value=@Movie.Trailer></MudTextField>
-                </MudStack>
-
-                <MudStack Row=true>
-                    <MudTextField T="string" Label="Description" Variant="Variant.Filled" Required RequiredError="You must enter a Description." @bind-Value=Movie.Description Lines="5"></MudTextField>
-                </MudStack>
-
+                    <MudStack Row="true">
+                        <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" @bind-Time="_time" />
+                        <MudDatePicker Label="Date" PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy" @bind-Date="_date" />
+                    </MudStack>
+                }
             </MudForm>
         </MudPaper>
     </DialogContent>
@@ -36,48 +37,116 @@
         <MudButton Color="Color.Primary" OnClick="Close">Save</MudButton>
         <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
     </DialogActions>
-
 </MudDialog>
 
-
 @code {
-    private const string API_URL = "api/admin";
-    private HttpClient _client;
+    private const string API_URL = "api/manager";
+    private HttpClient? _client;
+    private List<RoomDTO>? _rooms;
 
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public MovieDTO Movie { get; set; }
-    [Parameter] public MudTable<MovieDTO> MudTable { get; set; } 
+    TimeSpan? _time;
+    DateTime? _date;
+
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
+    [Parameter] public List<MovieDTO> Movies { get; set; }
+    [Parameter] public ScreeningDTO Screening { get; set; }
+    [Parameter] public List<ScreeningDTO> Screenings { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        _rooms = await GetRoomsModelAsync();
+
+        _time = Screening.DateTime.TimeOfDay;
+        _date = Screening.DateTime.Date;
     }
 
-    async void Close() 
-    { 
-        await UpdateMovieModel();
-
+    async void Close()
+    {
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-        Snackbar.Add("Movie Updated", Severity.Success, config =>
+
+        if (!ValidateScreeningTime())
+        {
+            Snackbar.Add("Movie Overlap", Severity.Warning, config =>
+            {
+                config.VisibleStateDuration = 1000;
+                config.Icon = @Icons.Material.Outlined.Error;
+            });
+
+            return;
+        }
+
+        await UpdateMovieScreeningAsync();
+
+        Snackbar.Add("Screening Updated", Severity.Success, config =>
         {
             config.VisibleStateDuration = 1000;
             config.Icon = @Icons.Material.Outlined.Check;
         });
 
-        MudDialog.Close(DialogResult.Ok(true));
+        MudDialog?.Close(DialogResult.Ok(true));
     }
 
-    void Cancel() 
-    { 
-        MudDialog.Close(DialogResult.Cancel()); 
-    }
-
-    private async Task UpdateMovieModel() 
+    void Cancel()
     {
-        await _client.PostAsJsonAsync<MovieDTO>(API_URL + $"/update/", Movie);
+        MudDialog.Close(DialogResult.Cancel());
+    }
+
+    private bool ValidateScreeningTime()
+    {
+        // Adding the selected values to the new screening
+        if (_date.HasValue && _time.HasValue)
+        {
+            TimeSpan time = (TimeSpan)_time;
+            DateTime date = (DateTime)_date;
+
+            Screening.DateTime = date;
+            Screening.DateTime = Screening.DateTime.Add(time);
+        }
+
+        // Getting the new screening end time
+        int newScreeningMovieDuration = Movies.Where(m => m.ID == Screening.MovieID).FirstOrDefault().Duration;
+        var newScreeningStartTime = Screening.DateTime;
+        var newScreeningEndTime = Screening.DateTime.AddMinutes(newScreeningMovieDuration);
+
+        foreach (var screening in Screenings)
+        {
+            // If the room or day are not the same, move on.
+            if (Screening.RoomID != screening.RoomID) continue;
+            if (Screening.DateTime.Date != screening.DateTime.Date) continue;
+
+            int currentMovieDuration = Movies.Where(m => m.ID == screening.MovieID).FirstOrDefault().Duration;
+
+            // Current screening start and end
+            var currentScreeningStartTime = screening.DateTime;
+            var currentScreeningEndTime = screening.DateTime.AddMinutes(currentMovieDuration);
+
+            // Current screening start and end
+            Console.WriteLine("currentScreeningStartTime: " + currentScreeningStartTime.ToString());
+            Console.WriteLine("currentScreeningEndTime: " + currentScreeningEndTime.ToString());
+            Console.WriteLine(newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime);
+
+            // This will make sure the screening times don't overlap at all
+            if (newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime)
+            {
+                if (Screening.ID != screening.ID) return false;
+            };
+        }
+
+        return true;
+    }
+
+    private async Task UpdateMovieScreeningAsync()
+    {
+        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + $"/update/", Screening);
         await MudTable.ReloadServerData();
     }
 
+    private async Task<List<RoomDTO>> GetRoomsModelAsync()
+    {
+        return await _client.GetFromJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
+    }
 }
-*@
