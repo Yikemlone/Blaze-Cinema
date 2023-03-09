@@ -1,0 +1,20 @@
+﻿@using Cinema.Shared.DTO
+
+<MudButton Href="@_link"
+    Variant="Variant.Text"
+    EndIcon="@Icons.Custom.Brands.GitHub"
+    Color="Color.Secondary"
+    Style="text-transform:none">
+
+    <MudText Typo="Typo.subtitle2">@Screening.DateTime.TimeOfDay</MudText>
+</MudButton>
+
+@code {
+    [Parameter] public ScreeningDTO Screening { get; set;}
+    private string _link;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _link = "/booking/" + Screening.ID;
+    }
+}

@@ -1,6 +1,5 @@
-﻿@page "/booking/{ID:int}"
-
-<h3>Booking</h3>
+﻿@page "/booking/{ScreeningID:int}"
+@using Cinema.Shared.DTO
 
 <PageTitle>Booking Page</PageTitle>
 
@@ -8,7 +7,7 @@
     <MudGrid Justify="Justify.Center" Spacing="5">
 
         <MudItem xs="12">
-            <RoomLayout></RoomLayout>
+            @*<RoomLayout Room=></RoomLayout>*@
         </MudItem>
 
         <MudItem xs="12">
@@ -19,5 +18,15 @@
 </MudPaper>
 
 @code {
-    [Parameter] public int ID { get; set; }
+    private HttpClient? _client;
+    private RoomDTO _room;
+
+    [Parameter] public int ScreeningID { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        //_room = await GetRoomAsync();
+    }
+
 }

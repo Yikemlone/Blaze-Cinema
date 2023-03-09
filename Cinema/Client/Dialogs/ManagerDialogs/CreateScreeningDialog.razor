@@ -45,8 +45,8 @@
     private ScreeningDTO? _newScreening;
     private List<RoomDTO>? _rooms;
 
-    private TimeSpan? _time = new TimeSpan(12, 00, 00);
-    private DateTime? _date = new DateTime(2023, 1, 1);
+    private TimeSpan? _time = DateTime.Now.TimeOfDay;
+    private DateTime? _date = DateTime.Now.Date;
 
     private DateTime _overlapDateTime;
 
@@ -76,7 +76,8 @@
                 config.Icon = @Icons.Material.Outlined.Error;
             });
 
-
+            // Update the time field to go red and show error message. Then dispay 
+            // which time is overlapping
 
             return;
         } 
@@ -99,6 +100,8 @@
 
     private bool ValidateScreeningTime() 
     {
+        if (_date < DateTime.Now.Date || _time < DateTime.Now.TimeOfDay) return false;
+
         // Adding the selected values to the new screening
         if (_date.HasValue && _time.HasValue)
         {

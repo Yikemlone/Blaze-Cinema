@@ -192,7 +192,7 @@
         _searchString = "";
         _dialogOptions = new DialogOptions
         {
-            CloseButton = true,
+            CloseButton = false,
             MaxWidth = MaxWidth.Medium,
             FullWidth = true,
             DisableBackdropClick = true
@@ -248,7 +248,7 @@
         parameters.Add("Movies", _movies.ToList());
         parameters.Add("Screenings", _screenings.ToList());
 
-        DialogService.Show<CreateScreeningDialog>("Create New Movie Screening", parameters, _dialogOptions);
+        DialogService.Show<CreateScreeningDialog>("Create New Screening", parameters, _dialogOptions);
     }
 
     private void OpenUpdateDialog()
@@ -259,7 +259,7 @@
         parameters.Add("Movies", _movies.ToList());
         parameters.Add("Screenings", _screenings.ToList());
 
-        DialogService.Show<UpdateScreeningDialog>("Update Movie Details", parameters, _dialogOptions);
+        DialogService.Show<UpdateScreeningDialog>("Update Screening Details", parameters, _dialogOptions);
     }
 
     private void OpenDeleteDialog()
@@ -268,7 +268,7 @@
         parameters.Add("Screening", _selected);
         parameters.Add("MudTable", _mudTable);
 
-        DialogService.Show<DeleteScreeningDialog>("Delete Movie", parameters, new DialogOptions()
+        DialogService.Show<DeleteScreeningDialog>("Delete Screening", parameters, new DialogOptions()
         {
             CloseButton = true,
             MaxWidth = MaxWidth.Medium,

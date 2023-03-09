@@ -44,8 +44,8 @@
     private HttpClient? _client;
     private List<RoomDTO>? _rooms;
 
-    TimeSpan? _time;
-    DateTime? _date;
+    private TimeSpan? _time;
+    private DateTime? _date;
 
     [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
@@ -97,6 +97,8 @@
 
     private bool ValidateScreeningTime()
     {
+        if (_date < DateTime.Now.Date || _time < DateTime.Now.TimeOfDay) return false;
+
         // Adding the selected values to the new screening
         if (_date.HasValue && _time.HasValue)
         {
