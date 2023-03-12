@@ -28,6 +28,10 @@
                         <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" @bind-Time="_time"/>
                         <MudDatePicker Label="Date" PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy" @bind-Date="_date" />
                     </MudStack>
+
+
+                    @*In this part of the form we should add an option to "Add at this time for the rest of the week"*@
+
                 }
             </MudForm>
         </MudPaper>
@@ -95,7 +99,7 @@
 
     private void Cancel()
     {
-        MudDialog.Close(DialogResult.Cancel());
+        MudDialog?.Close(DialogResult.Cancel());
     }
 
     private bool ValidateScreeningTime() 
@@ -128,11 +132,6 @@
             // Current screening start and end
             var currentScreeningStartTime = screening.DateTime;
             var currentScreeningEndTime = screening.DateTime.AddMinutes(currentMovieDuration);
-
-            // Current screening start and end
-            //Console.WriteLine("currentScreeningStartTime: " + currentScreeningStartTime.ToString());
-            //Console.WriteLine("currentScreeningEndTime: " + currentScreeningEndTime.ToString());
-            //Console.WriteLine(newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime);
 
             // This will make sure the screening times don't overlap at all
             if (newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime) 

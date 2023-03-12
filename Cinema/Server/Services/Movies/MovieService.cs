@@ -37,6 +37,7 @@ namespace Cinema.Server.Services.Movies
                     MovieID = s.ID,
                     RoomID = s.RoomID
                 })
+                .OrderBy(s => s.DateTime)
                 .ToList();
 
             return movie;
@@ -67,6 +68,7 @@ namespace Cinema.Server.Services.Movies
                         MovieID = s.ID,
                         RoomID = s.RoomID
                     })
+                    .OrderBy(s => s.DateTime)
                     .ToList();  
             }
 

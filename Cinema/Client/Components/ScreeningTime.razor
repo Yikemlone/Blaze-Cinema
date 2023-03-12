@@ -1,11 +1,6 @@
 ﻿@using Cinema.Shared.DTO
 
-<MudButton Href="@_link"
-    Variant="Variant.Text"
-    EndIcon="@Icons.Custom.Brands.GitHub"
-    Color="Color.Secondary"
-    Style="text-transform:none">
-
+<MudButton Href="@_link" Variant="Variant.Filled" EndIcon="@Icons.TwoTone.WatchLater" Color="Color.Secondary">
     <MudText Typo="Typo.subtitle2">@Screening.DateTime.TimeOfDay</MudText>
 </MudButton>
 
@@ -16,5 +11,6 @@
     protected override async Task OnInitializedAsync()
     {
         _link = "/booking/" + Screening.ID;
+        Screening.DateTime = Screening.DateTime.AddTicks(-Screening.DateTime.Ticks % TimeSpan.TicksPerSecond);
     }
-}
+}   

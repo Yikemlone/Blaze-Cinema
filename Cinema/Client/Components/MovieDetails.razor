@@ -1,4 +1,5 @@
 ﻿@using Cinema.Shared.DTO
+@using System.Globalization
 @inherits ComponentBase
 
 @if (Movie != null) 
@@ -21,19 +22,41 @@
 
             <MudItem xs="9" sm="9" md="8">
                 <MudPaper Class="d-flex align-content-end flex-wrap flex-grow-1 gap-4" Height="380px" Elevation="0" Style="overflow:auto">
-                    <MudPaper Height="@(Movie.Description.Length > 500? "380px":"150px")" Elevation="0">
-                    <MudText Typo="Typo.body1">@Movie.Description</MudText>
+                    <MudPaper Height="@(Movie.Description.Length > 500 ? "380px":"150px")" Elevation="0">
+                        <MudText Typo="Typo.body1">@Movie.Description</MudText>
                     </MudPaper>
                 </MudPaper>
             </MudItem>
             
-            <MudItem xs="9" sm="9" md="8">
-                <MudGrid Spacing="3" Justify="Justify.Center">
-                    @foreach (var screening in Movie.Screenings)
-                    {
-                        <ScreeningTime Screening=@screening/>
-                    }
-                </MudGrid>
+            <MudItem xs="9" sm="9" md="12">
+                <MudTabs Elevation="2" Color="@Color.Primary" ApplyEffectsToContainer="true" Position="Position.Start">
+                    
+                    <MudTabPanel Text="@("Monday " + daysOfTheWeek[0])">
+                        @foreach (var screening in Movie.Screenings)
+                        {
+                            <ScreeningTime Screening=@screening />
+                        }
+                    </MudTabPanel>
+
+                    <MudTabPanel Text="@("Tuesday " + daysOfTheWeek[1])">
+                    </MudTabPanel>
+
+                    <MudTabPanel Text="@("Wednesday " + daysOfTheWeek[2])">
+                    </MudTabPanel>
+
+                    <MudTabPanel Text="@("Thurday " + daysOfTheWeek[3])">
+                    </MudTabPanel>
+
+                    <MudTabPanel Text="@("Friday " + daysOfTheWeek[4])">
+                    </MudTabPanel>
+
+                    <MudTabPanel Text="@("Saturday " + daysOfTheWeek[5])">
+                    </MudTabPanel>
+
+                    <MudTabPanel Text="@("Sunday " + daysOfTheWeek[6])">
+                    </MudTabPanel>  
+
+                </MudTabs>
             </MudItem>
 
             <MudItem xs="6" sm="8" md="12">
@@ -52,23 +75,45 @@
 
 @code {
 
-    [Parameter]
-    public int MovieID { get; set; }
-
     private const string API_URL = "api/movie";
-    private string _imageURL;
-    private HttpClient _client;
-    private string link;
 
+    private HttpClient _client;
     public MovieDTO Movie { get; set; }
-    //public List<ScreeningDTO> Screenings { get; set; } = new List<ScreeningDTO>();
+    private string _imageURL;
+    string[] daysOfTheWeek;
+
+    [Parameter] public int MovieID { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         Movie = await GetMovieAsync();
         _imageURL = $"images/{Movie.ID}.jpg";
-        //Screenings = await GetScreening(Movie.ID);
+
+        DateTime startOfWeek = DateTime.Today.AddDays(
+            (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek -
+            (int)DateTime.Today.DayOfWeek);
+
+        string result = string.Join("," + Environment.NewLine, Enumerable
+          .Range(0, 7)
+          .Select(i => startOfWeek
+             .AddDays(i)
+             .ToString("dd MMMM")));
+
+        daysOfTheWeek = result.Split(",");
+
+
+        // Now we must filter the screenings by the days of the week. 
+        // Only show screenings for this week.
+
+        // These will all be lists containing their day of booking. We must make sure to also filter by THIS week.
+        // mondayScreenings
+        // tuesdayScreenings
+        // wednesdayScreenings
+        // thursdayScreenings
+        // fridayScreenings
+        // saturdayScreenings
+        // sundayScreenings
     }
 
     public async Task<MovieDTO> GetMovieAsync()
