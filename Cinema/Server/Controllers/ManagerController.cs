@@ -70,5 +70,20 @@ namespace Cinema.Server.Controllers
         {
             return await _managerService.GetRoomsAsync();
         }
+
+        //get seat
+        [HttpGet]
+        [Route("seats/{seatID}")]
+        public async Task<SeatDTO> GetSeat(int seatID)
+        {
+            return await _managerService.GetSeatAsync(seatID);
+        }
+        // get seats
+        [HttpGet]
+        [Route("seats")]
+        public async Task<List<SeatDTO>> GetSeats()
+        {
+            return await _managerService.GetSeatsAsync();
+        }
     }
 }
