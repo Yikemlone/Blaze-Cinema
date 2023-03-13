@@ -18,7 +18,7 @@ INSERT INTO Employees VALUES
 ('Admin','Sarah','Mullan','SarahMullan97','Password206');
 
 
-INSERT INTO Movies VALUES
+INSERT INTO Movies(Name, Duration, AgeRating, Trailer, Description) VALUES
 ('Puss in Boots: The Last Wish', 102, 'PG', 'RqrXhwS33yc', 'Puss in Boots discovers that his passion for adventure has taken its toll: He has burned through eight of his nine lives, leaving him with only one life left. Puss sets out on an epic journey to find the mythical Last Wish and restore his nine lives.'),
 ('Avatar: The Way of Water', 193, '12A', 'd9MyW72ELq0', 'Jake Sully lives with his newfound family formed on the planet of Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Navi race to protect their planet.'),
 ('Roald Dahls Matilda the Musical', 117, 'PG', 'lroAhsDr2vI', 'Matilda Wormwood is a little girl with big curiosity, a sharp mind and a vivid imagination — and the worst parents in the world. While her parents content themselves with trashy TV and dodgy money-making schemes, she loves to lose herself in the pages of her beloved books. On meeting an inspirational teacher, Matilda is encouraged and begins conjuring her own fantastical tales. Excited to attend Crunchem Hall, Matilda is surprised to find the school is an oppressive place led by the huge and villainous Miss Trunchbull. Filled with an overwhelming sense of justice, Matilda dares to take a stand for what is right and teach Trunchbull a lesson she wont forget.'),
