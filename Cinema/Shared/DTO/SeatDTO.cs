@@ -4,7 +4,7 @@
     {
         public int ID { get; set; }
         public string SeatNumber { get; set; } = string.Empty;
-        public bool Booked { get; set; }
+        
         public bool DisabiltySeat { get; set; }
 
         public int? RoomID { get; set; }

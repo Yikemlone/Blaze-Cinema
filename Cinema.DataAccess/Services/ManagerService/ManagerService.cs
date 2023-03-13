@@ -134,5 +134,36 @@ namespace Cinema.DataAccess.Services.ManagerService
             return rooms;
         }
 
+        //Get Seat
+        public async Task<SeatDTO> GetSeatAsync(int seatID)
+        {
+            var seat = _context.Seats
+                 .Where(m => m.ID == seatID)
+                 .Select(m => new SeatDTO()
+                 {
+                     ID = m.ID,
+                     SeatNumber = m.SeatNumber,
+                     DisabiltySeat = m.DisabiltySeat
+
+                 })
+                 .SingleOrDefault();
+
+            return seat;
+        }
+
+        //Get Seats
+        public async Task<List<SeatDTO>> GetSeatsAsync()
+        {
+            List<SeatDTO> seats = _context.Seats
+              .Select(m => new SeatDTO()
+              {
+                  ID = m.ID,
+                  SeatNumber = m.SeatNumber,
+                  DisabiltySeat = m.DisabiltySeat
+
+              }).ToList();
+
+            return seats;
+        }
     }
 }
