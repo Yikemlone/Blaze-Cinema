@@ -2,8 +2,18 @@
 @inherits ComponentBase
 
 @*This will display the layout of the room the screening is being displayed in.*@
+<MudPaper>
 
+</MudPaper>
 
 @code {
+    //[Parameter] public List<SeatScreeningDTO> SeatScreening { get; set; }
+    //[Parameter] public EventCallback<List<SeatScreeningDTO>> OnSeatsSelected { get; set; }
+    
+    //private List<SeatScreeningDTO> SelectedSeats;
 
+    protected async Task SeatSelected(string seat) 
+    {
+        // This will set the selected seat.
+    }
 }

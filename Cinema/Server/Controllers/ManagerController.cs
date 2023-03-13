@@ -1,8 +1,6 @@
-﻿using Cinema.Server.Services.Employees;
-using Cinema.Server.Services.Movies;
+﻿using Cinema.DataAccess.Services.ManagerService;
 using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Http.Description;
 
 namespace Cinema.Server.Controllers
 {
@@ -18,7 +16,6 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<EmployeeDTO>))]
         [Route("employees")]
         public async Task<List<EmployeeDTO>> GetEmployees()
         {
@@ -28,7 +25,6 @@ namespace Cinema.Server.Controllers
 
         //get employee
         [HttpGet]
-        [ResponseType(typeof(EmployeeDTO))]
         [Route("employees/{employeeID}")]
         public async Task<EmployeeDTO> GetEmployee(int employeeID)
         {
@@ -61,7 +57,6 @@ namespace Cinema.Server.Controllers
 
         //get room
         [HttpGet]
-        [ResponseType(typeof(RoomDTO))]
         [Route("rooms/{roomID}")]
         public async Task<RoomDTO> GetRoom(int roomID)
         {
@@ -70,11 +65,25 @@ namespace Cinema.Server.Controllers
 
         //get rooms
         [HttpGet]
-        [ResponseType(typeof(List<RoomDTO>))]
         [Route("rooms")]
         public async Task<List<RoomDTO>> GetRooms()
         {
             return await _managerService.GetRoomsAsync();
+        }
+
+        //get seat
+        [HttpGet]
+        [Route("seats/{seatID}")]
+        public async Task<SeatDTO> GetSeat(int seatID)
+        {
+            return await _managerService.GetSeatAsync(seatID);
+        }
+        // get seats
+        [HttpGet]
+        [Route("seats")]
+        public async Task<List<SeatDTO>> GetSeats()
+        {
+            return await _managerService.GetSeatsAsync();
         }
     }
 }

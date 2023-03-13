@@ -1,0 +1,19 @@
+﻿@using Cinema.Shared.DTO
+@inherits ComponentBase
+
+@*
+    Dislay options to select how many and what types of seats they would like.
+*@
+
+<MudIcon Icon="@Icons.Filled.Person"></MudIcon>
+<MudIcon Icon="@Icons.Material.Filled.EscalatorWarning"></MudIcon>
+
+@code{
+    //[Parameter] EventCallback<List<SeatTypeDTO>> OnSelectedSeats { get; set;}
+
+    public async Task OnSelectedTickets() 
+    {
+        // This will return a list of seats selected back to the booking page.
+    } 
+
+}

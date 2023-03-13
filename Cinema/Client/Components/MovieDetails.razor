@@ -16,7 +16,8 @@
             </MudItem>
 
             <MudItem xs="9" sm="9" md="1">
-                <MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>
+                <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="50" />
+                @*<MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>*@
                 <MudText Inline="true" Typo="Typo.subtitle2">@Movie.Duration Minutes</MudText>
             </MudItem>
 
@@ -81,6 +82,9 @@
     public MovieDTO Movie { get; set; }
     private string _imageURL;
     string[] daysOfTheWeek;
+    private string _ratingURL;
+    private HttpClient _client;
+    private string link;
 
     [Parameter] public int MovieID { get; set; }
 
