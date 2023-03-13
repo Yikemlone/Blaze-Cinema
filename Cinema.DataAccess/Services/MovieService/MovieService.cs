@@ -110,19 +110,49 @@ namespace Cinema.DataAccess.Services.MovieService
 
         //!!!! TODO !!!!!
         // Shane do this
-        public Task<List<SeatScreeningDTO>> GetSeatsScreeningAsync(int screeningID)
+        public async Task<List<SeatScreeningDTO>> GetSeatScreeningsAsync()
         {
-            throw new NotImplementedException();
+         List <SeatScreeningDTO> SeatScreenings = _context.SeatScreenings
+            .Select(m => new SeatScreeningDTO()
+         {
+             ID = m.ID,
+             Booked = m.Booked
+            
+
+         })
+        .ToList();
+
+           return SeatScreenings;
         }
         // this
-        public Task<SeatScreeningDTO> GetSeatScreeningAsync(int seatScreeningID)
+        public async Task<SeatScreeningDTO> GetSeatScreeningAsync(int seatScreeningID)
         {
-            throw new NotImplementedException();
+            var SeatScreening = _context.SeatScreenings
+             .Where(m => m.ID == seatScreeningID)
+             .Select(m => new SeatScreeningDTO()
+             {
+                 ID = m.ID,
+                 Booked=m.Booked
+
+             })
+             .SingleOrDefault();
+
+            return SeatScreening;
         }
         // and this
-        public Task UpdateSeatScreeningAsync(SeatScreeningDTO seatScreening)
+        public async Task UpdateSeatScreeningAsync(SeatScreeningDTO seatScreening)
         {
-            throw new NotImplementedException();
+            var oldSeatScreening = _context.SeatScreenings
+                .Select(m => m)
+                .Where(m => m.ID == seatScreening.ID)
+                .SingleOrDefault();
+
+            if (oldSeatScreening == null) return;
+
+           
+            oldSeatScreening.Booked = seatScreening.Booked;
+
+            await _context.SaveChangesAsync();
         }
 
     }
