@@ -10,6 +10,6 @@
         public int? RoomID { get; set; }
         public RoomDTO? Room { get; set; }
 
-        //public List<SeatScreeningDTO>? SeatScreenings { get; set; }
+        public List<SeatScreeningDTO>? SeatScreenings { get; set; }
     }
 }
