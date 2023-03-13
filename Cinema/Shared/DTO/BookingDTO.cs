@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cinema.Shared.DTO
+﻿namespace Cinema.Shared.DTO
 {
     public class BookingDTO
     {
         public int ID { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = string.Empty;
 
-        public List<SeatDTO> Seats { get; set; }
-        public List<TicketTypeDTO> TicketTypes { get; set; }
+        public List<SeatDTO> Seats { get; set; } = new();
+        public List<TicketTypeDTO> TicketTypes { get; set; } = new();
         public CustomerDTO? Customer { get; set; }
 
     }
