@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cinema.Shared.DTO
 {
-    public class SeastScreeningDTO
+    public class SeatScreeningDTO
     {
         public int ID { get; set; }
         public bool Booked { get; set; }
