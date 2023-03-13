@@ -112,12 +112,12 @@ namespace Cinema.DataAccess.Services.MovieService
         {
             throw new NotImplementedException();
         }
-
+        // this
         public Task<SeatScreeningDTO> GetSeatScreening(int seatScreeningID)
         {
             throw new NotImplementedException();
         }
-
+        // and this
         public Task UpdateSeatScreening(SeatScreeningDTO seatScreening)
         {
             throw new NotImplementedException();
