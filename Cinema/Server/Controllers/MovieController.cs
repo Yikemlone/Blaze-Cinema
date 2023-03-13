@@ -52,9 +52,9 @@ namespace Cinema.Server.Controllers
 
         [HttpPost]
         [Route("screenings/{movieID}")]
-        public async Task<ScreeningDTO> UpdateSeatScreening([FromBody] SeatScreeningDTO seatScreening)
+        public async Task UpdateSeatScreening([FromBody] SeatScreeningDTO seatScreening)
         {
-            return await _movieService.UpdateSeatScreening(seatScreening);
+            await _movieService.UpdateSeatScreening(seatScreening);
         }
     }
 }
