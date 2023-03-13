@@ -9,6 +9,8 @@ namespace Cinema.DataAccess.Services.MovieService
         public Task<MovieDTO> GetMovieAsync(int movieID);
         public Task<List<ScreeningDTO>> GetScreeningsAsync();
         public Task<ScreeningDTO> GetMovieScreeningAsync(int movieID);
-        
+        public Task<SeatScreeningDTO> GetSeatScreenings(int screeningID);
+        public Task UpdateSeatScreening(SeatScreeningDTO seatScreening);
+
     }
 }
