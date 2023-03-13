@@ -21,15 +21,14 @@
     private string _colour { get; set; }
     private bool _selected { get; set; }
 
-    [Parameter] public EventCallback<string> OnSeatSelected { get; set; }
-    [Parameter] public bool Booked { get; set; }
-    //[Parameter] public SeatScreeningDTO SeatScreening { get; set; }
+    [Parameter] public EventCallback<SeatScreeningDTO> OnSeatSelected { get; set; }
+    [Parameter] public SeatScreeningDTO SeatScreening { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _selected = false;
 
-        if (Booked)
+        if (SeatScreening.Booked)
         {
             _colour = "Red";
         }
@@ -40,7 +39,7 @@
     }
 
     public void ChangeColour() {
-        if (Booked) return;
+        if (SeatScreening.Booked) return;
 
         if (_colour.Equals("Green"))
         {
@@ -58,9 +57,9 @@
 
     public async Task OnSelected() 
     {
+        // Will send the seat back that was selected
         ChangeColour();
-        // This will return the selected seat to the seat layout.
-        await OnSeatSelected.InvokeAsync("AB"); // Change this to seating DTO later 
+        await OnSeatSelected.InvokeAsync(SeatScreening);
     }
 
 }

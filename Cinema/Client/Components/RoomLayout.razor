@@ -3,17 +3,36 @@
 
 @*This will display the layout of the room the screening is being displayed in.*@
 <MudPaper>
-
+    @foreach (var seat in SeatScreenings)
+    {
+        <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat"/>
+    }
 </MudPaper>
 
 @code {
-    //[Parameter] public List<SeatScreeningDTO> SeatScreening { get; set; }
-    //[Parameter] public EventCallback<List<SeatScreeningDTO>> OnSeatsSelected { get; set; }
-    
-    //private List<SeatScreeningDTO> SelectedSeats;
+    [Parameter] public List<SeatScreeningDTO> SeatScreenings { get; set; }
+    [Parameter] public EventCallback<List<SeatScreeningDTO>> OnSeatsSelected { get; set; }
 
-    protected async Task SeatSelected(string seat) 
+    private List<SeatScreeningDTO> _selectedSeats;
+
+    protected async Task SeatSelected(SeatScreeningDTO seat)
     {
-        // This will set the selected seat.
+        // This will set the selected seat, unless its already in the list
+        // which then it will remove it 
+        if (_selectedSeats.Contains(seat))
+        {
+            _selectedSeats.Remove(seat);
+        }
+        else 
+        {
+            _selectedSeats.Add(seat);
+        }
     }
+
+    protected async Task OnSelected() 
+    {
+        // This will send all the selected seats page to booking page.
+        await OnSeatsSelected.InvokeAsync(_selectedSeats);
+    }
+
 }

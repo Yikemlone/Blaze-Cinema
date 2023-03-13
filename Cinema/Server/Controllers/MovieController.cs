@@ -42,5 +42,19 @@ namespace Cinema.Server.Controllers
         {
             return await _movieService.GetMovieScreeningAsync(movieID);
         }
+
+        [HttpGet]
+        [Route("seats")]
+        public async Task<ScreeningDTO> GetSeatScreenings(int screeningID)
+        {
+            return await _movieService.GetMovieScreeningAsync(screeningID);
+        }
+
+        [HttpPost]
+        [Route("screenings/{movieID}")]
+        public async Task UpdateSeatScreening([FromBody] SeatScreeningDTO seatScreening)
+        {
+            await _movieService.UpdateSeatScreening(seatScreening);
+        }
     }
 }

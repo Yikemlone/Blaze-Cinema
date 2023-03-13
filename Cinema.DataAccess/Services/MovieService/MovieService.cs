@@ -107,5 +107,23 @@ namespace Cinema.DataAccess.Services.MovieService
             return Screening;
             
         }
+
+        //!!!! TODO !!!!!
+        // Shane do this
+        public Task<List<SeatScreeningDTO>> GetSeatsScreening(int screeningID)
+        {
+            throw new NotImplementedException();
+        }
+        // this
+        public Task<SeatScreeningDTO> GetSeatScreening(int seatScreeningID)
+        {
+            throw new NotImplementedException();
+        }
+        // and this
+        public Task UpdateSeatScreening(SeatScreeningDTO seatScreening)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
