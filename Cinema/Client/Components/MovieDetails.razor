@@ -32,29 +32,29 @@
             <MudItem xs="9" sm="9" md="12">
                 <MudTabs Elevation="2" Color="@Color.Primary" ApplyEffectsToContainer="true" Position="Position.Start">
                     
-                    <MudTabPanel Text="@("Monday " + daysOfTheWeek[0])">
+                    <MudTabPanel Text="@("Monday " + _daysOfTheWeek[0])">
                         @foreach (var screening in Movie.Screenings)
                         {
                             <ScreeningTime Screening=@screening />
                         }
                     </MudTabPanel>
 
-                    <MudTabPanel Text="@("Tuesday " + daysOfTheWeek[1])">
+                    <MudTabPanel Text="@("Tuesday " + _daysOfTheWeek[1])">
                     </MudTabPanel>
 
-                    <MudTabPanel Text="@("Wednesday " + daysOfTheWeek[2])">
+                    <MudTabPanel Text="@("Wednesday " + _daysOfTheWeek[2])">
                     </MudTabPanel>
 
-                    <MudTabPanel Text="@("Thurday " + daysOfTheWeek[3])">
+                    <MudTabPanel Text="@("Thurday " + _daysOfTheWeek[3])">
                     </MudTabPanel>
 
-                    <MudTabPanel Text="@("Friday " + daysOfTheWeek[4])">
+                    <MudTabPanel Text="@("Friday " + _daysOfTheWeek[4])">
                     </MudTabPanel>
 
-                    <MudTabPanel Text="@("Saturday " + daysOfTheWeek[5])">
+                    <MudTabPanel Text="@("Saturday " + _daysOfTheWeek[5])">
                     </MudTabPanel>
 
-                    <MudTabPanel Text="@("Sunday " + daysOfTheWeek[6])">
+                    <MudTabPanel Text="@("Sunday " + _daysOfTheWeek[6])">
                     </MudTabPanel>  
 
                 </MudTabs>
@@ -80,11 +80,11 @@
 
     private HttpClient _client;
     public MovieDTO Movie { get; set; }
+
     private string _imageURL;
-    string[] daysOfTheWeek;
+    string[] _daysOfTheWeek;
     private string _ratingURL;
-    private HttpClient _client;
-    private string link;
+    private string _link;
 
     [Parameter] public int MovieID { get; set; }
 
@@ -104,7 +104,7 @@
              .AddDays(i)
              .ToString("dd MMMM")));
 
-        daysOfTheWeek = result.Split(",");
+        _daysOfTheWeek = result.Split(",");
 
 
         // Now we must filter the screenings by the days of the week. 
