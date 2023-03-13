@@ -15,7 +15,8 @@
             </MudItem>
 
             <MudItem xs="9" sm="9" md="1">
-                <MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>
+                <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="50" />
+                @*<MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>*@
                 <MudText Inline="true" Typo="Typo.subtitle2">@Movie.Duration Minutes</MudText>
             </MudItem>
 
@@ -57,6 +58,7 @@
 
     private const string API_URL = "api/movie";
     private string _imageURL;
+    private string _ratingURL;
     private HttpClient _client;
     private string link;
 
@@ -68,6 +70,7 @@
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         Movie = await GetMovieAsync();
         _imageURL = $"images/{Movie.ID}.jpg";
+        _ratingURL = $"images/IFCO_{Movie.AgeRating}.png";
         //Screenings = await GetScreening(Movie.ID);
     }
 
