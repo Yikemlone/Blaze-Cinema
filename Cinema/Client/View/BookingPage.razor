@@ -5,13 +5,23 @@
 
 <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
     <MudGrid Justify="Justify.Center" Spacing="5">
-
+        
         <MudItem xs="12">
-            @*<RoomLayout Room=></RoomLayout>*@
+            We will add a component here that will ask them how many seats do they want.
         </MudItem>
 
         <MudItem xs="12">
-            We will add a component here that will 
+            @*
+            Room layout will take the SeatScreeningDTO and populate a visual
+            that will allow users to select a seat. 
+
+            We can try and pass these vaules back or try to figure out how to bind this 
+            backwords to a string array.
+
+            
+            <RoomLayout Room=></RoomLayout>
+
+            *@
         </MudItem>
 
     </MudGrid>
@@ -19,14 +29,25 @@
 
 @code {
     private HttpClient? _client;
-    private RoomDTO _room;
+    private BookingDTO _booking;
+    private ScreeningDTO _screening;
+    //private List<SeatScreeningDTO> _seats;
 
     [Parameter] public int ScreeningID { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-        //_room = await GetRoomAsync();
+        _booking = new BookingDTO();
     }
 
+    //protected async Task SeatsSelected(List<SeatScreeningsDTO> seatScreenings) 
+    //{
+    //    _booking.Seats = seatScreenings;
+    //}
+
+    protected async Task SelectedTickets(List<TicketTypeDTO> ticketTypes)
+    {
+        _booking.TicketTypes = ticketTypes;
+    }
 }

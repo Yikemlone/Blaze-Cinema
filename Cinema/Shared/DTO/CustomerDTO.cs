@@ -14,7 +14,6 @@ namespace Cinema.Shared.DTO
         public string Email { get; set; }
         public int Points { get; set; }
         
-        // NOTE: We could do this instead, if this works.
         public List<BookingDTO>? Bookings { get; set; } 
     }
 }

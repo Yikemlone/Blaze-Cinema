@@ -11,6 +11,7 @@ namespace Cinema.Shared.DTO
     public class BookingDTO
     {
         public int ID { get; set; }
+        public string Status { get; set; }
 
         public List<SeatDTO> Seats { get; set; }
         public List<TicketTypeDTO> TicketTypes { get; set; }
