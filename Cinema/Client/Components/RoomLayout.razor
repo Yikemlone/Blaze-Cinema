@@ -2,12 +2,15 @@
 @inherits ComponentBase
 
 @*This will display the layout of the room the screening is being displayed in.*@
+
+@if(SeatScreenings != null) {
 <MudPaper>
-    @foreach (var seat in SeatScreenings)
-    {
-        <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat"/>
-    }
-</MudPaper>
+        @foreach (var seat in SeatScreenings)
+        {
+            <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat"/>
+        }
+    </MudPaper>
+}
 
 @code {
     [Parameter] public List<SeatScreeningDTO> SeatScreenings { get; set; }
