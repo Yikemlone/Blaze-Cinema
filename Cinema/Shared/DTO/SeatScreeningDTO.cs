@@ -12,7 +12,7 @@ namespace Cinema.Shared.DTO
         public bool Booked { get; set; }
        
         public SeatDTO? Seat { get; set; }
-        public ScreeningDTO? Screening { get; set; }
-        public BookingDTO? Booking { get; set; }
+        public int ScreeningID { get; set; }
+        public int? BookingID { get; set; }
     }
 }

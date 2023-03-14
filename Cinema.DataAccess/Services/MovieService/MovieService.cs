@@ -118,21 +118,22 @@ namespace Cinema.DataAccess.Services.MovieService
                 .Select(sc => new SeatScreeningDTO()
                 {
                     ID = sc.ID,
-                    Booked = sc.Booked
+                    Booked = sc.Booked,
+                    Seat = (_context.Seats
+                        .Where(s => s.ID == sc.SeatID)
+                        .Select(s => new SeatDTO 
+                        {
+                            ID = s.ID,
+                            SeatNumber = s.SeatNumber,
+                            RoomID = s.RoomID,
+                            DisabiltySeat = s.DisabiltySeat,
+                        })
+                        .FirstOrDefault()
+                    ),
+                    BookingID = sc.BookingID,
+                    ScreeningID = sc.ScreeningID
                 })
                 .ToList();
-
-            // Need the booking 
-
-            //foreach (var item in seatScreenings)
-            //{
-            //    var booking = _context.Bookings
-            //        .Where(b => b.ID == item.)
-            //}
-
-            // Need the seat
-
-            // Need Screening
 
            return seatScreenings;
         }

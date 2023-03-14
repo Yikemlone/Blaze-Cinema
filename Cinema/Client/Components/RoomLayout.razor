@@ -1,22 +1,28 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-@*This will display the layout of the room the screening is being displayed in.*@
-
 @if(SeatScreenings != null) {
-<MudPaper>
-        @foreach (var seat in SeatScreenings)
-        {
-            <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat"/>
-        }
-    </MudPaper>
+    <MudContainer MaxWidth="MaxWidth.Small">
+        <MudPaper>
+            <MudGrid>
+                @foreach (var seat in SeatScreenings)
+                {
+                    <MudItem>
+                        <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat"/>
+                    </MudItem>
+                }
+            </MudGrid>
+
+                <MudButton ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="OnSelected">Save</MudButton>
+        </MudPaper>
+    </MudContainer>
 }
 
 @code {
     [Parameter] public List<SeatScreeningDTO> SeatScreenings { get; set; }
     [Parameter] public EventCallback<List<SeatScreeningDTO>> OnSeatsSelected { get; set; }
 
-    private List<SeatScreeningDTO> _selectedSeats;
+    private List<SeatScreeningDTO> _selectedSeats = new();
 
     protected async Task SeatSelected(SeatScreeningDTO seat)
     {
@@ -37,5 +43,4 @@
         // This will send all the selected seats page to booking page.
         await OnSeatsSelected.InvokeAsync(_selectedSeats);
     }
-
 }
