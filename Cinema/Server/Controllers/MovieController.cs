@@ -1,5 +1,4 @@
 ﻿using Cinema.DataAccess.Services.MovieService;
-using Cinema.Models.Models;
 using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,7 +50,7 @@ namespace Cinema.Server.Controllers
         // Seat Screenings
         [HttpGet]
         [Route("seatscreenings/{screeningID}")]
-        public async Task<List<SeatScreeningDTO>> GetSeatScreenings([FromBody] int screeningID)
+        public async Task<List<SeatScreeningDTO>> GetSeatScreenings(int screeningID)
         {
             // This returns all the seats for a screening
             return await _movieService.GetSeatsScreeningAsync(screeningID);

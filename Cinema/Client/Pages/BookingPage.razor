@@ -27,7 +27,7 @@
 </MudPaper>
 
 @code {
-    private const string API_URL = "/api/movie/seatscreenings/";
+    private const string API_URL = "/api/movie";
     private HttpClient? _client;
     private BookingDTO _booking;
     private ScreeningDTO _screening;
@@ -54,7 +54,7 @@
 
     public async Task<List<SeatScreeningDTO>> GetSeatScreenings() 
     {
-        return await _client.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + ScreeningID);
+        return await _client.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "/seatscreenings/" + ScreeningID);
     }
 
 }
