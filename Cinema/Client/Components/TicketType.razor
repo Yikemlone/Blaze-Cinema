@@ -1,19 +1,57 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-@*
-    Dislay options to select how many and what types of seats they would like.
-*@
+<MudPaper>
+    <MudStack>
+        <MudStack Row="true">
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary"></MudIconButton>
+            <p>@_adultTicket</p>
+            <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person" Style="padding-top: 50px"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary"></MudIconButton>
+        </MudStack>
 
-<MudIcon Icon="@Icons.Filled.Person"></MudIcon>
-<MudIcon Icon="@Icons.Material.Filled.EscalatorWarning"></MudIcon>
+        <MudStack Row="true">
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary"></MudIconButton>
+            <p>@_childTicket</p>
+            <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary"></MudIconButton>
+        </MudStack>
+    </MudStack>
+
+    <MudButton ButtonType="ButtonType.Button" Color="Color.Secondary">Save Tickets</MudButton>
+</MudPaper>
 
 @code{
-    //[Parameter] EventCallback<List<SeatTypeDTO>> OnSelectedSeats { get; set;}
+    private List<TicketTypeDTO> _tickets;
+    private int _adultTicket;
+    private int _childTicket;
 
-    public async Task OnSelectedTickets() 
+    [Parameter] public EventCallback<List<TicketTypeDTO>> OnSelectedTikcets { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tickets = new List<TicketTypeDTO>();
+    }
+
+    public async Task SelectedTickets() 
     {
         // This will return a list of seats selected back to the booking page.
-    } 
+        await OnSelectedTikcets.InvokeAsync();
+    }
 
+    public void AddAdult() 
+    {
+        // Should validate that they can not add more seats in the room
+        // should also make sure if they are free seats.
+        _adultTicket++;
+    }
+
+    public void SubtractAdult(int number) 
+    {
+        _adultTicket--;
+        if (_adultTicket < 0) 
+        {
+            _adultTicket = 0;
+        }
+    }
 }

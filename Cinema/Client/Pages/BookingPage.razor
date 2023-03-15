@@ -7,20 +7,11 @@
     <MudGrid Justify="Justify.Center" Spacing="5">
         
         <MudItem xs="12">
-            We will add a component here that will ask them how many seats do they want.
+            <TicketType/>
         </MudItem>
 
         <MudItem xs="12">
-            @*
-            Room layout will take the SeatScreeningDTO and populate a visual
-            that will allow users to select a seat. 
-
-            We can try and pass these vaules back or try to figure out how to bind this 
-            backwords to a string array.
-            *@
-
             <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats"/>
-
         </MudItem>
 
     </MudGrid>
