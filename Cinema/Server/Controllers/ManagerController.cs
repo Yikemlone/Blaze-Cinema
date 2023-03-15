@@ -69,5 +69,12 @@ namespace Cinema.Server.Controllers
         {
             return await _managerService.GetRoomsAsync();
         }
+
+        [HttpPost]
+        [Route("updateRoom")]
+        public async Task UpdateRoom([FromBody] RoomDTO room)
+        {
+            await _managerService.UpdateRoomAsync(room);
+        }
     }
 }
