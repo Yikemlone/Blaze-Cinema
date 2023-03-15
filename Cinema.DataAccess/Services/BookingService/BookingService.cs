@@ -17,19 +17,46 @@ namespace Cinema.DataAccess.Services.BookingService
             throw new NotImplementedException();
         }
 
-        public Task DeleteBookingAsync(int bookingID)
+        public async Task DeleteBookingAsync(int bookingID)
         {
-            throw new NotImplementedException();
+            {
+                var booking = _context.Bookings
+                    .Where(m => m.ID == bookingID)
+                    .Select(s => s)
+                    .FirstOrDefault();
+
+                if (booking == null) return;
+
+                _context.Bookings.Remove(booking);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<BookingDTO> GetBookingAsync(int ID)
+        public async Task<BookingDTO> GetBookingAsync(int bookingID)
         {
-            throw new NotImplementedException();
+            var booking = _context.Bookings
+                 .Where(m => m.ID == bookingID)
+                 .Select(m => new BookingDTO()
+                 {
+                     ID = m.ID,
+                     Status = m.Status,
+                     CustomerID = m.CustomerID,
+                 })
+                 .SingleOrDefault();
+            return booking;
         }
 
-        public Task<BookingDTO> GetBookingsAsync(int customerID)
+        public async Task<List<BookingDTO>> GetBookingsAsync(int customerID)
         {
-            throw new NotImplementedException();
+            List<BookingDTO> bookings = _context.Bookings
+              .Select(m => new BookingDTO()
+              {
+                  ID = m.ID,
+                  Status = m.Status,
+                  CustomerID = m.CustomerID,
+              }).ToList();
+
+            return bookings;
         }
 
         public Task UpdateBookingAsync(BookingDTO bookingDTO)
