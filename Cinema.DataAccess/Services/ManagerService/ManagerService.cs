@@ -174,7 +174,18 @@ namespace Cinema.DataAccess.Services.ManagerService
         // TODO: Update decom status of the room
         public async Task UpdateRoomAsync(RoomDTO roomDTO)
         {
-            throw new NotImplementedException();
+            var oldRoom = _context.Rooms
+               .Select(m => m)
+               .Where(m => m.ID == roomDTO.ID)
+               .SingleOrDefault();
+
+            if (oldRoom == null) return;
+
+            oldRoom.ID = roomDTO.ID;
+            oldRoom.Decom = roomDTO.Decom;
+            
+
+            await _context.SaveChangesAsync();
         }
 
     }
