@@ -24,22 +24,22 @@ namespace Cinema.DataAccess.Services.MovieService
                     AgeRating = m.AgeRating,
                     Duration = m.Duration,
                     Trailer = m.Trailer,
-                    Description = m.Description
+                    Description = m.Description,
+                    Screenings = (_context.Screenings
+                            .Where(s => s.MovieID == m.ID)
+                            .Select(s => new ScreeningDTO()
+                            {
+                                ID = s.ID,
+                                DateTime = s.DateTime,
+                                MovieID = s.ID,
+                                RoomID = s.RoomID
+                            })
+                            .OrderBy(s => s.DateTime)
+                            .ToList()
+                    )
                  })
                  .SingleOrDefault();
-
-            movie.Screenings = _context.Screenings
-                .Where(s => s.MovieID == movie.ID)
-                .Select(s => new ScreeningDTO() 
-                {
-                    ID = s.ID,
-                    DateTime = s.DateTime,
-                    MovieID = s.ID,
-                    RoomID = s.RoomID
-                })
-                .OrderBy(s => s.DateTime)
-                .ToList();
-
+            
             return movie;
         }
 
@@ -53,24 +53,21 @@ namespace Cinema.DataAccess.Services.MovieService
                     AgeRating = m.AgeRating,
                     Duration = m.Duration,
                     Trailer = m.Trailer,
-                    Description = m.Description
+                    Description = m.Description,
+                    Screenings = (_context.Screenings
+                            .Where(s => s.MovieID == m.ID)
+                            .Select(s => new ScreeningDTO()
+                            {
+                                ID = s.ID,
+                                DateTime = s.DateTime,
+                                MovieID = s.ID,
+                                RoomID = s.RoomID
+                            })
+                            .OrderBy(s => s.DateTime)
+                            .ToList()
+                    )
                 })
                 .ToList();
-
-            foreach (var movie in movies)
-            {
-                movie.Screenings = _context.Screenings
-                    .Where(s => s.MovieID == movie.ID)
-                    .Select(s => new ScreeningDTO()
-                    {
-                        ID = s.ID,
-                        DateTime = s.DateTime,
-                        MovieID = s.ID,
-                        RoomID = s.RoomID
-                    })
-                    .OrderBy(s => s.DateTime)
-                    .ToList();  
-            }
 
             return movies;
         }
@@ -145,7 +142,20 @@ namespace Cinema.DataAccess.Services.MovieService
                 .Select(sc => new SeatScreeningDTO()
                 {
                     ID = sc.ID,
-                    Booked = sc.Booked
+                    Booked = sc.Booked,
+                    Seat = (_context.Seats
+                        .Where(s => s.ID == sc.SeatID)
+                        .Select(s => new SeatDTO
+                        {
+                            ID = s.ID,
+                            SeatNumber = s.SeatNumber,
+                            RoomID = s.RoomID,
+                            DisabiltySeat = s.DisabiltySeat,
+                        })
+                        .FirstOrDefault()
+                    ),
+                    BookingID = sc.BookingID,
+                    ScreeningID = sc.ScreeningID
                 })
                 .SingleOrDefault();
 

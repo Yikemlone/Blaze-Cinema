@@ -97,13 +97,13 @@
 
     private bool ValidateScreeningTime()
     {
-        if (_date < DateTime.Now.Date || _time < DateTime.Now.TimeOfDay) return false;
-
         // Adding the selected values to the new screening
         if (_date.HasValue && _time.HasValue)
         {
             TimeSpan time = (TimeSpan)_time;
             DateTime date = (DateTime)_date;
+
+            if (DateTime.Now >= date.Date.Add(time)) return false;
 
             Screening.DateTime = date;
             Screening.DateTime = Screening.DateTime.Add(time);
@@ -132,9 +132,11 @@
             Console.WriteLine(newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime);
 
             // This will make sure the screening times don't overlap at all
-            if (newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime)
+            if (newScreeningStartTime <= currentScreeningEndTime 
+                && currentScreeningStartTime <= newScreeningEndTime 
+                && Screening.ID != screening.ID)
             {
-                if (Screening.ID != screening.ID) return false;
+                return false;
             };
         }
 

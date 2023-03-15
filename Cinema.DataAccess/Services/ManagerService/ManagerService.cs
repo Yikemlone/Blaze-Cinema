@@ -13,13 +13,100 @@ namespace Cinema.DataAccess.Services.ManagerService
             _context = context;
         }
 
-        // TODO: Updaete decom status of the room
-        public async Task UpdateRoomAsync(RoomDTO roomDTO)
+        // Screenings
+        public async Task CreateMovieScreeningAsync(ScreeningDTO screening)
         {
-            throw new NotImplementedException();
+            var newScreening = new Screening()
+            {
+                DateTime = screening.DateTime,
+                MovieID = screening.MovieID,
+                RoomID = screening.RoomID
+            };
+
+            var seats = _context.Seats
+                .Where(s => s.RoomID == newScreening.RoomID)
+                .Select(s => s)
+                .ToList();
+
+            await _context.AddAsync(newScreening);
+            await _context.SaveChangesAsync();
+
+            var screeningSeats = new List<SeatScreening>();
+
+            foreach (var seat in seats)
+            {
+                screeningSeats.Add(new SeatScreening
+                {
+                    Booked = false,
+                    ScreeningID = newScreening.ID,
+                    SeatID = seat.ID,
+                });
+            }
+
+            await _context.AddRangeAsync(screeningSeats);
+            await _context.SaveChangesAsync();
         }
 
-        //Get all employees
+        public async Task UpdateMovieScreeningAsync(ScreeningDTO screening)
+        {
+            var oldScreening = _context.Screenings
+                .Where(m => m.ID == screening.ID)
+                .Select(m => m)
+                .SingleOrDefault();
+
+            if (oldScreening == null) return;
+
+            oldScreening.DateTime = screening.DateTime;
+            oldScreening.MovieID = screening.MovieID;
+            oldScreening.RoomID = screening.RoomID;
+
+            var seats = _context.Seats
+                .Where(s => s.RoomID == screening.RoomID)
+                .Select(s => s)
+                .ToList();
+
+            var newScreeningSeats = new List<SeatScreening>();
+
+            foreach (var seat in seats)
+            {
+                newScreeningSeats.Add(new SeatScreening
+                {
+                    Booked = false,
+                    ScreeningID = screening.ID,
+                    SeatID = seat.ID,
+                });
+            }
+
+            var oldScreeningsSeats= _context.SeatScreenings
+                .Where(s => s.ID == screening.ID)
+                .Select(s => s)
+                .ToList();
+
+            _context.SeatScreenings.RemoveRange(oldScreeningsSeats);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteMovieScreeningAsync(int screeningID)
+        {
+            var screening = _context.Screenings
+                .Where(m => m.ID == screeningID)
+                .Select(s => s)
+                .FirstOrDefault();
+
+            if (screening == null) return;
+
+            var seatScreenings = _context.SeatScreenings
+                .Where(s => s.ID == screening.ID)
+                .Select(s => s)
+                .ToList();
+
+            _context.Screenings.Remove(screening);
+            _context.SeatScreenings.RemoveRange(seatScreenings);
+            await _context.SaveChangesAsync();
+        }
+
+
+        // Employees
         public async Task<List<EmployeeDTO>> GetEmployeesAsync()
         {
             List<EmployeeDTO> employees = _context.Employees
@@ -37,7 +124,6 @@ namespace Cinema.DataAccess.Services.ManagerService
             return employees;
         }
 
-        //Get employee
         public async Task<EmployeeDTO> GetEmployeeAsync(int employeeID)
         {
             var employee = _context.Employees
@@ -57,52 +143,8 @@ namespace Cinema.DataAccess.Services.ManagerService
             return employee;
         }
 
-        // Create screening
-        public async Task CreateMovieScreeningAsync(ScreeningDTO screening)
-        {
-            var newScreening = new Screening()
-            {
-                ID = screening.ID,
-                DateTime = screening.DateTime,
-                MovieID = screening.MovieID,
-                RoomID = screening.RoomID
 
-            };
-
-            await _context.AddAsync(newScreening);
-            await _context.SaveChangesAsync();
-        }
-
-        // Update movie screening
-        public async Task UpdateMovieScreeningAsync(ScreeningDTO screening)
-        {
-            var oldScreening = _context.Screenings
-             .Select(m => m)
-             .Where(m => m.ID == screening.ID)
-             .SingleOrDefault();
-
-            if (oldScreening == null) return;
-
-            oldScreening.ID = screening.ID;
-            oldScreening.DateTime = screening.DateTime;
-            oldScreening.MovieID = screening.MovieID;
-            oldScreening.RoomID = screening.RoomID;
-
-            await _context.SaveChangesAsync();
-        }
-
-        // Delete movie screening
-        public async Task DeleteMovieScreeningAsync(int screeningID)
-        {
-            var screening = _context.Screenings.FirstOrDefault(x => x.ID == screeningID);
-            if (screening != null)
-            {
-                _context.Screenings.Remove(screening);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        //Get room
+        // Rooms
         public async Task<RoomDTO> GetRoomAsync(int roomID)
         {
             var room = _context.Rooms
@@ -111,15 +153,12 @@ namespace Cinema.DataAccess.Services.ManagerService
                  {
                      ID = m.ID,
                      Decom = m.Decom,
-                     SeatQty = m.SeatQty
-
                  })
                  .SingleOrDefault();
 
             return room;
         }
 
-        //Get rooms 
         public async Task<List<RoomDTO>> GetRoomsAsync()
         {
             List<RoomDTO> rooms = _context.Rooms
@@ -127,43 +166,16 @@ namespace Cinema.DataAccess.Services.ManagerService
               {
                   ID = m.ID,
                   Decom = m.Decom,
-                  SeatQty = m.SeatQty
-
               }).ToList();
 
             return rooms;
         }
-
-        //Get Seat
-        public async Task<SeatDTO> GetSeatAsync(int seatID)
+        
+        // TODO: Update decom status of the room
+        public async Task UpdateRoomAsync(RoomDTO roomDTO)
         {
-            var seat = _context.Seats
-                 .Where(m => m.ID == seatID)
-                 .Select(m => new SeatDTO()
-                 {
-                     ID = m.ID,
-                     SeatNumber = m.SeatNumber,
-                     DisabiltySeat = m.DisabiltySeat
-
-                 })
-                 .SingleOrDefault();
-
-            return seat;
+            throw new NotImplementedException();
         }
 
-        //Get Seats
-        public async Task<List<SeatDTO>> GetSeatsAsync()
-        {
-            List<SeatDTO> seats = _context.Seats
-              .Select(m => new SeatDTO()
-              {
-                  ID = m.ID,
-                  SeatNumber = m.SeatNumber,
-                  DisabiltySeat = m.DisabiltySeat
-
-              }).ToList();
-
-            return seats;
-        }
     }
 }

@@ -80,8 +80,8 @@
                 config.Icon = @Icons.Material.Outlined.Error;
             });
 
-            // Update the time field to go red and show error message. Then dispay 
-            // which time is overlapping
+            // Update the time field to go red and show error message.
+            // Then display which time is overlapping
 
             return;
         } 
@@ -104,13 +104,12 @@
 
     private bool ValidateScreeningTime() 
     {
-        if (_date < DateTime.Now.Date || _time < DateTime.Now.TimeOfDay) return false;
-
-        // Adding the selected values to the new screening
         if (_date.HasValue && _time.HasValue)
         {
             TimeSpan time = (TimeSpan)_time;
             DateTime date = (DateTime)_date;
+
+            if (DateTime.Now >= date.Date.Add(time)) return false;
 
             _newScreening.DateTime = date;
             _newScreening.DateTime = _newScreening.DateTime.Add(time);
