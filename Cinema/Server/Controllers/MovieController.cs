@@ -49,12 +49,12 @@ namespace Cinema.Server.Controllers
             
         // Seat Screenings
         [HttpGet]
-        [Route("seatscreenings/{screeningID}")]
+        [Route("seats/{screeningID}")]
         public async Task<List<SeatScreeningDTO>> GetSeatScreenings(int screeningID)
         {
             // This returns all the seats for a screening
             return await _movieService.GetSeatsScreeningAsync(screeningID);
-       }
+        }
 
         [HttpGet]
         [Route("seat/{seatScreeningID}")]
@@ -65,11 +65,19 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpPost]
-        [Route("seatscreenings")]
+        [Route("seat")]
         public async Task UpdateSeatScreening([FromBody] SeatScreeningDTO seatScreening)
         {
             // Updates the seats state
             await _movieService.UpdateSeatScreeningAsync(seatScreening);
+        }
+
+        [HttpPost]
+        [Route("seats")]
+        public async Task UpdateSeatsScreening([FromBody] List<SeatScreeningDTO> seatsScreening)
+        {
+            // Updates the seats state
+            await _movieService.UpdateSeatsScreeningAsync(seatsScreening);
         }
     }
 }

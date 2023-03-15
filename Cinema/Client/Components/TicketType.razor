@@ -1,25 +1,23 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-<MudPaper>
-    <MudStack>
-        <MudStack Row="true">
-            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary"></MudIconButton>
-            <p>@_adultTicket</p>
-            <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person" Style="padding-top: 50px"/>
-            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary"></MudIconButton>
-        </MudStack>
-
-        <MudStack Row="true">
-            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary"></MudIconButton>
-            <p>@_childTicket</p>
-            <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning"/>
-            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary"></MudIconButton>
-        </MudStack>
+<MudStack>
+    <MudStack Row="true" Justify="Justify.Center">
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddAdult"/>
+        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person" Style="padding-top: 15px" />
+        <MudText Typo="Typo.body1" Align="Align.Center">Adult: @_adultTicket</MudText>
+        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractAdult"/>
     </MudStack>
 
-    <MudButton ButtonType="ButtonType.Button" Color="Color.Secondary">Save Tickets</MudButton>
-</MudPaper>
+    <MudStack Row="true" Justify="Justify.Center">
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddChild"/>
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning" Style="padding-top: 15px"/>
+        <MudText Typo="Typo.body1" Align="Align.End">Child: @_childTicket</MudText>
+        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractChild"/>
+    </MudStack>
+</MudStack>
+
+<MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="SelectedTickets">Save Tickets</MudButton>
 
 @code{
     private List<TicketTypeDTO> _tickets;
@@ -35,8 +33,24 @@
 
     public async Task SelectedTickets() 
     {
-        // This will return a list of seats selected back to the booking page.
-        await OnSelectedTikcets.InvokeAsync();
+        for (int i = 0; i < _adultTicket; i++)
+        {
+            _tickets.Add(new TicketTypeDTO
+            {
+                Type = "Adult"
+            });
+        }
+
+        for (int i = 0; i < _childTicket; i++)
+        {
+            _tickets.Add(new TicketTypeDTO
+            {
+                Type = "Child"
+            });
+        }
+
+        await OnSelectedTikcets.InvokeAsync(_tickets);
+        _tickets = new List<TicketTypeDTO>();
     }
 
     public void AddAdult() 
@@ -46,7 +60,7 @@
         _adultTicket++;
     }
 
-    public void SubtractAdult(int number) 
+    public void SubtractAdult() 
     {
         _adultTicket--;
         if (_adultTicket < 0) 
@@ -54,4 +68,21 @@
             _adultTicket = 0;
         }
     }
+
+    public void AddChild()
+    {
+        // Should validate that they can not add more seats in the room
+        // should also make sure if they are free seats.
+        _childTicket++;
+    }
+
+    public void SubtractChild()
+    {
+        _childTicket--;
+        if (_childTicket < 0)
+        {
+            _childTicket = 0;
+        }
+    }
+
 }

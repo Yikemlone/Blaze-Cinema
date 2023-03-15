@@ -175,5 +175,21 @@ namespace Cinema.DataAccess.Services.MovieService
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateSeatsScreeningAsync(List<SeatScreeningDTO> seatsScreening)
+        {
+            foreach (var seatScreening in seatsScreening)
+            {
+                var oldSeatScreening = _context.SeatScreenings
+                    .Where(sc => sc.ID == seatScreening.ID)
+                    .Select(s => s)
+                    .SingleOrDefault();
+
+                if (oldSeatScreening == null) return;
+                oldSeatScreening.Booked = seatScreening.Booked;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

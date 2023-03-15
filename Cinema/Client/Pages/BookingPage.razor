@@ -1,5 +1,6 @@
 ﻿@page "/booking/{ScreeningID:int}"
 @using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
 
 <PageTitle>Booking Page</PageTitle>
 
@@ -7,18 +8,24 @@
     <MudGrid Justify="Justify.Center" Spacing="5">
         
         <MudItem xs="12">
-            <TicketType/>
+            @*            
+                May need to pass down how many seats are free to make sure users can not 
+                book more seats than that are available.
+            *@
+            <TicketType OnSelectedTikcets="SelectedTickets" />
         </MudItem>
 
         <MudItem xs="12">
             <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats"/>
         </MudItem>
 
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.LocalMovies" OnClick="MakeBooking">Book Ticket</MudIconButton>
+
     </MudGrid>
 </MudPaper>
 
 @code {
-    private const string API_URL = "/api/movie";
+    private const string API_URL = "/api";
     private HttpClient? _client;
     private BookingDTO _booking;
     private ScreeningDTO _screening;
@@ -30,22 +37,70 @@
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _booking = new BookingDTO();
+        _booking.Status = "Pending";
         _seats = await GetSeatScreenings();
     }
 
     protected async Task SelectedSeats(List<SeatScreeningDTO> seatScreenings)
     {
+        string seats = "";
+
+        foreach (var seat in seatScreenings)
+        {
+            seats += seat.Seat.SeatNumber + " ";
+        }
+
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("Seats Added: " + seats, Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 2000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
+
         _booking.SeatScreenings = seatScreenings;
     }
 
     protected async Task SelectedTickets(List<TicketTypeDTO> ticketTypes)
     {
+        string tickets = "";
+
+        foreach (var ticket in ticketTypes)
+        {
+            tickets += ticket.Type + " ";
+        }
+
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("Tickets Added: " + tickets, Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 2000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
+
         _booking.TicketTypes = ticketTypes;
+    }
+
+    public async Task MakeBooking() 
+    {
+        // I need to POST the update of the seats and POST the new booking in here.
+        // After I validate all the information.
+
+        await _client.PostAsJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats", _booking.SeatScreenings);
+        await _client.PostAsJsonAsync<BookingDTO>(API_URL + "/booking/create", _booking);
+
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("Booked Tickets", Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 2000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
     }
 
     public async Task<List<SeatScreeningDTO>> GetSeatScreenings() 
     {
-        return await _client.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "/seatscreenings/" + ScreeningID);
+        return await _client.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats/" + ScreeningID);
     }
 
 }

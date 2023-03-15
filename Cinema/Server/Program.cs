@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Cinema.DataAccess.Services.MovieService;
 using Cinema.DataAccess.Services.ManagerService;
 using Cinema.DataAccess.Services.AdminService;
+using Cinema.DataAccess.Services.BookingService;
 using Cinema.DataAccess.Context;
 
 namespace Cinema
@@ -23,6 +24,7 @@ namespace Cinema
             builder.Services.AddScoped<IMovieService, MovieService>();
             builder.Services.AddScoped<IManagerService, ManagerService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
 
             //Connecting to the database
             builder.Services.AddDbContext<CinemaDBContext>(options =>

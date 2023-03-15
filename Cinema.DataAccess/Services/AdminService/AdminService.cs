@@ -29,16 +29,6 @@ namespace Cinema.DataAccess.Services.AdminService
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteMovieAsync(int movieID)
-        {
-            var movie = _context.Movies.FirstOrDefault(x => x.ID == movieID);
-            if (movie != null)
-            {
-                _context.Movies.Remove(movie);
-                await _context.SaveChangesAsync();
-            }
-        }
-
         public async Task UpdateMovieAsync(MovieDTO movie)
         {
             var oldMovie = _context.Movies
@@ -56,5 +46,16 @@ namespace Cinema.DataAccess.Services.AdminService
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteMovieAsync(int movieID)
+        {
+            var movie = _context.Movies.FirstOrDefault(x => x.ID == movieID);
+
+            if (movie == null) return;
+
+            _context.Movies.Remove(movie);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
