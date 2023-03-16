@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Cinema.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class SetUp : Migration
+    public partial class Setup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,7 +54,8 @@ namespace Cinema.DataAccess.Migrations
                     Duration = table.Column<int>(type: "int", nullable: false),
                     AgeRating = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Trailer = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Trailer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,8 +68,7 @@ namespace Cinema.DataAccess.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Decom = table.Column<bool>(type: "bit", nullable: false),
-                    SeatQty = table.Column<int>(type: "int", nullable: false)
+                    Decom = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cinema.DataAccess.Migrations
 {
     [DbContext(typeof(CinemaDBContext))]
-    [Migration("20230313155250_SetUp")]
-    partial class SetUp
+    [Migration("20230316132038_Set_up")]
+    partial class Setup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -131,6 +131,9 @@ namespace Cinema.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Trailer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -150,9 +153,6 @@ namespace Cinema.DataAccess.Migrations
 
                     b.Property<bool>("Decom")
                         .HasColumnType("bit");
-
-                    b.Property<int>("SeatQty")
-                        .HasColumnType("int");
 
                     b.HasKey("ID");
 

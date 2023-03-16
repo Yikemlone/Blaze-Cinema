@@ -8,7 +8,7 @@
         public string AgeRating { get; set; }
         public string Description { get; set; }
         public string Trailer { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         public List<Screening>? Screenings { get; set; }
     }

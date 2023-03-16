@@ -17,7 +17,6 @@ namespace Cinema.DataAccess.Services.AdminService
         {
             var newMovie = new Movie() 
             {
-                ID = movie.ID,
                 Name = movie.Name,
                 AgeRating = movie.AgeRating,
                 Duration = movie.Duration,
@@ -49,7 +48,8 @@ namespace Cinema.DataAccess.Services.AdminService
 
         public async Task DeleteMovieAsync(int movieID)
         {
-            var movie = _context.Movies.FirstOrDefault(x => x.ID == movieID);
+             var movie = _context.Movies
+                .FirstOrDefault(x => x.ID == movieID);
 
             if (movie == null) return;
 

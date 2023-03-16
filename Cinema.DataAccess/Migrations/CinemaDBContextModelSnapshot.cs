@@ -128,6 +128,9 @@ namespace Cinema.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Trailer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -147,9 +150,6 @@ namespace Cinema.DataAccess.Migrations
 
                     b.Property<bool>("Decom")
                         .HasColumnType("bit");
-
-                    b.Property<int>("SeatQty")
-                        .HasColumnType("int");
 
                     b.HasKey("ID");
 

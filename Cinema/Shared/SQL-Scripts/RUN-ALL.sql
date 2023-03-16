@@ -8,10 +8,10 @@ INSERT INTO Customers VALUES
 ('Joe', 'Ligma', 'email@mail.com', 10000);
 
 INSERT INTO Rooms VALUES
-('false', '200'),
-('false', '200'),
-('false', '200'),
-('false', '200');
+('false'),
+('false'),
+('false'),
+('false');
 
 
 INSERT INTO Employees VALUES
@@ -44,24 +44,6 @@ INSERT INTO Movies(Name, Duration, AgeRating, Trailer, Description) VALUES
 ('Cocaine Bear', 95, '15A', 'DuWEEKeJLMI', 'Inspired by the 1985 true story of a drug runner plane crash, missing cocaine, and the black bear that ate it, this wild dark comedy finds an oddball group of cops, criminals, tourists and teens converging in a Georgia forest where a 500-pound apex predator has ingested a staggering amount of cocaine and gone on a coke-fueled rampage for more blow and blood.'),
 ('Spider-Man: Across the Spider-Verse', 115, 'PG', 'cqGjhVJWtEg', 'Miles Morales returns for the next chapter of the Oscar®-winning Spider-Verse saga, Spider-Man: Across the Spider-Verse. After reuniting with Gwen Stacy, Brooklyn’s full-time, friendly neighborhood Spider-Man is catapulted across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. But when the heroes clash on how to handle a new threat, Miles finds himself pitted against the other Spiders and must redefine what it means to be a hero so he can save the people he loves most.');
 
-
-INSERT INTO Bookings(Status) VALUES
-('Pending'),
-('Approved'),
-('Approved');
-
-
-INSERT INTO Bookings(Status, CustomerID) VALUES
-('Pending', 5),
-('Approved', 5),
-('Approved', 4);
-
-
-INSERT INTO Screenings(MovieID, RoomID, DateTime) VALUES
-('1','1', '2023-03-03'),
-('1','2', '2023-03-23'),
-('2','1', '2023-05-13'),
-('2','2', '2023-04-23');
 
 INSERT INTO Seats(SeatNumber, DisabiltySeat, RoomID) VALUES
 ('A1','false','1'),
