@@ -7,28 +7,35 @@
 <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
     <MudGrid Spacing="5">
         
-        <MudItem xs="12">
-            @*            
+        @if (_tickets == null) 
+        {
+            <MudItem xs="12">
+                @*            
                 May need to pass down how many seats are free to make sure users can not 
                 book more seats than that are available.
-            *@
-            <TicketType OnSelectedTikcets="SelectedTickets"/>
-        </MudItem>
+                *@
+                <TicketType OnSelectedTikcets="SelectedTickets"/>
+            </MudItem>
+        }
 
-        <MudItem xs="12">
-            <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats"/>
-        </MudItem>
-
+        @if (_tickets != null) 
+        { 
+            <MudItem xs="12">
+                <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats"/>
+            </MudItem>
+        }
+        
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="MakeBooking">Book Ticket</MudButton>
 
     </MudGrid>
 </MudPaper>
 
-@code {
+    @code {
     private const string API_URL = "/api";
     private HttpClient? _client;
     private BookingDTO _booking;
     private ScreeningDTO _screening;
+    private List<TicketTypeDTO> _tickets;
     private List<SeatScreeningDTO> _seats;
 
     [Parameter] public int ScreeningID { get; set; }
@@ -78,6 +85,7 @@
             config.Icon = @Icons.Material.Outlined.Check;
         });
 
+        _tickets = ticketTypes;
         _booking.TicketTypes = ticketTypes;
     }
 
