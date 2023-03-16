@@ -5,7 +5,7 @@
 <PageTitle>Booking Page</PageTitle>
 
 <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-    <MudGrid Spacing="5">
+    <MudGrid Justify="Justify.Center" Spacing="5">
         
         @if (_tickets == null) 
         {
@@ -23,10 +23,10 @@
             <MudItem xs="12">
                 <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats"/>
             </MudItem>
+
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="MakeBooking">Book Ticket</MudButton>
         }
         
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="MakeBooking">Book Ticket</MudButton>
-
     </MudGrid>
 </MudPaper>
 
