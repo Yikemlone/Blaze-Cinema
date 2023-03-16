@@ -15,9 +15,11 @@
         <MudText Typo="Typo.body1" Align="Align.End">Child: @_childTicket</MudText>
         <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractChild"/>
     </MudStack>
+
+    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="SelectedTickets">Save Tickets</MudButton>
+
 </MudStack>
 
-<MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="SelectedTickets">Save Tickets</MudButton>
 
 @code{
     private List<TicketTypeDTO> _tickets;

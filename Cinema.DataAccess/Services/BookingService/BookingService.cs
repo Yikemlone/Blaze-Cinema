@@ -1,6 +1,7 @@
 ﻿using Cinema.DataAccess.Context;
 using Cinema.Models.Models;
 using Cinema.Shared.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.DataAccess.Services.BookingService
 {
@@ -69,6 +70,19 @@ namespace Cinema.DataAccess.Services.BookingService
             if (oldBooking == null) return;
             oldBooking.Status = booking.Status;
 
+            if (oldBooking.Status.Equals("Cancelled")) 
+            {
+                var seat = _context.SeatScreenings
+                    .Select(s => s)
+                    .Where(s => s.BookingID == oldBooking.ID)
+                    .FirstOrDefault();
+
+                if (seat != null)
+                {
+                    seat.Booked = false;
+                }
+            }
+
             await _context.SaveChangesAsync();
         }
 
@@ -77,6 +91,16 @@ namespace Cinema.DataAccess.Services.BookingService
             var bookingToRemove = _context.Bookings
                 .Where(b => b.ID == bookingID)
                 .Select(b => b);
+
+            var seat = _context.SeatScreenings
+                .Where(s => s.BookingID == bookingID)
+                .Select(s => s)
+                .FirstOrDefault();
+
+            if (seat != null) 
+            { 
+                seat.Booked = false;
+            }
 
             _context.Remove(bookingToRemove);
             await _context.SaveChangesAsync();

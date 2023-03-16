@@ -2,25 +2,37 @@
 @inherits ComponentBase
 
 @if(SeatScreenings != null) {
-    <MudContainer MaxWidth="MaxWidth.Small">
-        <MudPaper>
-            <MudGrid Style="width: 300px">
-                @foreach (var seat in SeatScreenings)
-                {
-                    <MudItem Style="padding: 0px">
-                        <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat"/>
-                    </MudItem>
-                }
 
-                Screen Here
+    <MudStack Class="justify-center align-content-center pa-10 ma-2" Justify="Justify.Center">
 
-            </MudGrid>
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="12">
+                <div>
+                    <MudGrid Style="width: 300px">
+                            @foreach (var seat in SeatScreenings)
+                            {
+                                <MudItem Style="padding: 0px">
+                                    <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat" />
+                                </MudItem>
+                            }
 
-            <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="OnSelected">
-                Save Seats
-            </MudButton>
-        </MudPaper>
-    </MudContainer>
+                        <MudItem>
+                            <p>Screen Here</p>
+                        </MudItem>
+
+                    </MudGrid>
+                </div>
+
+            </MudItem>
+
+            <MudItem>
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="OnSelected">
+                    Save Seats
+                </MudButton>
+            </MudItem>
+
+        </MudGrid>
+    </MudStack>
 }
 
 @code {

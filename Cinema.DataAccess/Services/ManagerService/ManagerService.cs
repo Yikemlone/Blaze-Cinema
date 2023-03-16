@@ -118,8 +118,8 @@ namespace Cinema.DataAccess.Services.ManagerService
                     LastName = m.LastName,
                     Username = m.Username,
                     Password = m.Password
-
-                }).ToList();
+                })
+                .ToList();
 
             return employees;
         }
@@ -136,7 +136,6 @@ namespace Cinema.DataAccess.Services.ManagerService
                      LastName = m.LastName,
                      Username = m.Username,
                      Password = m.Password
-
                  })
                  .SingleOrDefault();
 
@@ -166,12 +165,12 @@ namespace Cinema.DataAccess.Services.ManagerService
               {
                   ID = m.ID,
                   Decom = m.Decom,
-              }).ToList();
+              })
+              .ToList();
 
             return rooms;
         }
         
-        // TODO: Update decom status of the room
         public async Task UpdateRoomAsync(RoomDTO roomDTO)
         {
             var oldRoom = _context.Rooms
@@ -180,11 +179,8 @@ namespace Cinema.DataAccess.Services.ManagerService
                .SingleOrDefault();
 
             if (oldRoom == null) return;
-
-            oldRoom.ID = roomDTO.ID;
             oldRoom.Decom = roomDTO.Decom;
             
-
             await _context.SaveChangesAsync();
         }
 
