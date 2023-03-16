@@ -47,8 +47,6 @@
     }
 
     public void ChangeColour() {
-        if (SeatScreening.Booked) return;
-
         if (_colour.Equals("Green"))
         {
             _colour = "Grey";
@@ -65,7 +63,8 @@
 
     public async Task OnSelected() 
     {
-        // Will send the seat back that was selected
+        if (SeatScreening.Booked) return;
+        
         ChangeColour();
 
         if (_selected)
