@@ -5,32 +5,49 @@
 <PageTitle>Booking Page</PageTitle>
 
 <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-    <MudGrid Spacing="5">
+    <MudGrid Justify="Justify.Center" Spacing="5">
         
-        @if (_tickets == null) 
-        {
-            <MudItem xs="12">
-                @*            
-                May need to pass down how many seats are free to make sure users can not 
-                book more seats than that are available.
-                *@
-                <TicketType OnSelectedTikcets="SelectedTickets"/>
-            </MudItem>
-        }
+        <MudCarousel Class="mud-width-full" Style="height:200px;" 
+            ShowArrows="@arrows" ShowBullets="@bullets" EnableSwipeGesture="@enableSwipeGesture" 
+            AutoCycle="@autocycle" TData="object">
 
-        @if (_tickets != null) 
-        { 
-            <MudItem xs="12">
-                <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats"/>
-            </MudItem>
-        }
-        
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="MakeBooking">Book Ticket</MudButton>
+            <MudCarouselItem Transition="transition">
+                <MudItem xs="12">
+                    @*            
+                    May need to pass down how many seats are free to make sure users can not 
+                    book more seats than that are available.
+                    *@
+                    <TicketType OnSelectedTikcets="SelectedTickets"/>
+                </MudItem>
+            </MudCarouselItem>
 
+            <MudCarouselItem Transition="transition">
+                <MudItem xs="12">
+                    <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats"/>
+                </MudItem>
+
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="MakeBooking">Book Ticket</MudButton>
+            </MudCarouselItem>
+
+            <MudCarouselItem Transition="transition">
+                <div class="d-flex" style="height:100%">
+                    <MudIcon Class="mx-auto my-auto" Icon="@Icons.Custom.Brands.MudBlazor" Color="@Color.Primary" Size="@Size.Large" />
+                </div>
+            </MudCarouselItem>
+
+        </MudCarousel>
+     
     </MudGrid>
 </MudPaper>
 
-    @code {
+@code {
+
+    private bool arrows = true;
+    private bool bullets = true;
+    private bool enableSwipeGesture = true;
+    private bool autocycle = true;
+    private Transition transition = Transition.Slide;
+
     private const string API_URL = "/api";
     private HttpClient? _client;
     private BookingDTO _booking;
