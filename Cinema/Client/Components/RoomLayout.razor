@@ -1,13 +1,24 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
+<style>
+    .layoutGrid 
+    {
+        width: 300px;
+        margin: auto;
+    }
+</style>
+
+
 @if(SeatScreenings != null) {
 
-    <MudStack Class="justify-center align-content-center pa-10 ma-2" Justify="Justify.Center">
+    <MudStack Justify="Justify.Center">
+
+        <MudText Typo="Typo.h2" Align="Align.Left"><b> Select Seats </b></MudText>
 
         <MudGrid Justify="Justify.Center">
             <MudItem xs="12">
-                <MudGrid Style="width: 300px; margin: auto;">
+                    <MudGrid Class="layoutGrid">
                         @foreach (var seat in SeatScreenings)
                         {
                             <MudItem Style="padding: 0px">

@@ -2,10 +2,13 @@
 @inherits ComponentBase
 
 <MudStack>
+
+    <MudText Typo="Typo.h2" Align="Align.Left"><b>Select Tickets</b></MudText>
+
     <MudStack Row="true" Justify="Justify.Center">
         <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddAdult"/>
         <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person" Style="padding-top: 15px" />
-        <MudText Typo="Typo.body1" Align="Align.Center">Adult: @_adultTicket</MudText>
+        <span><MudText Typo="Typo.body1" Align="Align.Center">Adult: @_adultTicket</MudText></span>
         <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractAdult"/>
     </MudStack>
 
