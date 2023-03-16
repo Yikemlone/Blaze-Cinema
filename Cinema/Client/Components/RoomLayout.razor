@@ -7,22 +7,19 @@
 
         <MudGrid Justify="Justify.Center">
             <MudItem xs="12">
-                <div>
-                    <MudGrid Style="width: 300px">
-                            @foreach (var seat in SeatScreenings)
-                            {
-                                <MudItem Style="padding: 0px">
-                                    <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat" />
-                                </MudItem>
-                            }
+                <MudGrid Style="width: 300px; margin: auto;">
+                        @foreach (var seat in SeatScreenings)
+                        {
+                            <MudItem Style="padding: 0px">
+                                <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat" />
+                            </MudItem>
+                        }
 
-                        <MudItem>
-                            <p>Screen Here</p>
-                        </MudItem>
+                    <MudItem>
+                        <p>Screen Here</p>
+                    </MudItem>
 
-                    </MudGrid>
-                </div>
-
+                </MudGrid>
             </MudItem>
 
             <MudItem>
