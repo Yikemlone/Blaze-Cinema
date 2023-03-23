@@ -2,7 +2,7 @@
 
 namespace Cinema.DataAccess.Services.ManagerService
 {
-    public interface IManagerService
+    public interface IManagerService 
     {
         // Manager Functions
         // Limit with authorization

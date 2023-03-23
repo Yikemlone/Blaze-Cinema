@@ -12,7 +12,8 @@
                 </MudStack>
 
                 <MudStack>
-                    <MudSelect @bind-Value="_movie.AgeRating" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
+                    <MudDatePicker Label="Date" PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy" @bind-Date="_ReleaseDate" />
+                    <MudSelect @bind-Value="_movie.AgeRating" Variant="Variant.Filled" Required RequiredError="You must select an Age Rating.">
                         <MudSelectItem Value="@("G")">G</MudSelectItem>
                         <MudSelectItem Value="@("PG")">PG</MudSelectItem>
                         <MudSelectItem Value="@("12A")">12A</MudSelectItem>
@@ -41,6 +42,7 @@
     private const string API_URL = "api/admin";
     private HttpClient? _client;
     private MovieDTO? _movie;
+    private DateTime? _ReleaseDate = DateTime.Now.Date;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
