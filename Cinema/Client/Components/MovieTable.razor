@@ -67,6 +67,13 @@
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
+                <MudTableSortLabel SortLabel="release_date" T="MovieDTO">
+                    <div style="white-space: nowrap;">
+                        Release Date
+                    </div>
+                 </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
                 <MudTableSortLabel SortLabel="age_rating" T="MovieDTO">
                     <div style="white-space: nowrap;">
                         Age Rating
@@ -89,6 +96,7 @@
                     @context.Name
                 </div>
             </MudTd>
+            <MudTd DataLabel="ReleaseDate">@context.ReleaseDate</MudTd>
             <MudTd DataLabel="AgeRating">@context.AgeRating</MudTd>
             <MudTd DataLabel="Duration">@context.Duration</MudTd>
             <MudTd DataLabel="Trailer">@context.Trailer</MudTd>

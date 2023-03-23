@@ -21,7 +21,8 @@ namespace Cinema.DataAccess.Services.AdminService
                 AgeRating = movie.AgeRating,
                 Duration = movie.Duration,
                 Trailer = movie.Trailer,
-                Description = movie.Description
+                Description = movie.Description,
+                ReleaseDate = movie.ReleaseDate
             };
 
             await _context.AddAsync(newMovie);
@@ -41,6 +42,7 @@ namespace Cinema.DataAccess.Services.AdminService
             oldMovie.AgeRating = movie.AgeRating;
             oldMovie.Duration = movie.Duration;
             oldMovie.Description = movie.Description;
+            oldMovie.ReleaseDate = movie.ReleaseDate;
             oldMovie.Trailer = movie.Trailer;
 
             await _context.SaveChangesAsync();

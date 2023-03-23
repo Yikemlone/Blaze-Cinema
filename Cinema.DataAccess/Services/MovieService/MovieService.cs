@@ -25,6 +25,7 @@ namespace Cinema.DataAccess.Services.MovieService
                     Duration = m.Duration,
                     Trailer = m.Trailer,
                     Description = m.Description,
+                    ReleaseDate = (DateTime)m.ReleaseDate,
                     Screenings = (_context.Screenings
                             .Where(s => s.MovieID == m.ID)
                             .Select(s => new ScreeningDTO()
@@ -36,8 +37,8 @@ namespace Cinema.DataAccess.Services.MovieService
                             })
                             .OrderBy(s => s.DateTime)
                             .ToList()
-                    )
-                 })
+                    ),
+				 })
                  .SingleOrDefault();
             
             return movie;
@@ -54,6 +55,7 @@ namespace Cinema.DataAccess.Services.MovieService
                     Duration = m.Duration,
                     Trailer = m.Trailer,
                     Description = m.Description,
+                    ReleaseDate = (DateTime)m.ReleaseDate,
                     Screenings = (_context.Screenings
                             .Where(s => s.MovieID == m.ID)
                             .Select(s => new ScreeningDTO()
@@ -65,8 +67,9 @@ namespace Cinema.DataAccess.Services.MovieService
                             })
                             .OrderBy(s => s.DateTime)
                             .ToList()
-                    )
-                })
+                    ),
+                    
+				})
                 .ToList();
 
             return movies;
