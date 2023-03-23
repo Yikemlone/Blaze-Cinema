@@ -25,6 +25,11 @@
     </MudStack>
 
     <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="SelectedTickets">Save Tickets</MudButton>
+    
+    @if (!_valid) 
+    {
+        <span style="color: red">There isn't that many seats available. Availablse seats: @Availabletickets</span>
+    }
 
 </MudStack>
 
@@ -33,6 +38,7 @@
     private List<TicketTypeDTO> _tickets;
     private int _adultTicket;
     private int _childTicket;
+    private bool _valid = true;
 
     [Parameter] public EventCallback<List<TicketTypeDTO>> OnSelectedTikcets { get; set; }
     [Parameter] public List<SeatScreeningDTO> Seats { get; set; }
@@ -62,7 +68,11 @@
         }
 
         if (_tickets.Count == 0) return;
-        if (_tickets.Count > Availabletickets) return;
+        if (_tickets.Count > Availabletickets) 
+        {
+            _valid = false;
+            return;
+        } 
 
         await OnSelectedTikcets.InvokeAsync(_tickets);
         _tickets = new List<TicketTypeDTO>();
