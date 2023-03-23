@@ -14,14 +14,14 @@
                 May need to pass down how many seats are free to make sure users can not 
                 book more seats than that are available.
                 *@
-                <TicketType OnSelectedTikcets="SelectedTickets"/>
+                <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="5"/>
             </MudItem>
         }
 
         @if (_tickets != null) 
         { 
             <MudItem xs="12">
-                <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats"/>
+                    <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_booking.TicketTypes.Count"/>
             </MudItem>
 
             <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="MakeBooking">Book Ticket</MudButton>

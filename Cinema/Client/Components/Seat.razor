@@ -14,7 +14,6 @@
     }
 </style>
 
-
 <div class="seat" @onclick="OnSelected">
     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
         x="0px" y="0px" viewBox="0 0 90.4 122.88" style="enable-background:new 0 0 90.4 122.88">
@@ -23,7 +22,6 @@
         </g>
     </svg>
 </div>
-
 
 @code{
     private string _colour { get; set; }
@@ -64,18 +62,7 @@
     public async Task OnSelected() 
     {
         if (SeatScreening.Booked) return;
-        
         ChangeColour();
-
-        if (_selected)
-        {
-            SeatScreening.Booked = true;
-        }
-        else
-        {
-            SeatScreening.Booked = false;
-        }
-
         await OnSeatSelected.InvokeAsync(SeatScreening);
     }
 

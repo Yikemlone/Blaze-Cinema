@@ -12,6 +12,11 @@
         <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractAdult"/>
     </MudStack>
 
+    @*
+        There is probabbly a better way to implement this system without duplicating the methods. 
+        We could make a generic method, parameters or bind the values.
+    *@
+
     <MudStack Row="true" Justify="Justify.Center">
         <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddChild"/>
         <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning"/>
@@ -30,6 +35,8 @@
     private int _childTicket;
 
     [Parameter] public EventCallback<List<TicketTypeDTO>> OnSelectedTikcets { get; set; }
+    [Parameter] public List<SeatScreeningDTO> Seats { get; set; }
+    [Parameter] public int Availabletickets { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,6 +60,9 @@
                 Type = "Child"
             });
         }
+
+        if (_tickets.Count == 0) return;
+        if (_tickets.Count > Availabletickets) return;
 
         await OnSelectedTikcets.InvokeAsync(_tickets);
         _tickets = new List<TicketTypeDTO>();
