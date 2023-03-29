@@ -44,10 +44,10 @@
 
     public List<ChartSeries> Series2 = new List<ChartSeries>()
     {
-        new ChartSeries() { Name = "Titanic 3D", Data = new double[] { 40, 20, 25, 27, 46, 60, 15 } },
-        new ChartSeries() { Name = "Puss in Boots", Data = new double[] { 19, 24, 35, 13, 28, 15, 31 } },
-        new ChartSeries() { Name = "Avatar: The Way of Water", Data = new double[] { 8, 6, 11, 13, 4, 16, 18 } },
-        new ChartSeries() { Name = "Strange World", Data = new double[] { 16, 12, 22, 26, 8, 32, 36 } },
+        new ChartSeries() { Name = "Titanic 3D", Data = new double[] { 4000, 2000, 2500, 2700, 4600, 6000, 1500 } },
+        new ChartSeries() { Name = "Puss in Boots", Data = new double[] { 1900, 2400, 3500, 1300, 2800, 1500, 3100 } },
+        new ChartSeries() { Name = "Avatar: The Way of Water", Data = new double[] { 800, 600, 1100, 1300, 400, 1600, 1800 } },
+        new ChartSeries() { Name = "Strange World", Data = new double[] { 1600, 1200, 2200, 2600, 800, 3200, 3600 } },
     };
     public string[] XAxisLabels2 = { "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun" };
 
@@ -76,7 +76,7 @@
     <MudCarouselItem Transition="transition">
         <div class="mud-width-ful" style="height:100%">
             <MudText Align="Align.Center" Typo="Typo.h5">Each films total daily income </MudText><br />
-                <MudChart ChartType="ChartType.Line" ChartSeries="@Series" @bind-SelectedIndex="Index" XAxisLabels="@XAxisLabels2" Width="100%" Height="350px"></MudChart>
+                <MudChart ChartType="ChartType.Line" ChartSeries="@Series2" @bind-SelectedIndex="Index3" XAxisLabels="@XAxisLabels2" Width="100%" Height="350px"></MudChart>
                
                 
             
