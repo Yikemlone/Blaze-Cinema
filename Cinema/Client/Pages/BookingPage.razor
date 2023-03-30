@@ -1,5 +1,7 @@
 ﻿@page "/booking/{ScreeningID:int}"
+@using Cinema.Client.Dialogs
 @using Cinema.Shared.DTO
+@inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
 <PageTitle>Booking Page</PageTitle>
@@ -7,24 +9,25 @@
 <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
     <MudGrid Justify="Justify.Center" Spacing="5">
         
-        @if (_tickets == null) 
+        @if (_ticketTypeBookings == null) 
         {
             <MudItem xs="12">
-                @*            
-                May need to pass down how many seats are free to make sure users can not 
-                book more seats than that are available.
-                *@
                 <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats"/>
             </MudItem>
         }
-
-        @if (_tickets != null) 
+        else
         { 
             <MudItem xs="12">
-                    <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_booking.TicketTypes.Count"/>
+                <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_ticketTypeBookings.Count" />
             </MudItem>
 
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="MakeBooking">Book Ticket</MudButton>
+            @if (_booking.SeatScreenings.Count > 0) 
+            {
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="ConfirmBooking">Confirm Details</MudButton>
+            } else
+            {
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" Disabled OnClick="ConfirmBooking">Confirm Details</MudButton>
+            }
         }
         
     </MudGrid>
@@ -34,8 +37,8 @@
     private const string API_URL = "/api";
     private HttpClient? _client;
     private BookingDTO _booking;
-    private ScreeningDTO _screening;
-    private List<TicketTypeDTO> _tickets;
+    private ScreeningDTO _screening = new ScreeningDTO(); // FIX THIS
+    private List<TicketTypeBookingDTO> _ticketTypeBookings;
     private List<SeatScreeningDTO> _seats;
     private int _availableSeats;
 
@@ -52,59 +55,28 @@
 
     protected async Task SelectedSeats(List<SeatScreeningDTO> seatScreenings)
     {
-        string seats = "";
-
-        foreach (var seat in seatScreenings)
-        {
-            seats += seat.Seat.SeatNumber + " ";
-        }
-
-        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-        Snackbar.Add("Seats Added: " + seats, Severity.Success, config =>
-        {
-            config.VisibleStateDuration = 2000;
-            config.Icon = @Icons.Material.Outlined.Check;
-        });
-
         _booking.SeatScreenings = seatScreenings;
     }
 
-    protected async Task SelectedTickets(List<TicketTypeDTO> ticketTypes)
+    protected async Task SelectedTickets(List<TicketTypeBookingDTO> ticketTypes)
     {
-        string tickets = "";
-
-        foreach (var ticket in ticketTypes)
-        {
-            tickets += ticket.Type + " ";
-        }
-
-        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-        Snackbar.Add("Tickets Added: " + tickets, Severity.Success, config =>
-        {
-            config.VisibleStateDuration = 2000;
-            config.Icon = @Icons.Material.Outlined.Check;
-        });
-
-        _tickets = ticketTypes;
-        _booking.TicketTypes = ticketTypes;
+        _ticketTypeBookings = ticketTypes;
     }
 
-    public async Task MakeBooking() 
+    public async Task ConfirmBooking() 
     {
-        // I need to POST the update of the seats and POST the new booking in here.
-        // After I validate all the information.
+        var parameters = new DialogParameters();
+        parameters.Add("Booking", _booking);
+        parameters.Add("TicketTypeBooking", _ticketTypeBookings);
+        parameters.Add("Screening", _screening);
+        parameters.Add("Total", 19.99m);
 
-        await _client.PostAsJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats", _booking.SeatScreenings);
-        await _client.PostAsJsonAsync<BookingDTO>(API_URL + "/booking/create", _booking);
-
-        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-        Snackbar.Add("Booked Tickets", Severity.Success, config =>
+        DialogService.Show<BookingDialog>("Confirm Booking", parameters, new DialogOptions()
         {
-            config.VisibleStateDuration = 2000;
-            config.Icon = @Icons.Material.Outlined.Check;
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium,
+            DisableBackdropClick = true,
+            FullWidth = true
         });
     }
 

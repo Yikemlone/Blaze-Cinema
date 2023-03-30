@@ -5,6 +5,7 @@
 
     <MudText Typo="Typo.h2" Align="Align.Left"><b>Select Tickets</b></MudText>
 
+    @* DISPLAY PRICE OF TICKET*@
     <MudStack Row="true" Justify="Justify.Center">
         <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddAdult"/>
         <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person"/>
@@ -12,11 +13,7 @@
         <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractAdult"/>
     </MudStack>
 
-    @*
-        There is probabbly a better way to implement this system without duplicating the methods. 
-        We could make a generic method, parameters or bind the values.
-    *@
-
+    @* DISPLAY PRICE OF TICKET*@
     <MudStack Row="true" Justify="Justify.Center">
         <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddChild"/>
         <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning"/>
@@ -28,54 +25,70 @@
     
     @if (!_valid) 
     {
-        <span style="color: red">There isn't that many seats available. Availablse seats: @Availabletickets</span>
+        <span style="color: red">@_errorMessage</span>
     }
 
 </MudStack>
 
 
 @code{
-    private List<TicketTypeDTO> _tickets;
+    private List<TicketTypeBookingDTO> _tickTypeBookings = new List<TicketTypeBookingDTO>();
     private int _adultTicket;
     private int _childTicket;
     private bool _valid = true;
+    private string _errorMessage = "";
 
-    [Parameter] public EventCallback<List<TicketTypeDTO>> OnSelectedTikcets { get; set; }
+    [Parameter] public EventCallback<List<TicketTypeBookingDTO>> OnSelectedTikcets { get; set; }
     [Parameter] public List<SeatScreeningDTO> Seats { get; set; }
+    [Parameter] public List<TicketTypeDTO> TicketTypes { get; set; } // Do I even need this here?
     [Parameter] public int Availabletickets { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        _tickets = new List<TicketTypeDTO>();
-    }
 
     public async Task SelectedTickets() 
     {
         for (int i = 0; i < _adultTicket; i++)
         {
-            _tickets.Add(new TicketTypeDTO
+            _tickTypeBookings.Add(new TicketTypeBookingDTO
             {
-                Type = "Adult"
+                TicketTypeID = 1
             });
         }
 
         for (int i = 0; i < _childTicket; i++)
         {
-            _tickets.Add(new TicketTypeDTO
+            _tickTypeBookings.Add(new TicketTypeBookingDTO
             {
-                Type = "Child"
+                TicketTypeID = 2
             });
         }
-
-        if (_tickets.Count == 0) return;
-        if (_tickets.Count > Availabletickets) 
+        
+        // Validation for seats.
+        if (_tickTypeBookings.Count == 0)
         {
             _valid = false;
+            _errorMessage = "Please select a ticket.";
             return;
-        } 
+        }
+        else if (_tickTypeBookings.Count > Availabletickets)
+        {
+            _valid = false;
+            _errorMessage = "There are not that many seats available.";
+            return;
+        }
+        else if (_adultTicket == 0 && _childTicket > 0)
+        {
+            _valid = false;
+            _errorMessage = "Children must be with an adult.";
+            return;
+        }
+        else if ((_adultTicket + _childTicket) > 20 || _adultTicket > 20)
+        {
+            _valid = false;
+            _errorMessage = "Can't book more than 20 seats at a time.";
+            return;
+        }
 
-        await OnSelectedTikcets.InvokeAsync(_tickets);
-        _tickets = new List<TicketTypeDTO>();
+        await OnSelectedTikcets.InvokeAsync(_tickTypeBookings);
+        _tickTypeBookings = new List<TicketTypeBookingDTO>();
     }
 
     public void AddAdult() 
