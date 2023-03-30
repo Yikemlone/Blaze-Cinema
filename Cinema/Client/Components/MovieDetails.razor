@@ -10,29 +10,14 @@
             <MudItem xs="12" sm="12" md="12">
                 <MudText Typo="Typo.h2" Align="Align.Left"><b> @Movie.Name </b></MudText>
             </MudItem>
-            
+
             <MudItem xs="3" sm="3" md="3">
-                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="260"/>
+                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="225" />
             </MudItem>
 
-            <MudItem xs="9" sm="9" md="1">
-                <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="50" />
-                @*<MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>*@
-                <MudText Inline="true" Typo="Typo.subtitle2">@Movie.Duration Minutes</MudText>
-                    <MudText Inline="true" Typo="Typo.subtitle2">Release Date: @Movie.ReleaseDate.ToLongDateString()</MudText>
-            </MudItem>
-
-            <MudItem xs="9" sm="9" md="8">
-                <MudPaper Class="d-flex align-content-end flex-wrap flex-grow-1 gap-4" Height="380px" Elevation="0" Style="overflow:auto">
-                    <MudPaper Height="@(Movie.Description.Length > 500 ? "380px":"150px")" Elevation="0">
-                        <MudText Typo="Typo.body1">@Movie.Description</MudText>
-                    </MudPaper>
-                </MudPaper>
-            </MudItem>
-            
-            <MudItem xs="9" sm="9" md="12">
+            <MudItem xs="9" sm="9" md="9">
                 <MudTabs Elevation="2" Color="@Color.Primary" ApplyEffectsToContainer="true" Position="Position.Start">
-                    
+
                     <MudTabPanel Text="@("Monday " + _daysOfTheWeek[0])">
                         @foreach (var screening in Movie.Screenings)
                         {
@@ -56,20 +41,44 @@
                     </MudTabPanel>
 
                     <MudTabPanel Text="@("Sunday " + _daysOfTheWeek[6])">
-                    </MudTabPanel>  
+                    </MudTabPanel>
 
                 </MudTabs>
             </MudItem>
 
-            <MudItem xs="6" sm="8" md="12">
+            <MudItem xs="9" sm="9" md="1">
+                <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="75" />
+                @*<MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>*@
+            </MudItem>
+
+            <MudItem xs="9" sm="9" md="11">
+
+                <MudText Inline="false" Typo="Typo.subtitle2">Length: @Movie.Duration Minutes</MudText>
+                <MudText Inline="false" Typo="Typo.subtitle2">Release Date: @Movie.ReleaseDate.ToLongDateString()</MudText>
+            </MudItem>
+
+            <MudItem xs="9" sm="9" md="12">
                 <iframe src="https://www.youtube.com/embed/@Movie.Trailer"
-                    style="width: 100%!important;height: 500px!important;"
-                    title="YouTube video player" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen>
+                        style="width: 100%!important;height: 500px!important;"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
                 </iframe>
             </MudItem>
+            
+
+            <MudItem xs="6" sm="8" md="12">
+                <MudPaper Class="d-flex" Elevation="0" Style="overflow:auto">
+                    <MudPaper Elevation="0">
+                        <MudText Typo="Typo.h4">Description:</MudText>
+                        <MudText Typo="Typo.body1">@Movie.Description</MudText>
+                    </MudPaper>
+                </MudPaper>
+            </MudItem>
+
+            
+            
 
         </MudGrid>
     </MudContainer>
