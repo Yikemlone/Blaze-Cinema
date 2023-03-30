@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Client", "Cinema\Cli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Shared", "Cinema\Shared\Cinema.Shared.csproj", "{E62FE815-5E33-450E-B42C-41ECEA803FD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.Models", "Cinema.Models\Cinema.Models.csproj", "{C9F9E658-053C-4E3C-AC76-D1BEE8061873}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.Models", "Cinema.Models\Cinema.Models.csproj", "{C9F9E658-053C-4E3C-AC76-D1BEE8061873}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.DataAccess", "Cinema.DataAccess\Cinema.DataAccess.csproj", "{2106C32D-FB95-4ECC-BCF4-D61D3B734EA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.DataAccess", "Cinema.DataAccess\Cinema.DataAccess.csproj", "{2106C32D-FB95-4ECC-BCF4-D61D3B734EA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -19,7 +19,7 @@
                 <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="50" />
                 @*<MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>*@
                 <MudText Inline="true" Typo="Typo.subtitle2">@Movie.Duration Minutes</MudText>
-                <MudText Inline="true" Typo="Typo.subtitle2">@Movie.ReleaseDate.Date</MudText>
+                    <MudText Inline="true" Typo="Typo.subtitle2">Release Date: @Movie.ReleaseDate.ToLongDateString()</MudText>
             </MudItem>
 
             <MudItem xs="9" sm="9" md="8">
