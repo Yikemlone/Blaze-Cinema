@@ -1,0 +1,126 @@
+﻿@using Cinema.Shared.DTO
+@inherits ComponentBase
+
+<MudStack>
+
+    <MudText Typo="Typo.h2" Align="Align.Left"><b>Select Tickets</b></MudText>
+
+    @* DISPLAY PRICE OF TICKET*@
+    <MudStack Row="true" Justify="Justify.Center">
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddAdult"/>
+        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person"/>
+        <span><MudText Typo="Typo.body1" Align="Align.Center">Adult: @_adultTicket</MudText></span>
+        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractAdult"/>
+    </MudStack>
+
+    @* DISPLAY PRICE OF TICKET*@
+    <MudStack Row="true" Justify="Justify.Center">
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddChild"/>
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning"/>
+        <span><MudText Typo="Typo.body1" Align="Align.End">Child: @_childTicket</MudText></span>
+        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractChild"/>
+    </MudStack>
+
+    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="SelectedTickets">Save Tickets</MudButton>
+    
+    @if (!_valid) 
+    {
+        <span style="color: red">@_errorMessage</span>
+    }
+
+</MudStack>
+
+
+@code{
+    private List<TicketTypeBookingDTO> _tickTypeBookings = new List<TicketTypeBookingDTO>();
+    private int _adultTicket;
+    private int _childTicket;
+    private bool _valid = true;
+    private string _errorMessage = "";
+
+    [Parameter] public EventCallback<List<TicketTypeBookingDTO>> OnSelectedTikcets { get; set; }
+    [Parameter] public List<SeatScreeningDTO> Seats { get; set; }
+    [Parameter] public List<TicketTypeDTO> TicketTypes { get; set; } // Do I even need this here?
+    [Parameter] public int Availabletickets { get; set; }
+
+    public async Task SelectedTickets() 
+    {
+        for (int i = 0; i < _adultTicket; i++)
+        {
+            _tickTypeBookings.Add(new TicketTypeBookingDTO
+            {
+                TicketTypeID = 1
+            });
+        }
+
+        for (int i = 0; i < _childTicket; i++)
+        {
+            _tickTypeBookings.Add(new TicketTypeBookingDTO
+            {
+                TicketTypeID = 2
+            });
+        }
+
+        // Validation for seats.
+        if (_tickTypeBookings.Count == 0)
+        {
+            _valid = false;
+            _errorMessage = "Please select a ticket.";
+            return;
+        }
+        else if (_tickTypeBookings.Count > Availabletickets)
+        {
+            _valid = false;
+            _errorMessage = "There are not that many seats available.";
+            return;
+        }
+        else if (_adultTicket == 0 && _childTicket > 0)
+        {
+            _valid = false;
+            _errorMessage = "Children must be with an adult.";
+            return;
+        }
+        else if ((_adultTicket + _childTicket) > 20 || _adultTicket > 20)
+        {
+            _valid = false;
+            _errorMessage = "Can't book more than 20 seats at a time.";
+            return;
+        }
+
+        await OnSelectedTikcets.InvokeAsync(_tickTypeBookings);
+        _tickTypeBookings = new List<TicketTypeBookingDTO>();
+    }
+
+    public void AddAdult() 
+    {
+        // Should validate that they can not add more seats in the room
+        // should also make sure if they are free seats.
+        _adultTicket++;
+    }
+
+    public void SubtractAdult() 
+    {
+        _adultTicket--;
+        if (_adultTicket < 0) 
+        {
+            _adultTicket = 0;
+        }
+    }
+
+    public void AddChild()
+    {
+        // Should validate that they can not add more seats in the room
+        // should also make sure if they are free seats.
+        _childTicket++;
+    }
+
+    public void SubtractChild()
+    {
+        _childTicket--;
+        if (_childTicket < 0)
+        {
+            _childTicket = 0;
+        }
+    }
+
+}

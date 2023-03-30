@@ -1,0 +1,156 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper>
+
+            <MudForm>
+                @if (Movies != null && Screenings != null && _rooms != null)
+                {
+                    <MudStack Row=true>
+                        <MudSelect Label="Movie" @bind-Value="Screening.MovieID" Text="Select Movie" Variant="Variant.Filled" Required RequiredError="You must select a Movie.">
+                        @foreach (var movie in Movies)
+                            {
+                                <MudSelectItem Value="@movie.ID">@movie.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudSelect Label="Room" @bind-Value="Screening.RoomID" Text="Select Room" Variant="Variant.Filled" Required RequiredError="You must select a Room.">
+                        @foreach (var room in _rooms)
+                            {
+                                <MudSelectItem Value="@room.ID">@room.ID</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudStack>
+
+                    <MudStack Row="true">
+                        <MudTimePicker Label="Time" PickerVariant="PickerVariant.Dialog" @bind-Time="_time" />
+                        <MudDatePicker Label="Date" PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy" @bind-Date="_date" />
+                    </MudStack>
+                }
+            </MudForm>
+        </MudPaper>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Close">Save</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private const string API_URL = "api/manager";
+    private HttpClient? _client;
+    private List<RoomDTO>? _rooms;
+
+    private TimeSpan? _time;
+    private DateTime? _date;
+
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
+    [Parameter] public List<MovieDTO> Movies { get; set; }
+    [Parameter] public ScreeningDTO Screening { get; set; }
+    [Parameter] public List<ScreeningDTO> Screenings { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        _rooms = await GetRoomsModelAsync();
+
+        _time = Screening.DateTime.TimeOfDay;
+        _date = Screening.DateTime.Date;
+    }
+
+    async void Close()
+    {
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+
+        if (!ValidateScreeningTime())
+        {
+            Snackbar.Add("Movie Overlap", Severity.Warning, config =>
+            {
+                config.VisibleStateDuration = 1000;
+                config.Icon = @Icons.Material.Outlined.Error;
+            });
+
+            return;
+        }
+
+        await UpdateMovieScreeningAsync();
+
+        Snackbar.Add("Screening Updated", Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 1000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
+
+        MudDialog?.Close(DialogResult.Ok(true));
+    }
+
+    void Cancel()
+    {
+        MudDialog.Close(DialogResult.Cancel());
+    }
+
+    private bool ValidateScreeningTime()
+    {
+        // Adding the selected values to the new screening
+        if (_date.HasValue && _time.HasValue)
+        {
+            TimeSpan time = (TimeSpan)_time;
+            DateTime date = (DateTime)_date;
+
+            if (DateTime.Now >= date.Date.Add(time)) return false;
+
+            Screening.DateTime = date;
+            Screening.DateTime = Screening.DateTime.Add(time);
+        }
+
+        // Getting the new screening end time
+        int newScreeningMovieDuration = Movies.Where(m => m.ID == Screening.MovieID).FirstOrDefault().Duration;
+        var newScreeningStartTime = Screening.DateTime;
+        var newScreeningEndTime = Screening.DateTime.AddMinutes(newScreeningMovieDuration);
+
+        foreach (var screening in Screenings)
+        {
+            // If the room or day are not the same, move on.
+            if (Screening.RoomID != screening.RoomID) continue;
+            if (Screening.DateTime.Date != screening.DateTime.Date) continue;
+
+            int currentMovieDuration = Movies.Where(m => m.ID == screening.MovieID).FirstOrDefault().Duration;
+
+            // Current screening start and end
+            var currentScreeningStartTime = screening.DateTime;
+            var currentScreeningEndTime = screening.DateTime.AddMinutes(currentMovieDuration);
+
+            // Current screening start and end
+            Console.WriteLine("currentScreeningStartTime: " + currentScreeningStartTime.ToString());
+            Console.WriteLine("currentScreeningEndTime: " + currentScreeningEndTime.ToString());
+            Console.WriteLine(newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime);
+
+            // This will make sure the screening times don't overlap at all
+            if (newScreeningStartTime <= currentScreeningEndTime 
+                && currentScreeningStartTime <= newScreeningEndTime 
+                && Screening.ID != screening.ID)
+            {
+                return false;
+            };
+        }
+
+        return true;
+    }
+
+    private async Task UpdateMovieScreeningAsync()
+    {
+        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + $"/update/", Screening);
+        await MudTable.ReloadServerData();
+    }
+
+    private async Task<List<RoomDTO>> GetRoomsModelAsync()
+    {
+        return await _client.GetFromJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
+    }
+}

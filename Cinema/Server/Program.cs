@@ -1,9 +1,9 @@
-using Cinema.Server;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.ResponseCompression;
-using MudBlazor.Services;
-using Cinema.Server.Services.Movies;
-using Cinema.Server.Services.Employees;
+using Cinema.DataAccess.Services.MovieService;
+using Cinema.DataAccess.Services.ManagerService;
+using Cinema.DataAccess.Services.AdminService;
+using Cinema.DataAccess.Services.BookingService;
+using Cinema.DataAccess.Context;
 
 namespace Cinema
 {
@@ -24,6 +24,7 @@ namespace Cinema
             builder.Services.AddScoped<IMovieService, MovieService>();
             builder.Services.AddScoped<IManagerService, ManagerService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
 
             //Connecting to the database
             builder.Services.AddDbContext<CinemaDBContext>(options =>

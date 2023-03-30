@@ -1,5 +1,4 @@
-﻿using Cinema.Server.Services.Employees;
-using Cinema.Server.Services.Movies;
+﻿using Cinema.DataAccess.Services.AdminService;
 using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,9 +1,95 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-@*This will display the layout of the room the screening is being displayed in.*@
+<style>
+    .layoutGrid 
+    {
+        width: 300px;
+        margin: auto;
+    }
+</style>
 
+
+@if(SeatScreenings != null) {
+
+    <MudStack Justify="Justify.Center">
+
+        <MudText Typo="Typo.h2" Align="Align.Left"><b> Select Seats </b></MudText>
+
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="12">
+                    <MudGrid Class="layoutGrid">
+                        @foreach (var seat in SeatScreenings)
+                        {
+                            <MudItem Style="padding: 0px">
+                                <Seat OnSeatSelected="SeatSelected" SeatScreening="@seat" />
+                            </MudItem>
+                        }
+
+                    <MudItem>
+                        <p>Screen Here</p>
+                    </MudItem>
+
+                </MudGrid>
+            </MudItem>
+
+            <MudItem>
+                <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="OnSelected">
+                    Save Seats
+                </MudButton>
+            </MudItem>
+
+            @if (!_valid) 
+            {
+                <MudItem xs="12">
+                    <span style="color: red;">Select correct amount of seats: @AmountOfSeatsSelected</span>
+                </MudItem>
+            }
+
+        </MudGrid>
+    </MudStack>
+}
 
 @code {
+    [Parameter] public List<SeatScreeningDTO> SeatScreenings { get; set; }
+    [Parameter] public EventCallback<List<SeatScreeningDTO>> OnSeatsSelected { get; set; }
+    [Parameter] public int AmountOfSeatsSelected { get; set; }
 
+    private List<SeatScreeningDTO> _selectedSeats = new();
+    private bool _valid = true;
+
+    protected async Task SeatSelected(SeatScreeningDTO seat)
+    {
+        // This will set the selected seat, unless its already in the list
+        // which then it will remove it 
+        if (_selectedSeats.Contains(seat))
+        {
+            _selectedSeats.Remove(seat);
+        }
+        else 
+        {
+            _selectedSeats.Add(seat);
+        }
+    }
+
+    protected async Task OnSelected() 
+    {
+        // This will send all the selected seats page to booking page.
+        if (_selectedSeats.Count != AmountOfSeatsSelected)
+        {
+            _valid = false;
+            return;
+        }
+        else 
+        {
+            _valid = true;
+        }
+
+        foreach (var seat in _selectedSeats)
+        {
+            seat.Booked = true;
+        }
+
+        await OnSeatsSelected.InvokeAsync(_selectedSeats);
+    }
 }

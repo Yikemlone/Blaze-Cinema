@@ -1,0 +1,20 @@
+﻿@page "/manager/decom"
+
+<PageTitle>Screenings</PageTitle>
+
+<MudPaper Class="pa-3 ma-2" Elevation="1">
+    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+</MudPaper>
+
+<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
+   
+</MudPaper>
+
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
+        new BreadcrumbItem("Manager Dashboard", href: "/manager", icon: Icons.Material.Filled.Lock),
+        new BreadcrumbItem("Decomission Room", href: "/manager/decom", icon: Icons.Material.Filled.Lock),
+    };
+}
