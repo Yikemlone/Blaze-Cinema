@@ -14,7 +14,7 @@
                 May need to pass down how many seats are free to make sure users can not 
                 book more seats than that are available.
                 *@
-                <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="5"/>
+                <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats"/>
             </MudItem>
         }
 
@@ -30,13 +30,14 @@
     </MudGrid>
 </MudPaper>
 
-    @code {
+@code {
     private const string API_URL = "/api";
     private HttpClient? _client;
     private BookingDTO _booking;
     private ScreeningDTO _screening;
     private List<TicketTypeDTO> _tickets;
     private List<SeatScreeningDTO> _seats;
+    private int _availableSeats;
 
     [Parameter] public int ScreeningID { get; set; }
 
@@ -46,6 +47,7 @@
         _booking = new BookingDTO();
         _booking.Status = "Pending";
         _seats = await GetSeatScreenings();
+        _availableSeats = _seats.Where(s => s.Booked != true).Select(s => s).Count();
     }
 
     protected async Task SelectedSeats(List<SeatScreeningDTO> seatScreenings)
