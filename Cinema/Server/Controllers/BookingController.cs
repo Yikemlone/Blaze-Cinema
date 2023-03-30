@@ -34,16 +34,16 @@ namespace Cinema.Server.Controllers
         // Create, Update and Delete
         [HttpPost]
         [Route("create")]
-        public async Task CreateBooking([FromBody] BookingDTO booking) 
+        public async Task CreateBooking([FromBody] BookingAndSeatDTO bookingAndSeatDTO) 
         {
-            await _bookingService.CreateBookingAsync(booking);
+            await _bookingService.CreateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
         }
 
         [HttpPost]
         [Route("update")]
-        public async Task UpdateBooking([FromBody] BookingDTO booking)
+        public async Task UpdateBooking([FromBody] BookingAndSeatDTO bookingAndSeatDTO)
         {
-            await _bookingService.UpdateBookingAsync(booking);
+            await _bookingService.UpdateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
         }
 
         [HttpPost]

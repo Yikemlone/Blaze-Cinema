@@ -21,6 +21,7 @@ namespace Cinema.DataAccess.Services.BookingService
                 .Select(b => new BookingDTO()
                 {
                     ID = b.ID,
+                    BookingRef = b.BookingRef,
                     Status = b.Status,
                 })
                 .ToList();
@@ -35,6 +36,7 @@ namespace Cinema.DataAccess.Services.BookingService
                 .Select(b => new BookingDTO()
                 {
                     ID = b.ID,
+                    BookingRef = b.BookingRef,
                     Status = b.Status,
                 })
                 .ToList();
@@ -44,11 +46,12 @@ namespace Cinema.DataAccess.Services.BookingService
 
 
         // Add, Update and Delete
-        public async Task CreateBookingAsync(BookingDTO booking)
+        public async Task CreateBookingAsync(BookingDTO booking, List<TicketTypeBookingDTO> ticketTypeBookings)
         {
             var newBooking = new Booking()
             {
-                Status = booking.Status,
+                BookingRef = booking.BookingRef,
+                Status = booking.Status
             };
 
             if (booking.Customer != null) 
@@ -58,9 +61,36 @@ namespace Cinema.DataAccess.Services.BookingService
 
             await _context.AddAsync(newBooking);
             await _context.SaveChangesAsync();
+
+            foreach (var seatScreening in booking.SeatScreenings)
+            {
+                var oldSeatScreening = _context.SeatScreenings
+                    .Where(sc => sc.ID == seatScreening.ID)
+                    .Select(s => s)
+                    .SingleOrDefault();
+
+                if (oldSeatScreening == null) return;
+                oldSeatScreening.BookingID = newBooking.ID;
+                oldSeatScreening.Booked = seatScreening.Booked;
+            }
+
+            var tickets = new List<TicketTypeBooking>();
+
+            foreach (var ticket in ticketTypeBookings)
+            {
+                tickets.Add(new TicketTypeBooking()
+                {
+                    BookingID = newBooking.ID,
+                    TicketTypeID = ticket.TicketTypeID,
+                });
+            }
+
+            await _context.AddRangeAsync(tickets);
+            await _context.SaveChangesAsync();
+
         }
 
-        public async Task UpdateBookingAsync(BookingDTO booking)
+        public async Task UpdateBookingAsync(BookingDTO booking, List<TicketTypeBookingDTO> ticketTypeBookings)
         {
             var oldBooking = _context.Bookings
                 .Where(b => b.ID == booking.ID)

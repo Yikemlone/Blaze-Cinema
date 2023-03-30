@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace Cinema.Models.Models
 {
     public class Booking
     {
         public int ID { get; set; }
+        public string BookingRef { get; set; }
         public string Status { get; set; }
 
 

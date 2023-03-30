@@ -7,8 +7,8 @@ namespace Cinema.DataAccess.Services.BookingService
         public Task<List<BookingDTO>> GetBookingsAsync();
         public Task<List<BookingDTO>> GetCustomerBookingsAsync(int customerID);
 
-        public Task CreateBookingAsync(BookingDTO bookingDTO);
-        public Task UpdateBookingAsync(BookingDTO bookingDTO);
+        public Task CreateBookingAsync(BookingDTO bookingDTO, List<TicketTypeBookingDTO> ticketTypeBooking);
+        public Task UpdateBookingAsync(BookingDTO bookingDTO, List<TicketTypeBookingDTO> ticketTypeBooking);
         public Task DeleteBookingAsync(int bookingID);
     }
 }

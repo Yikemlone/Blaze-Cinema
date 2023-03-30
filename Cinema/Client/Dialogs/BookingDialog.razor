@@ -31,8 +31,9 @@
                 <p>Display the payment stuff here here</p>
             } else 
             {
-                @*This will only be displayed if the booking was succesful*@
-                <p>Display the booking number here</p>
+                <p>Your booking is confirmed!</p>
+                <p>Here is your booking reference:</p>
+                <h4>@Booking.BookingRef</h4>
             }
 
             @*            
@@ -75,7 +76,7 @@
 </MudDialog>
 
 @code {
-    private const string API_URL = "api/admin"; // MAKE THIS BOOKING RELATED
+    private const string API_URL = "api/"; // MAKE THIS BOOKING RELATED
     private HttpClient? _client;
 
     private bool _confirmedDetails;
@@ -122,13 +123,18 @@
     {
         // NOTE: All validation for payments should be here. 
         // If the payment is valid we will post the booking
-        
+
         // I need to POST the update of the seats and POST the new booking in here.
         // After I validate all the information.
-        //await _client.PostAsJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats", Booking.SeatScreenings);
-        //await _client.PostAsJsonAsync<BookingDTO>(API_URL + "/booking/create", Booking);
-
         _confirmedPayment = true;
+
+        //await _client.PostAsJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats", Booking.SeatScreenings);
+        await _client.PostAsJsonAsync<BookingAndSeatDTO>(API_URL + "booking/create", new BookingAndSeatDTO 
+        { 
+            BookingDTO = Booking, 
+            TicketTypeBookingDTO = TicketTypeBooking
+        });
+
     }
 
     private async void Back() 
