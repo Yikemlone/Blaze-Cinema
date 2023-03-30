@@ -96,7 +96,7 @@
                     @context.Name
                 </div>
             </MudTd>
-            <MudTd DataLabel="ReleaseDate">@context.ReleaseDate</MudTd>
+            <MudTd DataLabel="ReleaseDate">@context.ReleaseDate.ToLongDateString()</MudTd>
             <MudTd DataLabel="AgeRating">@context.AgeRating</MudTd>
             <MudTd DataLabel="Duration">@context.Duration</MudTd>
             <MudTd DataLabel="Trailer">@context.Trailer</MudTd>
