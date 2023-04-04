@@ -59,15 +59,15 @@ namespace Cinema.DataAccess.Services.BookingService
                 newBooking.CustomerID = booking.Customer.ID;
             }
 
-            await _context.AddAsync(newBooking);
-            await _context.SaveChangesAsync();
+            await _context.AddAsync(newBooking); // THIS MAY CAUSE ISSUES IF I DO UNIT OF WORK HERE, WE MAY NOT HAVE ID
+            //await _context.SaveChangesAsync();
 
             foreach (var seatScreening in booking.SeatScreenings)
             {
-                var oldSeatScreening = _context.SeatScreenings
+                var oldSeatScreening = await _context.SeatScreenings
                     .Where(sc => sc.ID == seatScreening.ID)
                     .Select(s => s)
-                    .SingleOrDefault();
+                    .FirstOrDefaultAsync();
 
                 if (oldSeatScreening == null) return;
                 oldSeatScreening.BookingID = newBooking.ID;
@@ -92,20 +92,20 @@ namespace Cinema.DataAccess.Services.BookingService
 
         public async Task UpdateBookingAsync(BookingDTO booking, List<TicketTypeBookingDTO> ticketTypeBookings)
         {
-            var oldBooking = _context.Bookings
+            var oldBooking = await _context.Bookings
                 .Where(b => b.ID == booking.ID)
                 .Select(b => b)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (oldBooking == null) return;
             oldBooking.Status = booking.Status;
 
             if (oldBooking.Status.Equals("Cancelled")) 
             {
-                var seat = _context.SeatScreenings
+                var seat = await _context.SeatScreenings
                     .Select(s => s)
                     .Where(s => s.BookingID == oldBooking.ID)
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync();
 
                 if (seat != null)
                 {
@@ -118,18 +118,20 @@ namespace Cinema.DataAccess.Services.BookingService
 
         public async Task DeleteBookingAsync(int bookingID)
         {
-            var bookingToRemove = _context.Bookings
+            var bookingToRemove = await _context.Bookings
                 .Where(b => b.ID == bookingID)
-                .Select(b => b);
+                .Select(b => b)
+                .FirstOrDefaultAsync();
 
-            var seat = _context.SeatScreenings
+            var seats = await _context.SeatScreenings
                 .Where(s => s.BookingID == bookingID)
                 .Select(s => s)
-                .FirstOrDefault();
+                .ToListAsync();
 
-            if (seat != null) 
-            { 
-                seat.Booked = false;
+            foreach (var seat in seats)
+            {
+                seat.Booked = false; // Changes seat to no longer be booked
+                seat.BookingID = null; // Removes the booking ID
             }
 
             _context.Remove(bookingToRemove);

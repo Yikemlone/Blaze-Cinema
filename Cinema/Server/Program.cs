@@ -26,6 +26,8 @@ namespace Cinema
             builder.Services.AddScoped<IAdminService, AdminService>();
             builder.Services.AddScoped<IBookingService, BookingService>();
 
+            // Replace all above services with UnitOfWork service.
+
             //Connecting to the database
             builder.Services.AddDbContext<CinemaDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"))

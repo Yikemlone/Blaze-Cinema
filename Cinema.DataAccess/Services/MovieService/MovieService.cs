@@ -46,7 +46,7 @@ namespace Cinema.DataAccess.Services.MovieService
 
         public async Task<List<MovieDTO>> GetMoviesAsync()
         {
-            List<MovieDTO> movies = _context.Movies
+            var movies = _context.Movies
                 .Select(m => new MovieDTO() 
                 {
                     ID = m.ID,
@@ -79,7 +79,7 @@ namespace Cinema.DataAccess.Services.MovieService
         // Screenings
         public async Task<List<ScreeningDTO>> GetScreeningsAsync()
         {
-            List<ScreeningDTO> Screenings = _context.Screenings
+            var Screenings = _context.Screenings
                 .Select(m => new ScreeningDTO()
                 {
                     ID = m.ID,
@@ -113,7 +113,7 @@ namespace Cinema.DataAccess.Services.MovieService
         // SeatScreenings
         public async Task<List<SeatScreeningDTO>> GetSeatsScreeningAsync(int screeningID)
         {
-            List<SeatScreeningDTO> seatScreenings = _context.SeatScreenings
+            var seatScreenings = _context.SeatScreenings
                 .Where(sc => sc.ScreeningID == screeningID)
                 .Select(sc => new SeatScreeningDTO()
                 {
@@ -140,7 +140,7 @@ namespace Cinema.DataAccess.Services.MovieService
 
         public async Task<SeatScreeningDTO> GetSeatScreeningAsync(int seatScreeningID)
         {
-            var SeatScreening = _context.SeatScreenings
+            var seatScreening = _context.SeatScreenings
                 .Where(sc => sc.ID == seatScreeningID)
                 .Select(sc => new SeatScreeningDTO()
                 {
@@ -162,7 +162,7 @@ namespace Cinema.DataAccess.Services.MovieService
                 })
                 .SingleOrDefault();
 
-            return SeatScreening;
+            return seatScreening;
         }
 
         public async Task UpdateSeatScreeningAsync(SeatScreeningDTO seatScreening)
