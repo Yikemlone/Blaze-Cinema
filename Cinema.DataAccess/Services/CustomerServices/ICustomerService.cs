@@ -1,6 +1,6 @@
 ﻿using Cinema.Shared.DTO;
 
-namespace Cinema.DataAccess.Services.CustomerService
+namespace Cinema.DataAccess.Services.CustomerServices
 {
     public interface ICustomerService
     {

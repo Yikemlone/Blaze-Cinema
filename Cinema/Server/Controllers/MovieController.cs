@@ -1,4 +1,4 @@
-﻿using Cinema.DataAccess.Services.MovieService;
+﻿using Cinema.DataAccess.Services.UnitOfWorkServices;
 using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +8,11 @@ namespace Cinema.Server.Controllers
     [Route("/api/[controller]")]
     public class MovieController
     {
-        private readonly IMovieService _movieService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public MovieController(IMovieService movieService)
+        public MovieController(IUnitOfWork movieService)
         {
-            _movieService = movieService;
+            _unitOfWork = movieService;
         }
 
         // Movies
@@ -20,14 +20,14 @@ namespace Cinema.Server.Controllers
         [Route("movies")]
         public async Task<List<MovieDTO>> GetMovies()
         {
-            return await _movieService.GetMoviesAsync();
+            return await _unitOfWork.MovieService.GetMoviesAsync();
         }
 
         [HttpGet]
         [Route("movies/{movieID}")]
         public async Task<MovieDTO> GetMovie(int movieID)
         {
-            return await _movieService.GetMovieAsync(movieID);
+            return await _unitOfWork.MovieService.GetMovieAsync(movieID);
         }
 
 
@@ -36,14 +36,14 @@ namespace Cinema.Server.Controllers
         [Route("screenings")]
         public async Task<List<ScreeningDTO>> GetScreenings()
         {
-            return await _movieService.GetScreeningsAsync();
+            return await _unitOfWork.MovieService.GetScreeningsAsync();
         }
 
         [HttpGet]
         [Route("screenings/{movieID}")]
         public async Task<ScreeningDTO> GetMovieScreening(int movieID)
         {
-            return await _movieService.GetMovieScreeningAsync(movieID);
+            return await _unitOfWork.MovieService.GetMovieScreeningAsync(movieID);
         }
 
             
@@ -53,7 +53,7 @@ namespace Cinema.Server.Controllers
         public async Task<List<SeatScreeningDTO>> GetSeatScreenings(int screeningID)
         {
             // This returns all the seats for a screening
-            return await _movieService.GetSeatsScreeningAsync(screeningID);
+            return await _unitOfWork.MovieService.GetSeatsScreeningAsync(screeningID);
         }
 
         [HttpGet]
@@ -61,7 +61,7 @@ namespace Cinema.Server.Controllers
         public async Task<SeatScreeningDTO> GetSeatScreening(int seatScreeningID)
         {
             // This returns the seat for a screening
-            return await _movieService.GetSeatScreeningAsync(seatScreeningID);
+            return await _unitOfWork.MovieService.GetSeatScreeningAsync(seatScreeningID);
         }
 
         [HttpPost]
@@ -69,7 +69,7 @@ namespace Cinema.Server.Controllers
         public async Task UpdateSeatScreening([FromBody] SeatScreeningDTO seatScreening)
         {
             // Updates the seats state
-            await _movieService.UpdateSeatScreeningAsync(seatScreening);
+            await _unitOfWork.MovieService.UpdateSeatScreeningAsync(seatScreening);
         }
 
         [HttpPost]
@@ -77,7 +77,7 @@ namespace Cinema.Server.Controllers
         public async Task UpdateSeatsScreening([FromBody] List<SeatScreeningDTO> seatsScreening)
         {
             // Updates the seats state
-            await _movieService.UpdateSeatsScreeningAsync(seatsScreening);
+            await _unitOfWork.MovieService.UpdateSeatsScreeningAsync(seatsScreening);
         }
     }
 }

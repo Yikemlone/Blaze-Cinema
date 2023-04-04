@@ -1,9 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Cinema.DataAccess.Services.MovieService;
-using Cinema.DataAccess.Services.ManagerService;
-using Cinema.DataAccess.Services.AdminService;
-using Cinema.DataAccess.Services.BookingService;
 using Cinema.DataAccess.Context;
+using Cinema.DataAccess.Services.UnitOfWorkServices;
 
 namespace Cinema
 {
@@ -17,16 +14,14 @@ namespace Cinema
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-
-            // NOTE: We can add auth checking here that uses the Identity Package.
-
             // NOTE: This is called dependency 
-            builder.Services.AddScoped<IMovieService, MovieService>();
-            builder.Services.AddScoped<IManagerService, ManagerService>();
-            builder.Services.AddScoped<IAdminService, AdminService>();
-            builder.Services.AddScoped<IBookingService, BookingService>();
+            //builder.Services.AddScoped<IMovieService, MovieService>();
+            //builder.Services.AddScoped<IManagerService, ManagerService>();
+            //builder.Services.AddScoped<IAdminService, AdminService>();
+            //builder.Services.AddScoped<IBookingService, BookingService>();
 
             // Replace all above services with UnitOfWork service.
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //Connecting to the database
             builder.Services.AddDbContext<CinemaDBContext>(options =>

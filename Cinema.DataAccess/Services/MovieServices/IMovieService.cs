@@ -1,7 +1,7 @@
 ﻿using Cinema.Models.Models;
 using Cinema.Shared.DTO;
 
-namespace Cinema.DataAccess.Services.MovieService
+namespace Cinema.DataAccess.Services.MovieServices
 {
     public interface IMovieService
     {

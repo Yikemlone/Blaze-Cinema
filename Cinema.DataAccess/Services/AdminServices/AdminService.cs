@@ -2,7 +2,7 @@
 using Cinema.Models.Models;
 using Cinema.Shared.DTO;
 
-namespace Cinema.DataAccess.Services.AdminService
+namespace Cinema.DataAccess.Services.AdminServices
 {
     public class AdminService : IAdminService
     {

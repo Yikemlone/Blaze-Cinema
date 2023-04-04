@@ -9,12 +9,11 @@ namespace Cinema.Models.Models
         public string BookingRef { get; set; }
         public string Status { get; set; }
 
-
         public int? CustomerID { get; set; }
         public Customer? Customer { get; set; }
 
         public List<TicketTypeBooking> TicketTypeBookings { get; set; } // Fix this in class diagram
-        public List<SeatScreening> SeatScreenings { get; set; }
+        public List<SeatScreening> SeatScreenings { get; set; } 
 
     }
 }

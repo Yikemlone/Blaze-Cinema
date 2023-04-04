@@ -1,7 +1,7 @@
 ﻿using Cinema.DataAccess.Context;
 using Cinema.Shared.DTO;
 
-namespace Cinema.DataAccess.Services.MovieService
+namespace Cinema.DataAccess.Services.MovieServices
 {
     public class MovieService : IMovieService
     {
@@ -140,7 +140,7 @@ namespace Cinema.DataAccess.Services.MovieService
 
         public async Task<SeatScreeningDTO> GetSeatScreeningAsync(int seatScreeningID)
         {
-            var seatScreening = _context.SeatScreenings
+            var SeatScreening = _context.SeatScreenings
                 .Where(sc => sc.ID == seatScreeningID)
                 .Select(sc => new SeatScreeningDTO()
                 {
@@ -162,7 +162,7 @@ namespace Cinema.DataAccess.Services.MovieService
                 })
                 .SingleOrDefault();
 
-            return seatScreening;
+            return SeatScreening;
         }
 
         public async Task UpdateSeatScreeningAsync(SeatScreeningDTO seatScreening)

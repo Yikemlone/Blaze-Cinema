@@ -1,6 +1,6 @@
 ﻿using Cinema.Shared.DTO;
 
-namespace Cinema.DataAccess.Services.BookingService
+namespace Cinema.DataAccess.Services.BookingServices
 {
     public interface IBookingService
     {

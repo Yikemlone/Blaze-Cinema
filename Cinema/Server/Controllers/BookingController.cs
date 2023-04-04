@@ -1,4 +1,4 @@
-﻿using Cinema.DataAccess.Services.BookingService;
+﻿using Cinema.DataAccess.Services.UnitOfWorkServices;
 using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +8,11 @@ namespace Cinema.Server.Controllers
     [Route("/api/[controller]")]
     public class BookingController
     {
-        private readonly IBookingService _bookingService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public BookingController(IBookingService bookingService)
+        public BookingController(IUnitOfWork bookingService)
         {
-            _bookingService = bookingService;
+            _unitOfWork = bookingService;
         }
 
         // Gets
@@ -20,14 +20,14 @@ namespace Cinema.Server.Controllers
         [Route("bookings")]
         public async Task<List<BookingDTO>> GetBookings()
         {
-            return await _bookingService.GetBookingsAsync();
+            return await _unitOfWork.BookingService.GetBookingsAsync();
         }
 
         [HttpGet]
         [Route("bookings/{customerID}")]
         public async Task<List<BookingDTO>> GetCustomerBookings(int customerID)
         {
-            return await _bookingService.GetCustomerBookingsAsync(customerID);
+            return await _unitOfWork.BookingService.GetCustomerBookingsAsync(customerID);
         }
 
 
@@ -36,21 +36,21 @@ namespace Cinema.Server.Controllers
         [Route("create")]
         public async Task CreateBooking([FromBody] BookingAndSeatDTO bookingAndSeatDTO) 
         {
-            await _bookingService.CreateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
+            await _unitOfWork.BookingService.CreateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
         }
 
         [HttpPost]
         [Route("update")]
         public async Task UpdateBooking([FromBody] BookingAndSeatDTO bookingAndSeatDTO)
         {
-            await _bookingService.UpdateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
+            await _unitOfWork.BookingService.UpdateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
         }
 
         [HttpPost]
         [Route("delete/{bookingID}")]
         public async Task DeleteBooking(int bookingID)
         {
-           await _bookingService.DeleteBookingAsync(bookingID);
+           await _unitOfWork.BookingService.DeleteBookingAsync(bookingID);
         }
     }
 }

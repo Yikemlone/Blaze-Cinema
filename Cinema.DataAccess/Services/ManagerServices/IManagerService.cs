@@ -1,6 +1,6 @@
 ﻿using Cinema.Shared.DTO;
 
-namespace Cinema.DataAccess.Services.ManagerService
+namespace Cinema.DataAccess.Services.ManagerServices
 {
     public interface IManagerService 
     {
