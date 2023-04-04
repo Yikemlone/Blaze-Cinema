@@ -26,6 +26,12 @@ INSERT INTO Employees VALUES
 ('Admin','Sarah','Mullan','SarahMullan97','Password206');
 
 
+INSERT INTO TicketTypes VALUES
+(9.99, 'Adult'),
+(5.99, 'Child'),
+(5, 'TuesdayDeal');
+
+
 INSERT INTO Movies(Name, Duration, AgeRating, Trailer, Description, ReleaseDate) VALUES
 ('Puss in Boots: The Last Wish', 102, 'PG', 'RqrXhwS33yc', 'Puss in Boots discovers that his passion for adventure has taken its toll: He has burned through eight of his nine lives, leaving him with only one life left. Puss sets out on an epic journey to find the mythical Last Wish and restore his nine lives.','2023-02-03'),
 ('Avatar: The Way of Water', 193, '12A', 'd9MyW72ELq0', 'Jake Sully lives with his newfound family formed on the planet of Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Navi race to protect their planet.','2022-12-16'),

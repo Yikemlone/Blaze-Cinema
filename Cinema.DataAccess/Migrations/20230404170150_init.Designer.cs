@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cinema.DataAccess.Migrations
 {
     [DbContext(typeof(CinemaDBContext))]
-    [Migration("20230323161428_InitialMigrations")]
-    partial class InitialMigrations
+    [Migration("20230404170150_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,10 @@ namespace Cinema.DataAccess.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("BookingRef")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CustomerID")
                         .HasColumnType("int");

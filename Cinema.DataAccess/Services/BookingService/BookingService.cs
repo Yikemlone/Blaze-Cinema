@@ -60,7 +60,7 @@ namespace Cinema.DataAccess.Services.BookingService
             }
 
             await _context.AddAsync(newBooking); // THIS MAY CAUSE ISSUES IF I DO UNIT OF WORK HERE, WE MAY NOT HAVE ID
-            //await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // THIS COULD BE A PROBLEM
 
             foreach (var seatScreening in booking.SeatScreenings)
             {
@@ -70,7 +70,7 @@ namespace Cinema.DataAccess.Services.BookingService
                     .FirstOrDefaultAsync();
 
                 if (oldSeatScreening == null) return;
-                oldSeatScreening.BookingID = newBooking.ID;
+                oldSeatScreening.BookingID = newBooking.ID; // Getting this 
                 oldSeatScreening.Booked = seatScreening.Booked;
             }
 
