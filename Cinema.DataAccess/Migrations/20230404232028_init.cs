@@ -93,8 +93,7 @@ namespace Cinema.DataAccess.Migrations
                 name: "Bookings",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BookingRef = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: true)
@@ -162,7 +161,7 @@ namespace Cinema.DataAccess.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BookingID = table.Column<int>(type: "int", nullable: false),
+                    BookingID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TicketTypeID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -190,7 +189,7 @@ namespace Cinema.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Booked = table.Column<bool>(type: "bit", nullable: false),
                     SeatID = table.Column<int>(type: "int", nullable: false),
-                    BookingID = table.Column<int>(type: "int", nullable: true),
+                    BookingID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ScreeningID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

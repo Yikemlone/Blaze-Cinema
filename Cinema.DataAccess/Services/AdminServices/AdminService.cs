@@ -26,7 +26,6 @@ namespace Cinema.DataAccess.Services.AdminServices
             };
 
             await _context.AddAsync(newMovie);
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateMovieAsync(MovieDTO movie)
@@ -44,8 +43,6 @@ namespace Cinema.DataAccess.Services.AdminServices
             oldMovie.Description = movie.Description;
             oldMovie.ReleaseDate = movie.ReleaseDate;
             oldMovie.Trailer = movie.Trailer;
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteMovieAsync(int movieID)
@@ -56,7 +53,6 @@ namespace Cinema.DataAccess.Services.AdminServices
             if (movie == null) return;
 
             _context.Movies.Remove(movie);
-            await _context.SaveChangesAsync();
         }
 
     }

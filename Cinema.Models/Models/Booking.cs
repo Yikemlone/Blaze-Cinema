@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
 namespace Cinema.Models.Models
 {
     public class Booking
     {
-        public int ID { get; set; }
+        [Key]
+        public Guid ID { get; set; }
         public string BookingRef { get; set; }
         public string Status { get; set; }
 

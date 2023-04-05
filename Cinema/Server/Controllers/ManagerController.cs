@@ -21,6 +21,7 @@ namespace Cinema.Server.Controllers
         public async Task CreateMovieScreening([FromBody] ScreeningDTO screening)
         {
             await _unitOfWork.ManagerService.CreateMovieScreeningAsync(screening);
+            await _unitOfWork.SaveAsync();
         }
 
         [HttpPost]
@@ -28,13 +29,15 @@ namespace Cinema.Server.Controllers
         public async Task UpdateScreening([FromBody] ScreeningDTO screening)
         {
             await _unitOfWork.ManagerService.UpdateMovieScreeningAsync(screening);
+            await _unitOfWork.SaveAsync();
         }
 
         [HttpPost]
         [Route("delete/{screeningID}")]
-        public async Task DeleteMovieScreening(int screeningID)
+        public async Task DeleteMovieScreening(Guid screeningID)
         {
             await _unitOfWork.ManagerService.DeleteMovieScreeningAsync(screeningID);
+            await _unitOfWork.SaveAsync();
         }
 
 
@@ -75,6 +78,7 @@ namespace Cinema.Server.Controllers
         public async Task UpdateRoom([FromBody] RoomDTO room)
         {
             await _unitOfWork.ManagerService.UpdateRoomAsync(room);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

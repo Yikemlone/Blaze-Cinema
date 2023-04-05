@@ -29,12 +29,12 @@ namespace Cinema.DataAccess.Services.UnitOfWorkServices
 
         public void Dispose()
         {
-            _context.Dispose();
+             _context.Dispose();
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -14,6 +14,6 @@ namespace Cinema.DataAccess.Services.UnitOfWorkServices
         IAdminService AdminService { get; }
         ICustomerService CustomerService { get; }
 
-        void Save();
+        Task SaveAsync();
     }
 }

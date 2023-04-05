@@ -50,13 +50,6 @@
     </DialogContent>
 
     <DialogActions>
-        @*       
-            We will have multiple buttons here that will chain until the final view:
-            - Confirm details
-            - Confirm payment method
-            - Booking confirmed
-        *@
-
         @if (!_confirmedDetails)
         {
             <MudButton Color="Color.Primary" OnClick="Confirm">Confirm</MudButton>
@@ -71,7 +64,6 @@
         {
             <MudButton Color="Color.Primary" OnClick="Close">Confirm</MudButton>
         }
-
     </DialogActions>
 </MudDialog>
 

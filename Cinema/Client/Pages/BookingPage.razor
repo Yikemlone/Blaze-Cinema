@@ -49,14 +49,13 @@
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _booking = new BookingDTO();
         _booking.Status = "Pending";
-        _booking.BookingRef = Guid.NewGuid().ToString();
+        _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
         _seats = await GetSeatScreenings();
         _availableSeats = _seats.Where(s => s.Booked != true).Select(s => s).Count();
     }
 
     protected async Task SelectedSeats(List<SeatScreeningDTO> seatScreenings)
     {
-        Console.WriteLine(seatScreenings[0].ID);
         _booking.SeatScreenings = seatScreenings;
     }
 

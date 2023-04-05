@@ -18,6 +18,7 @@ namespace Cinema.DataAccess.Services.ManagerServices
         {
             var newScreening = new Screening()
             {
+                ID = new Guid(),
                 DateTime = screening.DateTime,
                 MovieID = screening.MovieID,
                 RoomID = screening.RoomID
@@ -27,9 +28,6 @@ namespace Cinema.DataAccess.Services.ManagerServices
                 .Where(s => s.RoomID == newScreening.RoomID)
                 .Select(s => s)
                 .ToList();
-
-            await _context.AddAsync(newScreening);
-            await _context.SaveChangesAsync();
 
             var screeningSeats = new List<SeatScreening>();
 
@@ -43,8 +41,8 @@ namespace Cinema.DataAccess.Services.ManagerServices
                 });
             }
 
+            await _context.AddAsync(newScreening);
             await _context.AddRangeAsync(screeningSeats);
-            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateMovieScreeningAsync(ScreeningDTO screening)
@@ -78,15 +76,14 @@ namespace Cinema.DataAccess.Services.ManagerServices
             }
 
             var oldScreeningsSeats= _context.SeatScreenings
-                .Where(s => s.ID == screening.ID)
+                .Where(s => s.ScreeningID == screening.ID)
                 .Select(s => s)
                 .ToList();
 
             _context.SeatScreenings.RemoveRange(oldScreeningsSeats);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteMovieScreeningAsync(int screeningID)
+        public async Task DeleteMovieScreeningAsync(Guid screeningID)
         {
             var screening = _context.Screenings
                 .Where(m => m.ID == screeningID)
@@ -96,13 +93,12 @@ namespace Cinema.DataAccess.Services.ManagerServices
             if (screening == null) return;
 
             var seatScreenings = _context.SeatScreenings
-                .Where(s => s.ID == screening.ID)
+                .Where(s => s.ScreeningID == screening.ID)
                 .Select(s => s)
                 .ToList();
 
             _context.Screenings.Remove(screening);
             _context.SeatScreenings.RemoveRange(seatScreenings);
-            await _context.SaveChangesAsync();
         }
 
 
@@ -180,9 +176,6 @@ namespace Cinema.DataAccess.Services.ManagerServices
 
             if (oldRoom == null) return;
             oldRoom.Decom = roomDTO.Decom;
-            
-            await _context.SaveChangesAsync();
         }
-
     }
 }

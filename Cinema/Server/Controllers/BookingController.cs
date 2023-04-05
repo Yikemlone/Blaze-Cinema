@@ -37,6 +37,7 @@ namespace Cinema.Server.Controllers
         public async Task CreateBooking([FromBody] BookingAndSeatDTO bookingAndSeatDTO) 
         {
             await _unitOfWork.BookingService.CreateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
+            await _unitOfWork.SaveAsync();
         }
 
         [HttpPost]
@@ -44,13 +45,15 @@ namespace Cinema.Server.Controllers
         public async Task UpdateBooking([FromBody] BookingAndSeatDTO bookingAndSeatDTO)
         {
             await _unitOfWork.BookingService.UpdateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
+            await _unitOfWork.SaveAsync();
         }
 
         [HttpPost]
         [Route("delete/{bookingID}")]
-        public async Task DeleteBooking(int bookingID)
+        public async Task DeleteBooking(Guid bookingID)
         {
-           await _unitOfWork.BookingService.DeleteBookingAsync(bookingID);
+            await _unitOfWork.BookingService.DeleteBookingAsync(bookingID);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

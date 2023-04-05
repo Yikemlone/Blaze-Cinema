@@ -32,7 +32,7 @@ namespace Cinema.DataAccess.Services.MovieServices
                             {
                                 ID = s.ID,
                                 DateTime = s.DateTime,
-                                MovieID = s.ID,
+                                MovieID = s.MovieID,
                                 RoomID = s.RoomID
                             })
                             .OrderBy(s => s.DateTime)
@@ -62,7 +62,7 @@ namespace Cinema.DataAccess.Services.MovieServices
                             {
                                 ID = s.ID,
                                 DateTime = s.DateTime,
-                                MovieID = s.ID,
+                                MovieID = m.ID,
                                 RoomID = s.RoomID
                             })
                             .OrderBy(s => s.DateTime)
@@ -92,10 +92,10 @@ namespace Cinema.DataAccess.Services.MovieServices
             return Screenings;
         }
 
-        public async Task <ScreeningDTO> GetMovieScreeningAsync(int movieID)
+        public async Task <ScreeningDTO> GetMovieScreeningAsync(Guid screeningID)
         {
             var Screening = _context.Screenings
-                .Where(m => m.ID == movieID)
+                .Where(m => m.ID == screeningID)
                 .Select(m => new ScreeningDTO()
                 {
                     ID = m.ID,
@@ -111,7 +111,7 @@ namespace Cinema.DataAccess.Services.MovieServices
 
 
         // SeatScreenings
-        public async Task<List<SeatScreeningDTO>> GetSeatsScreeningAsync(int screeningID)
+        public async Task<List<SeatScreeningDTO>> GetSeatsScreeningAsync(Guid screeningID)
         {
             var seatScreenings = _context.SeatScreenings
                 .Where(sc => sc.ScreeningID == screeningID)
@@ -193,6 +193,5 @@ namespace Cinema.DataAccess.Services.MovieServices
 
             await _context.SaveChangesAsync();
         }
-
     }
 }

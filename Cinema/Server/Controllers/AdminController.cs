@@ -20,6 +20,7 @@ namespace Cinema.Server.Controllers
         public async Task CreateMovie([FromBody] MovieDTO movie)
         {
             await _unitOfWork.AdminService.CreateMovieAsync(movie);
+            await _unitOfWork.SaveAsync();
         }
 
         [HttpPost]
@@ -27,6 +28,7 @@ namespace Cinema.Server.Controllers
         public async Task UpdateMovie([FromBody] MovieDTO movie)
         {
             await _unitOfWork.AdminService.UpdateMovieAsync(movie);
+            await _unitOfWork.SaveAsync();
         }
 
         [HttpPost]
@@ -34,6 +36,7 @@ namespace Cinema.Server.Controllers
         public async Task DeleteMovie(int movieID)
         {
             await _unitOfWork.AdminService.DeleteMovieAsync(movieID);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

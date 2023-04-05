@@ -47,7 +47,7 @@
 
     public async Task DeleteMovieScreeningAysnc()
     {
-        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/{Screening.ID}", Screening.ID);
+        await _client.PostAsJsonAsync<Guid>(API_URL + $"/delete/{Screening.ID}", Screening.ID);
         await MudTable.ReloadServerData();
     }
 

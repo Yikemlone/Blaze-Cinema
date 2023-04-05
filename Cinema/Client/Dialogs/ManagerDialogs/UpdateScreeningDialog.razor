@@ -126,11 +126,6 @@
             var currentScreeningStartTime = screening.DateTime;
             var currentScreeningEndTime = screening.DateTime.AddMinutes(currentMovieDuration);
 
-            // Current screening start and end
-            Console.WriteLine("currentScreeningStartTime: " + currentScreeningStartTime.ToString());
-            Console.WriteLine("currentScreeningEndTime: " + currentScreeningEndTime.ToString());
-            Console.WriteLine(newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime);
-
             // This will make sure the screening times don't overlap at all
             if (newScreeningStartTime <= currentScreeningEndTime 
                 && currentScreeningStartTime <= newScreeningEndTime 
@@ -145,7 +140,7 @@
 
     private async Task UpdateMovieScreeningAsync()
     {
-        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + $"/update/", Screening);
+        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + "/update/", Screening);
         await MudTable.ReloadServerData();
     }
 
