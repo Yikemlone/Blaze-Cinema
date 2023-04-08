@@ -36,6 +36,7 @@ namespace Cinema.UnitTests {
                 Assert.Equal(2, bookings.Count);
                 Assert.Contains(bookings, b => b.ID == 1 && b.BookingRef == "Ref1" && b.Status == "Booked");
                 Assert.Contains(bookings, b => b.ID == 2 && b.BookingRef == "Ref2" && b.Status == "Cancelled");
+                context.Database.EnsureDeleted();
             }
         }
 
@@ -45,8 +46,8 @@ namespace Cinema.UnitTests {
             // Arrange
             using (var context = new CinemaDBContext(_options))
             {
-                var customer = new Customer() { ID = 1, Email = "test@email.com", FirstName = "Mikey", LastName = "Creamer" };
-                var booking1 = new Booking() { ID = 1, BookingRef = "Ref1", Status = "Booked", Customer = customer };
+                var customer = new Customer() { ID = 3, Email = "test@email.com", FirstName = "Mikey", LastName = "Creamer" };
+                var booking1 = new Booking() { ID = 1, BookingRef = "Ref1", Status = "Booked", CustomerID = 3 };
                 var booking2 = new Booking() { ID = 2, BookingRef = "Ref2", Status = "Cancelled" };
                 context.AddRange(customer, booking1, booking2);
                 await context.SaveChangesAsync();
@@ -62,6 +63,7 @@ namespace Cinema.UnitTests {
                 // Assert
                 Assert.Single(bookings);
                 Assert.Contains(bookings, b => b.ID == 1 && b.BookingRef == "Ref1" && b.Status == "Booked");
+                context.Database.EnsureDeleted();
             }
         }
     }

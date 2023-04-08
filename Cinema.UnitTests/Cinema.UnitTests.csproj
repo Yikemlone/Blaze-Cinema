@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cinema.DataAccess\Cinema.DataAccess.csproj" />
     <ProjectReference Include="..\Cinema.Models\Cinema.Models.csproj" />
     <ProjectReference Include="..\Cinema\Server\Cinema.Server.csproj" />
   </ItemGroup>
