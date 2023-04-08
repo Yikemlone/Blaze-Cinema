@@ -92,7 +92,7 @@ namespace Cinema.DataAccess.Services.MovieServices
             return Screenings;
         }
 
-        public async Task <ScreeningDTO> GetMovieScreeningAsync(Guid screeningID)
+        public async Task <ScreeningDTO> GetMovieScreeningAsync(int screeningID)
         {
             var Screening = _context.Screenings
                 .Where(m => m.ID == screeningID)
@@ -111,7 +111,7 @@ namespace Cinema.DataAccess.Services.MovieServices
 
 
         // SeatScreenings
-        public async Task<List<SeatScreeningDTO>> GetSeatsScreeningAsync(Guid screeningID)
+        public async Task<List<SeatScreeningDTO>> GetSeatsScreeningAsync(int screeningID)
         {
             var seatScreenings = _context.SeatScreenings
                 .Where(sc => sc.ScreeningID == screeningID)

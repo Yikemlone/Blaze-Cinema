@@ -7,7 +7,7 @@ namespace Cinema.Models.Models
     public class Booking
     {
         [Key]
-        public Guid ID { get; set; }
+        public int ID { get; set; }
         public string BookingRef { get; set; }
         public string Status { get; set; }
 

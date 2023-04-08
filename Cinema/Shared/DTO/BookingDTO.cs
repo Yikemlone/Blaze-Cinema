@@ -2,7 +2,7 @@
 {
     public class BookingDTO
     {
-        public Guid ID { get; set; }
+        public int ID { get; set; }
         public string BookingRef { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
 

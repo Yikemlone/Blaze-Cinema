@@ -1,4 +1,4 @@
-﻿@page "/booking/{ScreeningID:int}"
+﻿@page "/booking/{ID}"
 @using Cinema.Client.Dialogs
 @using Cinema.Shared.DTO
 @inject IDialogService DialogService
@@ -42,14 +42,16 @@
     private List<SeatScreeningDTO> _seats;
     private int _availableSeats;
 
-    [Parameter] public int ScreeningID { get; set; }
+    [Parameter] public string ID { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _booking = new BookingDTO();
+
         _booking.Status = "Pending";
-        _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Remove(0, 2);
+        
         _seats = await GetSeatScreenings();
         _availableSeats = _seats.Where(s => s.Booked != true).Select(s => s).Count();
     }
@@ -83,7 +85,7 @@
 
     public async Task<List<SeatScreeningDTO>> GetSeatScreenings() 
     {
-        return await _client.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats/" + ScreeningID);
+        return await _client.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats/" + ID);
     }
 
 }

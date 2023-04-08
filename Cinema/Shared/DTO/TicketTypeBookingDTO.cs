@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSharpVitamins;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Cinema.Shared.DTO
     {
         public int ID { get; set; }
 
-        public Guid BookingID { get; set; }
+        public int BookingID { get; set; }
         public int TicketTypeID { get; set; } 
     }
 }

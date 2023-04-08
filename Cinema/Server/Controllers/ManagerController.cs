@@ -34,7 +34,7 @@ namespace Cinema.Server.Controllers
 
         [HttpPost]
         [Route("delete/{screeningID}")]
-        public async Task DeleteMovieScreening(Guid screeningID)
+        public async Task DeleteMovieScreening(int screeningID)
         {
             await _unitOfWork.ManagerService.DeleteMovieScreeningAsync(screeningID);
             await _unitOfWork.SaveAsync();

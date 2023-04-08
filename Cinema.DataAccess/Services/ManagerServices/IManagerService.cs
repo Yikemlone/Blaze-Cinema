@@ -10,7 +10,7 @@ namespace Cinema.DataAccess.Services.ManagerServices
         // Screenings
         public Task CreateMovieScreeningAsync(ScreeningDTO screening);
         public Task UpdateMovieScreeningAsync(ScreeningDTO screening);
-        public Task DeleteMovieScreeningAsync(Guid screeningID);
+        public Task DeleteMovieScreeningAsync(int screeningID);
 
         // Employees
         public Task<List<EmployeeDTO>> GetEmployeesAsync();

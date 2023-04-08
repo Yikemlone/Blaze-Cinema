@@ -13,25 +13,25 @@ namespace Cinema.DataAccess.Services.BookingServices
         {
             _context = context;
         }
-
-        // Gets
+        
+        // GET
         public async Task<List<BookingDTO>> GetBookingsAsync()
         {
-            var bookings = _context.Bookings
+            var bookings = await _context.Bookings
                 .Select(b => new BookingDTO()
                 {
                     ID = b.ID,
                     BookingRef = b.BookingRef,
                     Status = b.Status,
                 })
-                .ToList();
+                .ToListAsync();
 
             return bookings;
         }
 
         public async Task<List<BookingDTO>> GetCustomerBookingsAsync(int customerID)
         {
-            var bookings = _context.Bookings
+            var bookings = await _context.Bookings
                 .Where(b => b.CustomerID == customerID)
                 .Select(b => new BookingDTO()
                 {
@@ -39,19 +39,18 @@ namespace Cinema.DataAccess.Services.BookingServices
                     BookingRef = b.BookingRef,
                     Status = b.Status,
                 })
-                .ToList();
+                .ToListAsync();
 
             return bookings;
         }
 
 
-        // Add, Update and Delete
+        // CREATE
         public async Task CreateBookingAsync(BookingDTO booking, List<TicketTypeBookingDTO> ticketTypeBookings)
         {
             // Create Booking
             var newBooking = new Booking()
             {
-                ID = new Guid(),
                 BookingRef = booking.BookingRef,
                 Status = booking.Status
             };
@@ -61,6 +60,9 @@ namespace Cinema.DataAccess.Services.BookingServices
                 newBooking.CustomerID = booking.Customer.ID;
             }
 
+            await _context.AddAsync(newBooking);
+            await _context.SaveChangesAsync();
+
             // Update Seats with booking ID
             foreach (var seatScreening in booking.SeatScreenings)
             {
@@ -69,7 +71,7 @@ namespace Cinema.DataAccess.Services.BookingServices
                     .Select(s => s)
                     .FirstOrDefaultAsync();
 
-                if (oldSeatScreening == null) return;
+                if (oldSeatScreening == null) continue;
                 oldSeatScreening.BookingID = newBooking.ID;
                 oldSeatScreening.Booked = seatScreening.Booked;
             }
@@ -86,10 +88,10 @@ namespace Cinema.DataAccess.Services.BookingServices
                 });
             }
 
-            await _context.AddAsync(newBooking);
             await _context.AddRangeAsync(tickets);
         }
 
+        // UPDATE
         public async Task UpdateBookingAsync(BookingDTO booking, List<TicketTypeBookingDTO> ticketTypeBookings)
         {
             var oldBooking = await _context.Bookings
@@ -114,7 +116,8 @@ namespace Cinema.DataAccess.Services.BookingServices
             }
         }
 
-        public async Task DeleteBookingAsync(Guid bookingID)
+        // DELETE
+        public async Task DeleteBookingAsync(int bookingID)
         {
             var bookingToRemove = await _context.Bookings
                 .Where(b => b.ID == bookingID)
@@ -132,7 +135,10 @@ namespace Cinema.DataAccess.Services.BookingServices
                 seat.BookingID = null; // Removes the booking ID
             }
 
+
+            // THIS NEEDS TO BE TESTED
             _context.Remove(bookingToRemove);
         }
+
     }
 }

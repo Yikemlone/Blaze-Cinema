@@ -41,7 +41,7 @@ namespace Cinema.Server.Controllers
 
         [HttpGet]
         [Route("screenings/{movieID}")]
-        public async Task<ScreeningDTO> GetMovieScreening(Guid movieID)
+        public async Task<ScreeningDTO> GetMovieScreening(int movieID)
         {
             return await _unitOfWork.MovieService.GetMovieScreeningAsync(movieID);
         }
@@ -50,7 +50,7 @@ namespace Cinema.Server.Controllers
         // Seat Screenings
         [HttpGet]
         [Route("seats/{screeningID}")]
-        public async Task<List<SeatScreeningDTO>> GetSeatScreenings(Guid screeningID)
+        public async Task<List<SeatScreeningDTO>> GetSeatScreenings(int screeningID)
         {
             // This returns all the seats for a screening
             return await _unitOfWork.MovieService.GetSeatsScreeningAsync(screeningID);

@@ -24,9 +24,11 @@ namespace Cinema.DataAccess.Migrations
 
             modelBuilder.Entity("Cinema.Models.Models.Booking", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("BookingRef")
                         .IsRequired()
@@ -220,8 +222,8 @@ namespace Cinema.DataAccess.Migrations
                     b.Property<bool>("Booked")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("BookingID")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("BookingID")
+                        .HasColumnType("int");
 
                     b.Property<int>("ScreeningID")
                         .HasColumnType("int");
@@ -268,8 +270,8 @@ namespace Cinema.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<Guid>("BookingID")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("BookingID")
+                        .HasColumnType("int");
 
                     b.Property<int>("TicketTypeID")
                         .HasColumnType("int");

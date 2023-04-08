@@ -50,7 +50,7 @@ namespace Cinema.Server.Controllers
 
         [HttpPost]
         [Route("delete/{bookingID}")]
-        public async Task DeleteBooking(Guid bookingID)
+        public async Task DeleteBooking(int bookingID)
         {
             await _unitOfWork.BookingService.DeleteBookingAsync(bookingID);
             await _unitOfWork.SaveAsync();
