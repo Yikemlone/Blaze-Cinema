@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
 {
+    // This whole contorller should be authed, except for create booking
     [ApiController]
     [Route("/api/[controller]")]
     public class BookingController
