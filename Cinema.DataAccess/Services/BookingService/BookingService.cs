@@ -71,7 +71,7 @@ namespace Cinema.DataAccess.Services.BookingService
 
                 if (oldSeatScreening == null) return;
                 oldSeatScreening.BookingID = newBooking.ID; // Getting this 
-                oldSeatScreening.Booked = seatScreening.Booked;
+                oldSeatScreening.Booked = true;
             }
 
             var tickets = new List<TicketTypeBooking>();

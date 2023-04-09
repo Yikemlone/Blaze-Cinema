@@ -58,6 +58,5 @@ namespace Cinema.DataAccess.Services.AdminService
             _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();
         }
-
     }
 }
