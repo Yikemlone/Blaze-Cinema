@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
 {
-    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("/api/[controller]")]
     public class AdminController

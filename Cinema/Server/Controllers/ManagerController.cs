@@ -1,13 +1,10 @@
 ﻿using Cinema.Server.Services.Employees;
 using Cinema.Server.Services.Movies;
 using Cinema.Shared.DTO;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Http.Description;
 
 namespace Cinema.Server.Controllers
 {
-    [Authorize(Roles ="Manager")]
     [ApiController]
     [Route("/api/[controller]")]
     public class ManagerController
@@ -20,7 +17,6 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<EmployeeDTO>))]
         [Route("employees")]
         public async Task<List<EmployeeDTO>> GetEmployees()
         {
@@ -29,7 +25,6 @@ namespace Cinema.Server.Controllers
 
         //get employee
         [HttpGet]
-        [ResponseType(typeof(EmployeeDTO))]
         [Route("employees/{employeeID}")]
         public async Task<EmployeeDTO> GetEmployee(int employeeID)
         {

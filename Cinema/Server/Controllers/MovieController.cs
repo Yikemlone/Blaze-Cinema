@@ -1,7 +1,6 @@
 ﻿using Cinema.Server.Services.Movies;
 using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Http.Description;
 
 namespace Cinema.Server.Controllers
 {
@@ -17,7 +16,6 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<MovieDTO>))]
         [Route("movies")]
         public async Task<List<MovieDTO>> GetMovies()
         {
@@ -26,7 +24,6 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(MovieDTO))]
         [Route("movies/{movieID}")]
         public async Task<MovieDTO> GetMovie(int movieID)
         {
@@ -34,7 +31,6 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<ScreeningDTO>))]
         [Route("screenings")]
         public async Task<List<ScreeningDTO>> GetScreenings()
         {
@@ -43,7 +39,6 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(ScreeningDTO))]
         [Route("screenings/{movieID}")]
         public async Task<ScreeningDTO> GetMovieScreening(int movieID)
         {

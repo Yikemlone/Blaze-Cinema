@@ -1,13 +1,11 @@
 ﻿using Cinema.Server.Models;
-using Duende.IdentityServer.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Transactions;
 
 namespace Cinema.Server
 {
-    public class CinemaDBContext : ApiAuthorizationDbContext<ApplicationUser>
+    public class CinemaDBContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -20,9 +18,23 @@ namespace Cinema.Server
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<TicketTypeBooking> TicketTypesBookings { get; set; }
 
-        public CinemaDBContext(DbContextOptions options, 
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+        public CinemaDBContext(DbContextOptions<CinemaDBContext> options)
+            : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            // Customize the ASP.NET Identity model and override the defaults if needed.
+            // For example, you can rename the ASP.NET Identity table names and more.
+            // Add your customizations after calling base.OnModelCreating(builder);
+
         }
     }
 }

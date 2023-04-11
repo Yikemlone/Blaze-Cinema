@@ -3,6 +3,19 @@
 
 <PageTitle>Blaze Cinema</PageTitle>
 
+<AuthorizeView>
+    <Authorized>
+        <h1>Hello @context.User.Identity.Name !!</h1>
+
+        Welcome to your new app.
+
+        <SurveyPrompt Title="How is Blazor working for you?" />
+    </Authorized>
+    <Authorizing>
+        <h1>Loading ...</h1>
+    </Authorizing>
+</AuthorizeView>
+
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
 
     <MudPaper Class="pa-5 ma-2" Elevation="2">

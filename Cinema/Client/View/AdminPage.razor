@@ -1,7 +1,8 @@
 ﻿@page "/admin"
 @using Cinema.Shared.DTO
 
-<AuthorizeView Roles="admin">
+<AuthorizeView Policy="IsAdmin">
+
         <Authorized>
             <PageTitle>Admin Page</PageTitle>
 
@@ -18,16 +19,6 @@
             </MudPaper>
         </Authorized>
 
-        <NotAuthorized>
-            @if (context.User.Identity?.IsAuthenticated != true)
-            {
-                <RedirectToLogin />
-            }
-            else
-            {
-                <p role="alert">You are not authorized to access this resource.</p>
-            }
-        </NotAuthorized>
 </AuthorizeView>
 
 @code {

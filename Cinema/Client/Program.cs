@@ -1,7 +1,9 @@
-using Cinema.Client;
+using Cinema.Client.Services.Contracts;
+using Cinema.Client.Services.Implementations;
+using Cinema.Client.States;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MudBlazor.Services;
 
 namespace Cinema.Client
@@ -14,15 +16,16 @@ namespace Cinema.Client
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddOptions();
 
-            builder.Services.AddHttpClient("Cinema.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
-                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+            builder.Services.AddAuthorizationCore(options => {
+                options.AddPolicy("IsAdmin", policy => policy.RequireClaim("role", "admin"));
+            });
 
-            // Supply HttpClient instances that include access tokens when making requests to the server project
-            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Cinema.ServerAPI"));
-
-            builder.Services.AddApiAuthorization();
+            builder.Services.AddScoped<IdentityAuthenticationStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<IdentityAuthenticationStateProvider>());
+            builder.Services.AddScoped<IAuthorizeApi, AuthorizeApi>();
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             // Adding MudBlazor
             builder.Services.AddMudServices();
