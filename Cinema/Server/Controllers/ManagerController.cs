@@ -1,9 +1,11 @@
 ﻿using Cinema.DataAccess.Services.ManagerService;
 using Cinema.Shared.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
 {
+    [Authorize(Policy = "IsManager")]
     [ApiController]
     [Route("/api/[controller]")]
     public class ManagerController

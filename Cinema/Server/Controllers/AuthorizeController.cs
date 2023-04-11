@@ -1,13 +1,9 @@
-﻿using Cinema.Server.Models;
+﻿using Cinema.Models.Models;
 using Cinema.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Cinema.Server.Controllers
 {
@@ -53,10 +49,13 @@ namespace Cinema.Server.Controllers
 
             if (!result.Succeeded ) return BadRequest(result.Errors.FirstOrDefault()?.Description);
 
-            var claims = new Claim("role", "admin");
-            var claimsSucc = await _userManager.AddClaimAsync(user, claims);
+            //var adminClaim = new Claim("AdminRole", "admin");
+            var customerClaim = new Claim("CustomerRole", "customer");
 
-            if (!claimsSucc.Succeeded) return BadRequest(result.Errors.FirstOrDefault()?.Description);
+            var custSucc = await _userManager.AddClaimAsync(user, customerClaim);
+            //var claimsSucc = await _userManager.AddClaimAsync(user, adminClaim);
+
+            if (!custSucc.Succeeded) return BadRequest(result.Errors.FirstOrDefault()?.Description);
 
             return await Login(new LoginParameters
             {

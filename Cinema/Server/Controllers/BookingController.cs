@@ -1,9 +1,11 @@
 ﻿using Cinema.DataAccess.Services.BookingService;
 using Cinema.Shared.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("/api/[controller]")]
     public class BookingController
@@ -23,6 +25,7 @@ namespace Cinema.Server.Controllers
             return await _bookingService.GetBookingsAsync();
         }
 
+        [Authorize(Policy = "IsCustomer")]
         [HttpGet]
         [Route("bookings/{customerID}")]
         public async Task<List<BookingDTO>> GetCustomerBookings(int customerID)
@@ -39,6 +42,7 @@ namespace Cinema.Server.Controllers
             await _bookingService.CreateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
         }
 
+        [Authorize(Policy = "IsCustomer")]
         [HttpPost]
         [Route("update")]
         public async Task UpdateBooking([FromBody] BookingAndSeatDTO bookingAndSeatDTO)
@@ -46,6 +50,7 @@ namespace Cinema.Server.Controllers
             await _bookingService.UpdateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
         }
 
+        [Authorize(Policy = "IsCustomer")]
         [HttpPost]
         [Route("delete/{bookingID}")]
         public async Task DeleteBooking(int bookingID)

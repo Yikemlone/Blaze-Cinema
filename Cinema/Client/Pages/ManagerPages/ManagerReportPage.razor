@@ -1,4 +1,5 @@
 ﻿@page "/manager/report"
+@attribute [Authorize(Policy = "IsManager")]
 
 <PageTitle>Screenings</PageTitle>
 

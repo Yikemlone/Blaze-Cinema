@@ -1,20 +1,15 @@
 ﻿@page "/manager"
-
-<PageTitle>Manager Page</PageTitle>
-
-<MudPaper Class="pa-3 ma-2" Elevation="1">
-    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
-</MudPaper>
+@attribute [Authorize(Policy = "IsManager")]
 
 @*
-  Manager Page
+Manager Page
 
 A manager can perform many tasks.
 
 Screening CRUD:
-- Managers can Create film screenings 
-- Managers can Update film screenings 
-- Managers can Delete film screenings 
+- Managers can Create film screenings
+- Managers can Update film screenings
+- Managers can Delete film screenings
 
 Decom a Room:
 - This will return all the rooms
@@ -23,6 +18,12 @@ Decom a Room:
 Produce a weekly Report:
 - Will produce a weekly report that will check all bookings, screenings seats booked
 *@
+
+<PageTitle>Manager Page</PageTitle>
+
+<MudPaper Class="pa-3 ma-2" Elevation="1">
+    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+</MudPaper>
 
 <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
     <MudGrid Spacing="3" Justify="Justify.Center">

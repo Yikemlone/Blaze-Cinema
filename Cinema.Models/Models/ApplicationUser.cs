@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Cinema.Server.Models
+namespace Cinema.Models.Models
 {
     public class ApplicationUser : IdentityUser<Guid>
     {

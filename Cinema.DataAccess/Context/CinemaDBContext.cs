@@ -1,9 +1,11 @@
-﻿using Cinema.Server.Models;
+﻿using Cinema.Models.Models;
+using Cinema.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
-namespace Cinema.Server
+namespace Cinema.DataAccess.Context
 {
     public class CinemaDBContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
@@ -34,7 +36,6 @@ namespace Cinema.Server
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
-
         }
     }
 }

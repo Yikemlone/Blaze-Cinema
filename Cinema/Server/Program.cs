@@ -1,17 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.ResponseCompression;
-using MudBlazor.Services;
-using Cinema.Server.Services.Movies;
-using Cinema.Server.Services.Employees;
-using Cinema.Server.Models;
-using Microsoft.AspNetCore.Authentication;
-using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.Identity;
 using Cinema.DataAccess.Services.MovieService;
 using Cinema.DataAccess.Services.ManagerService;
 using Cinema.DataAccess.Services.AdminService;
 using Cinema.DataAccess.Services.BookingService;
 using Cinema.DataAccess.Context;
+using Cinema.Models.Models;
 
 namespace Cinema
 {
