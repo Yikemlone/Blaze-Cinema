@@ -1,6 +1,5 @@
 ﻿@using Cinema.Shared.DTO
 @inject ISnackbar Snackbar
-@inject HttpClient Http
 
 <MudDialog>
     <DialogContent>
@@ -13,7 +12,8 @@
                 </MudStack>
 
                 <MudStack>
-                    <MudSelect @bind-Value="_movie.AgeRating" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
+                    <MudDatePicker Label="Date" Variant="Variant.Filled" DateFormat="dd/MM/yyyy" @bind-Date="_ReleaseDate" />
+                    <MudSelect @bind-Value="_movie.AgeRating" Variant="Variant.Filled" Required RequiredError="You must select an Age Rating.">
                         <MudSelectItem Value="@("G")">G</MudSelectItem>
                         <MudSelectItem Value="@("PG")">PG</MudSelectItem>
                         <MudSelectItem Value="@("12A")">12A</MudSelectItem>
@@ -38,15 +38,18 @@
     </DialogActions>
 </MudDialog>
 
-@code {
+                @code {
     private const string API_URL = "api/admin";
+    private HttpClient? _client;
     private MovieDTO? _movie;
+    private DateTime? _ReleaseDate;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _movie = new MovieDTO();
     }
 
@@ -67,12 +70,17 @@
 
     private void Cancel()
     {
+        _movie = null;
         MudDialog.Close(DialogResult.Cancel());
     }
 
     private async Task AddMovieModel()
     {
-        await Http.PostAsJsonAsync<MovieDTO>(API_URL + "/create/", _movie);
+        if(_ReleaseDate != null)
+        {
+            _movie.ReleaseDate = (DateTime)_ReleaseDate;
+        }
+        await _client.PostAsJsonAsync<MovieDTO>(API_URL + "/create/", _movie);
         await MudTable.ReloadServerData();
     }
 }

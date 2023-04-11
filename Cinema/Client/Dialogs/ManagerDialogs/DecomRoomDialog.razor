@@ -1,0 +1,40 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <p>Are you sure you want to decommission room <b>@Room.ID</b></p>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Close">Decommission</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    private const string API_URL = "api/manager";
+    private HttpClient? _client;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public RoomDTO Room { get; set; }
+    [Parameter] public MudTable<RoomDTO> MudTable { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+    }
+
+    public async Task Close()
+    {
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    void Cancel()
+    {
+        MudDialog.Close(DialogResult.Cancel());
+    }
+
+}
+

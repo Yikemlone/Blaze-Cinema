@@ -1,4 +1,3 @@
-using Cinema.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 using MudBlazor.Services;
@@ -8,6 +7,11 @@ using Cinema.Server.Models;
 using Microsoft.AspNetCore.Authentication;
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.Identity;
+using Cinema.DataAccess.Services.MovieService;
+using Cinema.DataAccess.Services.ManagerService;
+using Cinema.DataAccess.Services.AdminService;
+using Cinema.DataAccess.Services.BookingService;
+using Cinema.DataAccess.Context;
 
 namespace Cinema
 {
@@ -21,6 +25,9 @@ namespace Cinema
             builder.Services.AddScoped<IMovieService, MovieService>();
             builder.Services.AddScoped<IManagerService, ManagerService>();
             builder.Services.AddScoped<IAdminService, AdminService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
+
+            // Replace all above services with UnitOfWork service.
 
             //Connecting to the database
             builder.Services.AddDbContext<CinemaDBContext>(options =>

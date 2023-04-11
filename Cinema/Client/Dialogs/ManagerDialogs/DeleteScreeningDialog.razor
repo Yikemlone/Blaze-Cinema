@@ -1,0 +1,54 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <p>Are you sure you want to delete screening <b>@Screening.DateTime?</b></p>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="Close">Delete</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+    private const string API_URL = "api/manager";
+    private HttpClient? _client;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public ScreeningDTO Screening { get; set; }
+    [Parameter] public MudTable<ScreeningDTO> MudTable { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+    }
+
+    public async Task Close()
+    {
+        await DeleteMovieScreeningAysnc();
+
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("Screening Deleted", Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 1000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    void Cancel()
+    {
+        MudDialog.Close(DialogResult.Cancel());
+    }
+
+    public async Task DeleteMovieScreeningAysnc()
+    {
+        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/{Screening.ID}", Screening.ID);
+        await MudTable.ReloadServerData();
+    }
+
+}

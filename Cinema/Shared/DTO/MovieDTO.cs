@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cinema.Shared.DTO
+﻿namespace Cinema.Shared.DTO
 {
     public class MovieDTO
     {
         public int ID { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int Duration { get; set; }
-        public string Description { get; set; }
-        public string AgeRating { get; set; }
-        public string Trailer { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public string AgeRating { get; set; } = string.Empty;
+        public string Trailer { get; set; } = string.Empty;
+        public DateTime ReleaseDate { get; set; }
 
         public List<ScreeningDTO>? Screenings { get; set; }
     }

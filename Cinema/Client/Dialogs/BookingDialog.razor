@@ -1,0 +1,167 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper>
+            
+            @if (Booking != null && !_confirmedDetails)
+            {
+                <p>
+                    Movie: Puss in Boots: The Last Stand
+                </p>
+                <p>
+                    Seats Types:
+                    Adult - @_adultTickets
+                    Child - @_childTickets
+                </p>
+                <p>
+                    Seat Numbers:
+                    @foreach (var seat in Booking.SeatScreenings)
+                    {
+                        <p>@seat.Seat.SeatNumber</p>
+                    }
+                </p>
+                <p>
+                    Total: @Total
+                </p>
+            }
+            else if (!_confirmedPayment) 
+            {
+                <p>Display the payment stuff here here</p>
+            } else 
+            {
+                <p>Your booking is confirmed!</p>
+                <p>Here is your booking reference:</p>
+                <h4>@Booking.BookingRef</h4>
+            }
+
+            @*            
+                Display:
+                - Seat numbers,
+                - What type of tickets,
+                - Total,
+                - Room number,
+                - Movie,
+                - Time
+            *@
+
+        </MudPaper>
+    </DialogContent>
+
+    <DialogActions>
+        @*       
+            We will have multiple buttons here that will chain until the final view:
+            - Confirm details
+            - Confirm payment method
+            - Booking confirmed
+        *@
+
+        @if (!_confirmedDetails)
+        {
+            <MudButton Color="Color.Primary" OnClick="Confirm">Confirm</MudButton>
+            <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+        }
+        else if (!_confirmedPayment) 
+        {
+            <MudButton Color="Color.Tertiary" OnClick="Back">Go Back</MudButton>
+            <MudButton Color="Color.Primary" OnClick="Book">Book</MudButton>
+            <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+        } else 
+        {
+            <MudButton Color="Color.Primary" OnClick="Close">Confirm</MudButton>
+        }
+
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private const string API_URL = "api/"; // MAKE THIS BOOKING RELATED
+    private HttpClient? _client;
+
+    private bool _confirmedDetails;
+    private bool _confirmedPayment;
+
+    private MovieDTO _movie;
+    private ScreeningDTO _screening;
+
+    private int _adultTickets;
+    private int _childTickets; 
+    private int _movieID; // get this from screeningDTO
+
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public BookingDTO Booking { get; set; }
+    [Parameter] public List<TicketTypeBookingDTO> TicketTypeBooking { get; set; }
+    [Parameter] public ScreeningDTO Screening { get; set; }
+    [Parameter] public decimal Total { get; set; }
+    [Parameter] public List<TicketTypeDTO> TicketTypes { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        _movieID = 1; // Need to get this legit
+        _movie = await GetMovieAsync();
+        _confirmedDetails = false; 
+        _confirmedPayment = false;
+
+        foreach (var tickType in TicketTypeBooking)
+        {
+            _adultTickets = TicketTypeBooking.Where(tt => tt.TicketTypeID == 1).Count();
+            _childTickets = TicketTypeBooking.Where(tt => tt.TicketTypeID == 2).Count();
+        }
+    }
+
+
+    private async void Confirm()
+    {
+        _confirmedDetails = true;
+    }
+
+    private async void Book() 
+    {
+        // NOTE: All validation for payments should be here. 
+        // If the payment is valid we will post the booking
+
+        // I need to POST the update of the seats and POST the new booking in here.
+        // After I validate all the information.
+        _confirmedPayment = true;
+
+        //await _client.PostAsJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats", Booking.SeatScreenings);
+        await _client.PostAsJsonAsync<BookingAndSeatDTO>(API_URL + "booking/create", new BookingAndSeatDTO 
+        { 
+            BookingDTO = Booking, 
+            TicketTypeBookingDTO = TicketTypeBooking
+        });
+
+    }
+
+    private async void Back() 
+    {
+        _confirmedDetails = false;
+    }
+
+    private async void Close()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel()
+    {
+        //_booking = null; WE MAY NEED TO DO THIS, BUT I DON'T THINK WE WILL
+        MudDialog.Close(DialogResult.Cancel());
+    }
+
+
+    //// Check if URL is right
+    //private async Task AddBookingAsync()
+    //{
+    //    await _client.PostAsJsonAsync<BookingDTO>(API_URL + "/create/", Booking);
+    //}
+
+    private async Task<MovieDTO> GetMovieAsync()
+    {
+        return await _client.GetFromJsonAsync<MovieDTO>("api/movie/movies/" + _movieID);
+    }
+}

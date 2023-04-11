@@ -1,4 +1,4 @@
-﻿using Cinema.Server.Services.Movies;
+﻿using Cinema.DataAccess.Services.MovieService;
 using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +15,11 @@ namespace Cinema.Server.Controllers
             _movieService = movieService;
         }
 
+        // Movies
         [HttpGet]
         [Route("movies")]
         public async Task<List<MovieDTO>> GetMovies()
         {
-
             return await _movieService.GetMoviesAsync();
         }
 
@@ -30,11 +30,12 @@ namespace Cinema.Server.Controllers
             return await _movieService.GetMovieAsync(movieID);
         }
 
+
+        // Screenings
         [HttpGet]
         [Route("screenings")]
         public async Task<List<ScreeningDTO>> GetScreenings()
         {
-
             return await _movieService.GetScreeningsAsync();
         }
 
@@ -43,6 +44,40 @@ namespace Cinema.Server.Controllers
         public async Task<ScreeningDTO> GetMovieScreening(int movieID)
         {
             return await _movieService.GetMovieScreeningAsync(movieID);
+        }
+
+            
+        // Seat Screenings
+        [HttpGet]
+        [Route("seats/{screeningID}")]
+        public async Task<List<SeatScreeningDTO>> GetSeatScreenings(int screeningID)
+        {
+            // This returns all the seats for a screening
+            return await _movieService.GetSeatsScreeningAsync(screeningID);
+        }
+
+        [HttpGet]
+        [Route("seat/{seatScreeningID}")]
+        public async Task<SeatScreeningDTO> GetSeatScreening(int seatScreeningID)
+        {
+            // This returns the seat for a screening
+            return await _movieService.GetSeatScreeningAsync(seatScreeningID);
+        }
+
+        [HttpPost]
+        [Route("seat")]
+        public async Task UpdateSeatScreening([FromBody] SeatScreeningDTO seatScreening)
+        {
+            // Updates the seats state
+            await _movieService.UpdateSeatScreeningAsync(seatScreening);
+        }
+
+        [HttpPost]
+        [Route("seats")]
+        public async Task UpdateSeatsScreening([FromBody] List<SeatScreeningDTO> seatsScreening)
+        {
+            // Updates the seats state
+            await _movieService.UpdateSeatsScreeningAsync(seatsScreening);
         }
     }
 }
