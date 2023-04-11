@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using Cinema.Shared.DTO
-@attribute [AllowAnonymous]
+@inject HttpClient Http
 
 <PageTitle>Blaze Cinema</PageTitle>
 
@@ -56,13 +56,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         Movies = await GetMoviesAsync();
     }
 
     public async Task<List<MovieDTO>> GetMoviesAsync()
     {
-        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
+        return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 
     //public async Task<List<ScreeningDTO>> GetScreeningsAsync()

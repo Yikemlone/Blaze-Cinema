@@ -1,6 +1,4 @@
-using Cinema.Client.Services.Contracts;
-using Cinema.Client.Services.Implementations;
-using Cinema.Client.States;
+using Cinema.DataAccess.Services.AuthorizeServices;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

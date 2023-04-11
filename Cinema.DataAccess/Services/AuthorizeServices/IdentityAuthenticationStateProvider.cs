@@ -1,10 +1,8 @@
-﻿using Cinema.Client.Services.Contracts;
-using Cinema.Shared;
-using Microsoft.AspNetCore.Components;
+﻿using Cinema.Shared;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace Cinema.Client.States
+namespace Cinema.DataAccess.Services.AuthorizeServices
 {
     public class IdentityAuthenticationStateProvider : AuthenticationStateProvider
     {

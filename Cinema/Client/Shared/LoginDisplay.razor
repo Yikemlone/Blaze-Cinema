@@ -1,17 +1,15 @@
-﻿@using Cinema.Client.States
-@using Microsoft.AspNetCore.Components.Authorization
-
+﻿@using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager navigationManager
 @inject IdentityAuthenticationStateProvider authStateProvider
 
 <AuthorizeView>
     <Authorized>
-        <a href="/profile">Hello, @context.User.Identity?.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        <MudNavLink Href="/profile">Hello, @context.User.Identity?.Name!</MudNavLink>
+        <MudButton @onclick="BeginSignOut">Log out</MudButton>
     </Authorized>
     <NotAuthorized>
-        <a href="/register">Register</a>
-        <a href="/login">Log in</a>
+        <MudNavLink Href="/login">Log in</MudNavLink>
+        <MudNavLink Href="/register">Register</MudNavLink>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -19,6 +17,6 @@
     private async Task BeginSignOut(MouseEventArgs args)
     {
         await authStateProvider.Logout();
-        navigationManager.NavigateTo("/login");
+        navigationManager.NavigateTo("/");
     }
 }

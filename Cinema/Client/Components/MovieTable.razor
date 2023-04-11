@@ -1,6 +1,7 @@
 ﻿@using Cinema.Client.Dialogs.AdminDialogs
 @using Cinema.Shared.DTO
 @inherits ComponentBase
+@inject HttpClient Http
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
@@ -130,7 +131,6 @@
     private int _totalItems;
     private int[] _pageSizeOptions;
 
-    private HttpClient _client;
     private MovieDTO? _selected;
     private MudTable<MovieDTO>? _mudTable;
     private DialogOptions _dialogOptions;
@@ -139,7 +139,6 @@
     // Set up
     public MovieTable()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _buttonDisabled = true;
         _searchString = "";
         _pageSizeOptions = new int[] { 5, 10, 20 };
@@ -262,7 +261,7 @@
 
     public async Task<List<MovieDTO>> GetMoviesAsync()
     {
-        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
+        return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 
 }

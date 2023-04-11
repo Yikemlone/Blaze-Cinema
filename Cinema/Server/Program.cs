@@ -33,6 +33,12 @@ namespace Cinema
                 .AddEntityFrameworkStores<CinemaDBContext>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.AddAuthorization(options => {
+                options.AddPolicy("IsAdmin", policy => policy.RequireClaim("AdminRole", "admin"));
+                options.AddPolicy("IsManager", policy => policy.RequireClaim("ManagerRole", "manager"));
+                options.AddPolicy("IsCustomer", policy => policy.RequireClaim("CustomerRole", "customer"));
+            });
+
             builder.Services.Configure<IdentityOptions>(options =>
             {
                 // Password settings

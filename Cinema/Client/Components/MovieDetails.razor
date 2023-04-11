@@ -1,5 +1,6 @@
 ﻿@using Cinema.Shared.DTO
 @using System.Globalization
+@inject HttpClient Http
 @inherits ComponentBase
 
 @if (Movie != null) 
@@ -88,7 +89,6 @@
 
     private const string API_URL = "api/movie";
 
-    private HttpClient _client;
     public MovieDTO Movie { get; set; }
 
     private string _imageURL;
@@ -100,7 +100,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         Movie = await GetMovieAsync();
         _imageURL = $"images/{Movie.ID}.jpg";
         _ratingURL = $"images/IFCO_{Movie.AgeRating}.png";
@@ -133,6 +132,6 @@
 
     public async Task<MovieDTO> GetMovieAsync()
     {
-        return await _client.GetFromJsonAsync<MovieDTO>(API_URL + $"/movies/{MovieID}");
+        return await Http.GetFromJsonAsync<MovieDTO>(API_URL + $"/movies/{MovieID}");
     }
 }

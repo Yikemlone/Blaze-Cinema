@@ -1,10 +1,6 @@
 ﻿using Cinema.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Cinema.Client.Services.Contracts
+namespace Cinema.DataAccess.Services.AuthorizeServices
 {
     public interface IAuthorizeApi
     {
