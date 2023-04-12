@@ -1,4 +1,5 @@
 ﻿using Cinema.DataAccess.Context;
+using Cinema.Models.Models;
 using Cinema.Shared.DTO;
 
 namespace Cinema.DataAccess.Services.MovieServices
@@ -77,37 +78,7 @@ namespace Cinema.DataAccess.Services.MovieServices
 
 
         // Screenings
-        public async Task<List<ScreeningDTO>> GetScreeningsAsync()
-        {
-            var Screenings = _context.Screenings
-                .Select(m => new ScreeningDTO()
-                {
-                    ID = m.ID,
-                    MovieID = m.MovieID,
-                    RoomID = m.RoomID,
-                    DateTime = m.DateTime
-                })
-                .ToList();
 
-            return Screenings;
-        }
-
-        public async Task <ScreeningDTO> GetMovieScreeningAsync(int screeningID)
-        {
-            var Screening = _context.Screenings
-                .Where(m => m.ID == screeningID)
-                .Select(m => new ScreeningDTO()
-                {
-                    ID = m.ID,
-                    MovieID = m.MovieID,
-                    RoomID = m.RoomID,
-                    DateTime = m.DateTime
-
-                })
-                .SingleOrDefault();
-
-            return Screening;
-        }
 
 
         // SeatScreenings
@@ -192,6 +163,50 @@ namespace Cinema.DataAccess.Services.MovieServices
             }
 
             await _context.SaveChangesAsync();
+        }
+
+
+        // ADMIN METHODS
+        public async Task CreateMovieAsync(MovieDTO movie)
+        {
+            var newMovie = new Movie()
+            {
+                Name = movie.Name,
+                AgeRating = movie.AgeRating,
+                Duration = movie.Duration,
+                Trailer = movie.Trailer,
+                Description = movie.Description,
+                ReleaseDate = movie.ReleaseDate
+            };
+
+            await _context.AddAsync(newMovie);
+        }
+
+        public async Task UpdateMovieAsync(MovieDTO movie)
+        {
+            var oldMovie = _context.Movies
+                 .Select(m => m)
+                 .Where(m => m.ID == movie.ID)
+                 .SingleOrDefault();
+
+            if (oldMovie == null) return;
+
+            oldMovie.Name = movie.Name;
+            oldMovie.AgeRating = movie.AgeRating;
+            oldMovie.Duration = movie.Duration;
+            oldMovie.Description = movie.Description;
+            oldMovie.ReleaseDate = movie.ReleaseDate;
+            oldMovie.Trailer = movie.Trailer;
+        }
+
+        public async Task DeleteMovieAsync(int movieID)
+        {
+            var movie = _context.Movies
+               .FirstOrDefault(x => x.ID == movieID);
+
+            if (movie == null) return;
+
+            _context.Movies.Remove(movie);
         }
     }
 }
