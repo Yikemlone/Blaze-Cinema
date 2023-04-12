@@ -118,7 +118,19 @@ namespace Cinema.UnitTests {
         }
 
         [Fact]
+        public async Task UpdateCustomerBookingsAsync_ShouldNotUpdateBooking()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
         public async Task DeleteCustomerBookingsAsync_ShouldDeleteBooking()
+        {
+            throw new NotImplementedException();
+        }        
+        
+        [Fact]
+        public async Task DeleteCustomerBookingsAsync_ShouldNotDeleteBooking()
         {
             throw new NotImplementedException();
         }

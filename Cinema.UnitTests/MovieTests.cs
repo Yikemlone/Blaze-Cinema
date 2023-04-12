@@ -1,6 +1,6 @@
 ﻿namespace Cinema.UnitTests
 {
-    public class MovieService
+    public class MovieTests
     {
         private readonly DbContextOptions<CinemaDBContext> _options = new DbContextOptionsBuilder<CinemaDBContext>()
             .UseInMemoryDatabase(databaseName: "TestDb")
