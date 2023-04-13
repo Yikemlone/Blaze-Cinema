@@ -1,5 +1,6 @@
 ﻿using Cinema.DataAccess.Context;
 using Cinema.Models.Models;
+using Cinema.Shared;
 using Cinema.Shared.DTO;
 
 namespace Cinema.DataAccess.Services.AdminServices
@@ -13,7 +14,7 @@ namespace Cinema.DataAccess.Services.AdminServices
             _context = context;
         }
 
-        public async Task CreateMovieAsync(MovieDTO movie)
+        public async Task<int> CreateMovieAsync(MovieDTO movie)
         {
             var newMovie = new Movie() 
             {
@@ -26,6 +27,9 @@ namespace Cinema.DataAccess.Services.AdminServices
             };
 
             await _context.AddAsync(newMovie);
+            await _context.SaveChangesAsync();
+
+            return newMovie.ID;
         }
 
         public async Task UpdateMovieAsync(MovieDTO movie)

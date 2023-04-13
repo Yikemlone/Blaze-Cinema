@@ -14,12 +14,6 @@ namespace Cinema
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-            // NOTE: This is called dependency 
-            //builder.Services.AddScoped<IMovieService, MovieService>();
-            //builder.Services.AddScoped<IManagerService, ManagerService>();
-            //builder.Services.AddScoped<IAdminService, AdminService>();
-            //builder.Services.AddScoped<IBookingService, BookingService>();
-
             // Replace all above services with UnitOfWork service.
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
