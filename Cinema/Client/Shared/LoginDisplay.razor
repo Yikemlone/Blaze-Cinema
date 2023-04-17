@@ -2,15 +2,21 @@
 @inject NavigationManager navigationManager
 @inject IdentityAuthenticationStateProvider authStateProvider
 
+<AuthorizeView Policy="IsCustomer">
+    <MudButton Href="/profile">Profile</MudButton>
+</AuthorizeView>
+
 <AuthorizeView>
+
     <Authorized>
-        <MudNavLink Href="/profile">Hello, @context.User.Identity?.Name!</MudNavLink>
         <MudButton @onclick="BeginSignOut">Log out</MudButton>
     </Authorized>
+
     <NotAuthorized>
-        <MudNavLink Href="/login">Log in</MudNavLink>
-        <MudNavLink Href="/register">Register</MudNavLink>
+        <MudButton Href="/login">Log in</MudButton>
+        <MudButton Href="/register">Register</MudButton>
     </NotAuthorized>
+
 </AuthorizeView>
 
 @code {

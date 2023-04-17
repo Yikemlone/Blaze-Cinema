@@ -1,5 +1,6 @@
 ﻿@using Cinema.Shared.DTO
 @inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
 
 <MudDialog>
     <DialogContent>
@@ -35,28 +36,10 @@
                 <p>Here is your booking reference:</p>
                 <h4>@Booking.BookingRef</h4>
             }
-
-            @*            
-                Display:
-                - Seat numbers,
-                - What type of tickets,
-                - Total,
-                - Room number,
-                - Movie,
-                - Time
-            *@
-
         </MudPaper>
     </DialogContent>
 
     <DialogActions>
-        @*       
-            We will have multiple buttons here that will chain until the final view:
-            - Confirm details
-            - Confirm payment method
-            - Booking confirmed
-        *@
-
         @if (!_confirmedDetails)
         {
             <MudButton Color="Color.Primary" OnClick="Confirm">Confirm</MudButton>
@@ -71,7 +54,6 @@
         {
             <MudButton Color="Color.Primary" OnClick="Close">Confirm</MudButton>
         }
-
     </DialogActions>
 </MudDialog>
 
@@ -88,7 +70,6 @@
     private int _adultTickets;
     private int _childTickets; 
     private int _movieID; // get this from screeningDTO
-
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
@@ -144,6 +125,7 @@
 
     private async void Close()
     {
+        navigationManager.NavigateTo("/");
         MudDialog.Close(DialogResult.Ok(true));
     }
 

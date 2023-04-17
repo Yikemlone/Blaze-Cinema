@@ -1,5 +1,9 @@
 ﻿@inject NavigationManager navigationManager
-<div class="loader loader-bouncing"><span>Redirecting...</span></div>
+
+<MudContainer>
+    <MudProgressCircular Color="Color.Primary" Size="Size.Large"/>
+</MudContainer>
+
 @code{
 
     protected override void OnInitialized()

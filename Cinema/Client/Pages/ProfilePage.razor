@@ -1,0 +1,13 @@
+﻿@page "/profile"
+@attribute [Authorize(Policy = "IsCustomer")]
+@inject HttpClient Http
+
+<AuthorizeView>
+    <Authorized>
+        Hello, @context.User.Identity?.Name!
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    // Using the http, grab all the info about the user and display it here and offer to view bookings
+}

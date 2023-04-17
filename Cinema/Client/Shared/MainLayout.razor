@@ -1,23 +1,21 @@
 ﻿@inherits LayoutComponentBase
 @inject ISnackbar Snackbar
 
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
+<MudThemeProvider Theme="_theme" />
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <MudLayout>
     <MudStack Class="flex-grow-1 gap-0" Style="min-height:100vh;">
 
-        <MudAppBar Elevation="1" Color="Color.Secondary">
-            <MudIconButton aria-label="Toggle light/dark theme" Icon="@GetThemeIcon()" Color="MudBlazor.Color.Inherit" OnClick="DarkMode"/>
-            <MudSpacer />
-            <NavMenu></NavMenu>
+        <MudAppBar Elevation="1" Color="Color.Dark">
+            <NavMenu/>
+            <MudSpacer/>
+            <LoginDisplay />
         </MudAppBar>
 
         <MudMainContent>  
-            <MudContainer MaxWidth="MaxWidth.Large">
-                    @Body
-            </MudContainer>
+            @Body
         </MudMainContent>
 
         <MudScrollToTop TopOffset="400" Style="z-index:2000;">
@@ -26,11 +24,9 @@
 
         <MudSpacer/>
 
-        <MudMainContent Class="flex-grow-0">
+        <MudMainContent>
             <MudContainer Fixed="true">
-                <ChildContent>
-                    <FooterDisplay/>
-                </ChildContent>
+                <FooterDisplay/>
             </MudContainer>
         </MudMainContent>
 
@@ -38,24 +34,27 @@
 </MudLayout>
 
 @code{
-    private MudTheme _theme = new();
-    private bool _isDarkMode = true;
 
-    private void DarkMode()
+    private MudTheme _theme = new()
     {
-        _isDarkMode = !_isDarkMode;
-    }
+        Palette = new Palette()
+        {
+            // These ones I know I want
+            Background = Colors.Shades.Black, 
+            Primary = Colors.Pink.Default,
+            Secondary = Colors.Cyan.Default,   
+            Surface = Colors.Grey.Darken4,
+            Dark = Colors.Grey.Darken4,
+            AppbarText = Colors.Shades.White,
+            TextPrimary = Colors.Shades.White,
+            TextSecondary = Colors.Shades.White,
+            TableLines = Colors.Grey.Darken3,
+            ActionDefault = Colors.Shades.White,
+            ActionDisabled = Colors.Grey.Darken3,
+            ActionDisabledBackground = Colors.Grey.Darken2,
+            LinesDefault = Colors.Grey.Darken3,
+        }
+    };
 
-    private string GetThemeIcon()
-    {
-        if (_isDarkMode)
-        {
-            return Icons.Material.Outlined.LightMode;
-        }
-        else
-        {
-            return Icons.Material.Outlined.DarkMode;
-        }
-    }
 }
 

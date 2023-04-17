@@ -4,23 +4,21 @@
 
 <PageTitle>Admin Page</PageTitle>
 
-<MudPaper Class="pa-3 ma-2" Elevation="1">
-    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
-</MudPaper>
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
+    <MudPaper Class="pa-3 ma-2" Elevation="1">
+        <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+    </MudPaper>
 
-<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
     <MudGrid Justify="Justify.Center" Spacing="5">
         <MudItem xs="12">
             <MovieTable />
         </MudItem>
     </MudGrid>
-</MudPaper>
-
+</MudContainer>
 
 @code {
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
         new BreadcrumbItem("Admin Dashboard", href: "/admin", icon: Icons.Material.Filled.Lock)
     };
 }

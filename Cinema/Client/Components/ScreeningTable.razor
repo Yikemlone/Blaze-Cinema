@@ -1,5 +1,4 @@
-﻿@using Cinema.Client.Dialogs.AdminDialogs
-@using Cinema.Client.Dialogs.ManagerDialogs
+﻿@using Cinema.Client.Dialogs.ManagerDialogs
 @using Cinema.Shared.DTO
 @inherits ComponentBase
 @inject HttpClient Http
@@ -35,11 +34,9 @@
         OnRowClick="RowClickEvent" 
         Hover="true" 
         Dense="true"
-        Bordered="true"
         FixedHeader="true"
-        HorizontalScrollbar="true"
         GroupBy="@_groupDefinition"
-        GroupHeaderStyle="background-color:var(--mud-palette-background-grey)"
+        GroupHeaderStyle="background-color: #424242"
         GroupFooterClass="mb-4"
         ServerData="ServerReload">
 
@@ -53,14 +50,14 @@
 
                 <MudSpacer />
 
-                <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Secondary">
-                    <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
+                <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Primary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Primary" OnClick="OpenCreateDialog" />
                 </MudTooltip>
-                <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Secondary">
-                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
+                <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Primary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
                 </MudTooltip>
-                <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Secondary">
-                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
+                <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Primary">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Primary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
                 </MudTooltip>
 
             </ToolBarContent>
@@ -105,7 +102,8 @@
 
         </MudTable>
     </MudGrid>
-} else 
+} 
+else 
 {
     <MudGrid>
         <MudTable 

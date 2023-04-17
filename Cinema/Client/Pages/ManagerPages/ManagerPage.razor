@@ -21,53 +21,56 @@ Produce a weekly Report:
 
 <PageTitle>Manager Page</PageTitle>
 
-<MudPaper Class="pa-3 ma-2" Elevation="1">
-    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
-</MudPaper>
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
 
-<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-    <MudGrid Spacing="3" Justify="Justify.Center">
+    <MudPaper Class="pa-3 ma-2" Elevation="1">
+        <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+    </MudPaper>
 
-        <MudItem xs="8" sm="6" md="3">
-            <MudCard>
-                <MudCardContent>
-                    <MudStack AlignItems="AlignItems.Center">
-                        <MudIconButton Size="Size.Large" Href="/manager/screenings" Icon="@Icons.Material.Filled.Movie" Color="Color.Secondary"></MudIconButton>
-                        <MudText Typo="Typo.caption">Manage Screenings</MudText>
-                    </MudStack>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+    <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
+        <MudGrid Spacing="3" Justify="Justify.Center">
 
-        <MudItem xs="8" sm="6" md="3">
-            <MudCard>
-                <MudCardContent>
-                    <MudStack AlignItems="AlignItems.Center">
-                        <MudIconButton Size="Size.Large" Href="/manager/report" Icon="@Icons.Material.Filled.Report" Color="Color.Secondary"></MudIconButton>
-                        <MudText Typo="Typo.caption">Weekly Report</MudText>
-                    </MudStack>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+            <MudItem xs="8" sm="6" md="3">
+                <MudCard>
+                    <MudCardContent>
+                        <MudStack AlignItems="AlignItems.Center">
+                            <MudIconButton Size="Size.Large" Href="/manager/screenings" Icon="@Icons.Material.Filled.Movie" Color="Color.Primary"></MudIconButton>
+                            <MudText Typo="Typo.caption">Manage Screenings</MudText>
+                        </MudStack>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
 
-        <MudItem xs="8" sm="6" md="3">
-            <MudCard>
-                <MudCardContent>
-                    <MudStack AlignItems="AlignItems.Center">
-                        <MudIconButton Size="Size.Large" Href="/manager/decom" Icon="@Icons.Material.Filled.Handyman" Color="Color.Secondary"></MudIconButton>
-                        <MudText Typo="Typo.caption">Decomission Room</MudText>
-                    </MudStack>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+            <MudItem xs="8" sm="6" md="3">
+                <MudCard>
+                    <MudCardContent>
+                        <MudStack AlignItems="AlignItems.Center">
+                            <MudIconButton Size="Size.Large" Href="/manager/report" Icon="@Icons.Material.Filled.Report" Color="Color.Primary"></MudIconButton>
+                            <MudText Typo="Typo.caption">Weekly Report</MudText>
+                        </MudStack>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
 
-    </MudGrid>
-</MudPaper>
+            <MudItem xs="8" sm="6" md="3">
+                <MudCard>
+                    <MudCardContent>
+                        <MudStack AlignItems="AlignItems.Center">
+                            <MudIconButton Size="Size.Large" Href="/manager/decom" Icon="@Icons.Material.Filled.Handyman" Color="Color.Primary"></MudIconButton>
+                            <MudText Typo="Typo.caption">Decomission Room</MudText>
+                        </MudStack>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+
+        </MudGrid>
+    </MudPaper>
+</MudContainer>
+
 
 @code {
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
         new BreadcrumbItem("Manager Dashboard", href: "/manager", icon: Icons.Material.Filled.Lock)
     };
 }

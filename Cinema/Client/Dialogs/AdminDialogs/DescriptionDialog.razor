@@ -1,0 +1,23 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        @Description
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Color="Color.Secondary" OnClick="Close">Close</MudButton>
+    </DialogActions>
+
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Description { get; set; }
+
+    private async void Close()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

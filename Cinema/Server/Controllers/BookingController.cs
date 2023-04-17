@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("/api/[controller]")]
     public class BookingController

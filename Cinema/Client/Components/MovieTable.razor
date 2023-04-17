@@ -20,108 +20,102 @@
 
 </style>
 
-<MudGrid>
-    <MudTable 
-        Items="@_movies" 
-        T="MovieDTO" 
-        Breakpoint="Breakpoint.Sm" 
-        Style="width: 100%"
-        @ref="_mudTable" 
-        @bind-SelectedItem="_selected"
-        RowClassFunc="@SelectedRowClassFunc" 
-        OnRowClick="RowClickEvent" 
-        Loading="@(_movies == null ? true : false)"
-        LoadingProgressColor="Color.Secondary"
-        Hover="true" 
-        Dense="true"
-        Bordered="true"
-        FixedHeader="true"
-        HorizontalScrollbar="true"
-        ServerData="ServerReload">
+<MudTable 
+    Items="@_movies" 
+    T="MovieDTO" 
+    Breakpoint="Breakpoint.Sm" 
+    Style="width: 100%"
+    @ref="_mudTable" 
+    @bind-SelectedItem="_selected"
+    RowClassFunc="@SelectedRowClassFunc" 
+    OnRowClick="RowClickEvent" 
+    Loading="@(_movies == null ? true : false)"
+    LoadingProgressColor="Color.Primary"
+    Hover="true"
+    Dense="true"
+    FixedHeader="true"
+    ServerData="ServerReload">
         
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">Edit Movie Listings</MudText>
-            <MudSpacer />
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Edit Movie Listings</MudText>
+        <MudSpacer />
 
-            <MudTextField T="string" Placeholder="Search" Adornment="Adornment.Start" ValueChanged="@(s=>OnSearch(s))" 
-                AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
-            </MudTextField>
+        <MudTextField T="string" Placeholder="Search" Adornment="Adornment.Start" ValueChanged="@(s=>OnSearch(s))" 
+            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+        </MudTextField>
 
-            <MudSpacer />
+        <MudSpacer />
 
-            <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Secondary">
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
-            </MudTooltip>
-            <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Secondary">
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
-            </MudTooltip>
-            <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Secondary">
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
-            </MudTooltip>
+        <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Primary">
+            <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Primary" OnClick="OpenCreateDialog" />
+        </MudTooltip>
+        <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Primary">
+            <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
+        </MudTooltip>
+        <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Primary">
+            <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Primary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
+        </MudTooltip>
 
-        </ToolBarContent>
+    </ToolBarContent>
 
-        <HeaderContent>
-            <MudTh>
-                <MudTableSortLabel SortLabel="name" T="MovieDTO">
-                    Name
-                </MudTableSortLabel>
-            </MudTh>
-            <MudTh>
-                <MudTableSortLabel SortLabel="release_date" T="MovieDTO">
-                    <div style="white-space: nowrap;">
-                        Release Date
-                    </div>
-                 </MudTableSortLabel>
-            </MudTh>
-            <MudTh>
-                <MudTableSortLabel SortLabel="age_rating" T="MovieDTO">
-                    <div style="white-space: nowrap;">
-                        Age Rating
-                    </div>
-                 </MudTableSortLabel>
-            </MudTh>
-            <MudTh>
-                <MudTableSortLabel SortLabel="duration" T="MovieDTO">
-                    Duration
-                </MudTableSortLabel>
-            </MudTh>
-
-            <MudTh>Trailer</MudTh>
-            <MudTh>Description</MudTh>
-        </HeaderContent>
-
-        <RowTemplate>
-            <MudTd DataLabel="Name" Style="width: 200px">
+    <HeaderContent>
+        <MudTh>
+            <MudTableSortLabel SortLabel="name" T="MovieDTO">
+                Name
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="release_date" T="MovieDTO">
                 <div style="white-space: nowrap;">
-                    @context.Name
+                    Release Date
                 </div>
-            </MudTd>
-            <MudTd DataLabel="ReleaseDate">@context.ReleaseDate.ToLongDateString()</MudTd>
-            <MudTd DataLabel="AgeRating">@context.AgeRating</MudTd>
-            <MudTd DataLabel="Duration">@context.Duration</MudTd>
-            <MudTd DataLabel="Trailer">@context.Trailer</MudTd>
-            <MudTd DataLabel="Description">
+                </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="age_rating" T="MovieDTO">
                 <div style="white-space: nowrap;">
-                    @context.Description
+                    Age Rating
                 </div>
-            </MudTd>
-        </RowTemplate>
+                </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortLabel="duration" T="MovieDTO">
+                Duration
+            </MudTableSortLabel>
+        </MudTh>
 
-        <NoRecordsContent>
-            <MudText>No matching records found</MudText>
-        </NoRecordsContent>
+        <MudTh>Trailer</MudTh>
+        <MudTh>Description</MudTh>
+    </HeaderContent>
 
-        <LoadingContent>
-            <MudText>Loading...</MudText>
-        </LoadingContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name" Style="width: 200px">
+            <div style="white-space: nowrap;">
+                @context.Name
+            </div>
+        </MudTd>
+        <MudTd DataLabel="ReleaseDate">@context.ReleaseDate.ToLongDateString()</MudTd>
+        <MudTd DataLabel="AgeRating">@context.AgeRating</MudTd>
+        <MudTd DataLabel="Duration">@context.Duration</MudTd>
+        <MudTd DataLabel="Trailer">@context.Trailer</MudTd>
+        <MudTd DataLabel="Description">
+            <MudButton Variant="Variant.Outlined" @onclick="@(() => OpenDescriptonDialog(@context.Description))">View Description</MudButton>
+        </MudTd>
+    </RowTemplate>
 
-        <PagerContent>
-            <MudTablePager PageSizeOptions="@_pageSizeOptions" HorizontalAlignment="HorizontalAlignment.Center"/>
-        </PagerContent>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
 
-    </MudTable>
-</MudGrid>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+
+    <PagerContent>
+        <MudTablePager PageSizeOptions="@_pageSizeOptions" HorizontalAlignment="HorizontalAlignment.Center"/>
+    </PagerContent>
+
+</MudTable>
 
 @code {
     private const string API_URL = "api/movie";
@@ -221,6 +215,14 @@
             MaxWidth = MaxWidth.Medium, 
             DisableBackdropClick = true 
         });
+    }
+
+    private void OpenDescriptonDialog(string description)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Description", description);
+
+        DialogService.Show<DescriptionDialog>("Movie Description", parameters, _dialogOptions);
     }
 
 
