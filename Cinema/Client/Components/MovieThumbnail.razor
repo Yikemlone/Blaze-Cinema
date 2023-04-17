@@ -2,9 +2,15 @@
 @inherits ComponentBase
 
 <a href="movie/@MovieID">
-    <img src="images/movies/@(MovieID).jpg" width="100%"> @* Make sure all files are the same. EX: .jpg *@
+    <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Contain" Fluid=true />
 </a>
 
 @code {
     [Parameter] public int MovieID { get; set; }
+    private string _imageURL;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _imageURL = $"images/movies/{MovieID}.jpg";
+    }
 }

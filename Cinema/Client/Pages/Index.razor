@@ -80,7 +80,7 @@
                     @foreach (var movie in _nowShowingMovies)
                     {
                         <MudItem xs="5" sm="6" md="2" xl="1">
-                            <MovieThumbnail MovieID=@(movie.ID) />
+                            <MovieThumbnail MovieID=@movie.ID/>
                         </MudItem>
                     }
 
@@ -93,7 +93,7 @@
                         @foreach (var movie in _upcomingMovies)
                         {
                             <MudItem xs="5" sm="6" md="2" xl="1">
-                                <MovieThumbnail MovieID=@(movie.ID) />
+                                <MovieThumbnail MovieID=@movie.ID />
                             </MudItem>
                         }
                     }

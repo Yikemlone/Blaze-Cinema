@@ -2,46 +2,52 @@
 @inject NavigationManager navigationManager
 @inject IdentityAuthenticationStateProvider authStateProvider
 
-<EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="registerParameters">
-    <DataAnnotationsValidator />
-    <h4 class="font-weight-normal text-center">Create Account</h4>
+<MudContainer MaxWidth="MaxWidth.Medium">
 
-    <label for="inputUsername" class="sr-only">User Name</label>
-    <InputText id="inputUsername" class="form-control" placeholder="Username" autofocus @bind-Value="@registerParameters.UserName" />
-    <ValidationMessage For="@(() => registerParameters.UserName)" />
+    @*<MudText Typo="Typo.h3">Create Account</MudText>*@
 
-    <label for="inputPassword" class="sr-only">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="@registerParameters.Password" />
-    <ValidationMessage For="@(() => registerParameters.Password)" />
+    <EditForm Model="@_model" OnValidSubmit="OnSubmit">
+        <DataAnnotationsValidator />
 
-    <label for="inputPasswordConfirm" class="sr-only">Password Confirmation</label>
-    <InputText type="password" id="inputPasswordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@registerParameters.PasswordConfirm" />
-    <ValidationMessage For="@(() => registerParameters.PasswordConfirm)" />
+        <MudCard Style="margin: 100px">
+            <MudCardContent>
+                <div style="margin: 20px">
+                    <MudTextField Label="Username" @bind-Value="_model.UserName" For="@(() => _model.UserName)" />
+                    <MudTextField InputType="InputType.Password" Label="Password" Class="mt-3" @bind-Value="_model.Password" For="@(() => _model.Password)" />
+                    <MudTextField InputType="InputType.Password" Label="Password" Class="mt-3" @bind-Value="_model.PasswordConfirm" For="@(() => _model.PasswordConfirm)" />
+                </div>
+            </MudCardContent>
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Create account</button>
+            <MudStack Row="true" Spacing="6" Justify="Justify.Center">
+                <MudText Typo="Typo.subtitle1" style="color: red">@_error</MudText>
+            </MudStack>
 
-    <label class="text-danger">@error</label>
-    <NavLink href="login">
-        <h6 class="font-weight-normal text-center">Already have an account? Click here to login</h6>
-    </NavLink>
-</EditForm>
+            <MudStack Row="true" Spacing="6" Justify="Justify.Center">
+                <MudButton Style="margin-bottom: 20px" ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Register</MudButton>
+                <MudButton Style="margin-bottom: 20px" Href="/register" Variant="Variant.Outlined" Color="Color.Secondary">Sign in</MudButton>
+            </MudStack>
+
+        </MudCard>
+    </EditForm>
+</MudContainer>
 
 @functions{
 
-    RegisterParameters registerParameters { get; set; } = new RegisterParameters();
-    string error { get; set; }
+    private RegisterParameters _model = new();
+    private string _error;
 
     async Task OnSubmit()
     {
-        error = null;
+        _error = null;
+
         try
         {
-            await authStateProvider.Register(registerParameters);
+            await authStateProvider.Register(_model);
             navigationManager.NavigateTo("");
         }
         catch (Exception ex)
         {
-            error = ex.Message;
+            _error = ex.Message;
         }
     }
 }

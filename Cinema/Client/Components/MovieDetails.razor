@@ -5,18 +5,50 @@
 
 @if (Movie != null) 
 {
-    <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
-        <MudGrid Spacing="3" Justify="Justify.Center">
+    <MudGrid Spacing="3" Justify="Justify.Center">
 
-            <MudItem xs="12" sm="12" md="12">
-                <MudText Typo="Typo.h2" Align="Align.Left"><b> @Movie.Name </b></MudText>
-            </MudItem>
+        @*Movie Title *@
+        <MudItem xs="12" sm="12" md="12">
+            <MudText Typo="Typo.h3" Align="Align.Left"><b> @Movie.Name </b></MudText>
+        </MudItem>
 
-            <MudItem xs="3" sm="3" md="3">
-                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="225" />
-            </MudItem>
+        @*Movie Image*@
+        <MudItem xs="3" sm="3" md="3">
+            <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Contain" Fluid=true/>
+        </MudItem>
 
-            <MudItem xs="9" sm="9" md="9">
+        @*Movie trailer*@
+        @*The height is not scalable, need to adjust*@
+        <MudItem xs="9" sm="9" md="9">
+            <iframe src="https://www.youtube.com/embed/@Movie.Trailer"
+                style="width: 100% !important; height: 655px !important;" 
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+            </iframe>
+        </MudItem>
+
+        @*Movie Duration and release Date*@
+        <MudItem xs="9" sm="9" md="12">
+            <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="75" />
+            <MudText Typo="Typo.h5">Length: @Movie.Duration Minutes</MudText>
+            <MudText Typo="Typo.h5">Release Date: @Movie.ReleaseDate.ToLongDateString()</MudText>
+        </MudItem>
+
+        @*Movie Description*@
+        <MudItem xs="6" sm="8" md="12">
+            <MudText Typo="Typo.h3">Description:</MudText>
+            <MudText Typo="Typo.body1">@Movie.Description</MudText>
+        </MudItem>
+
+        @*Movie Screenings*@
+        @if(Movie.Screenings != null) 
+        {
+            <MudItem xs="9" sm="9" md="12">
+
+                <MudText Typo="Typo.h3">Screenings</MudText>
+
                 <MudTabs Elevation="2" Color="@Color.Primary" ApplyEffectsToContainer="true" Position="Position.Start">
 
                     <MudTabPanel Text="@("Monday " + _daysOfTheWeek[0])">
@@ -46,40 +78,13 @@
 
                 </MudTabs>
             </MudItem>
-
-            <MudItem xs="9" sm="9" md="1">
-                <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="75" />
-                @*<MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>*@
-            </MudItem>
-
-            <MudItem xs="9" sm="9" md="11">
-
-                <MudText Inline="false" Typo="Typo.subtitle2">Length: @Movie.Duration Minutes</MudText>
-                <MudText Inline="false" Typo="Typo.subtitle2">Release Date: @Movie.ReleaseDate.ToLongDateString()</MudText>
-            </MudItem>
-
-            <MudItem xs="9" sm="9" md="12">
-                <iframe src="https://www.youtube.com/embed/@Movie.Trailer"
-                        style="width: 100%!important;height: 500px!important;"
-                        title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen>
-                </iframe>
-            </MudItem>
-            
-
-            <MudItem xs="6" sm="8" md="12">
-                <MudPaper Class="d-flex" Elevation="0" Style="overflow:auto">
-                    <MudPaper Elevation="0">
-                        <MudText Typo="Typo.h4">Description:</MudText>
-                        <MudText Typo="Typo.body1">@Movie.Description</MudText>
-                    </MudPaper>
-                </MudPaper>
-            </MudItem>
-
-        </MudGrid>
-    </MudContainer>
+        }
+        else
+        {
+            <MudText Typo="Typo.h5">No Screenings yet.</MudText>
+        }
+        
+    </MudGrid>
 }
 
 @code {
@@ -98,8 +103,8 @@
     protected override async Task OnInitializedAsync()
     {
         Movie = await GetMovieAsync();
-        _imageURL = $"images/{Movie.ID}.jpg";
-        _ratingURL = $"images/IFCO_{Movie.AgeRating}.png";
+        _imageURL = $"images/movies/{Movie.ID}.jpg";
+        _ratingURL = $"images/age-rating/IFCO_{Movie.AgeRating}.png";
 
         DateTime startOfWeek = DateTime.Today.AddDays(
             (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek -

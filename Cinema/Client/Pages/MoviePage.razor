@@ -1,9 +1,8 @@
 ﻿@page "/movie/{ID:int}"
 
-<MudPaper Class="pa-10 ma-2" Elevation="2">
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MovieDetails MovieID=@ID/>
-</MudPaper> 
-
+</MudContainer>
 @code
 {
     [Parameter] public int ID { get; set; }
