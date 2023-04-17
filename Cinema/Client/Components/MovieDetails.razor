@@ -43,7 +43,7 @@
         </MudItem>
 
         @*Movie Screenings*@
-        @if(Movie.Screenings != null) 
+        @if(Movie.Screenings.Count != 0) 
         {
             <MudItem xs="9" sm="9" md="12">
 
@@ -81,7 +81,10 @@
         }
         else
         {
-            <MudText Typo="Typo.h5">No Screenings yet.</MudText>
+            <MudItem xs="9" sm="9" md="12">
+                <MudText Typo="Typo.h3">Screenings</MudText>
+                <MudText Typo="Typo.h5">No Screenings yet.</MudText>
+            </MudItem>
         }
         
     </MudGrid>
