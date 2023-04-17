@@ -21,7 +21,7 @@
 
         align-items: center;
         justify-content: left;
-        padding-left: 70px;
+        padding-left: 60px;
         color: white;
         font-size: 40px;
     }
@@ -66,16 +66,16 @@
     </MudItem>
 
     <MudItem xs="12">
+
         <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
+
             <MudGrid Spacing="3" Justify="Justify.Center">
 
                 @if (_nowShowingMovies != null)
                 {
-                    <MudItem xs="12">
-                        <MudText Typo="Typo.h1" Style="margin-left: 60px"><b>Now</b> Showing</MudText>
+                    <MudItem xs="11">
+                        <MudText Typo="Typo.h1"> <b>Now</b> Showing</MudText>
                     </MudItem>
-
-                    <MudSpacer></MudSpacer>
 
                     @foreach (var movie in _nowShowingMovies)
                     {
@@ -86,11 +86,9 @@
 
                     @if (_upcomingMovies != null) 
                     {
-                        <MudItem xs="12">
-                            <MudText Typo="Typo.h1" Style="margin-left: 60px"><b>Upcoming</b> Movies</MudText>
+                        <MudItem xs="11">
+                            <MudText Typo="Typo.h1"><b>Upcoming</b> Movies</MudText>
                         </MudItem>
-
-                        <MudSpacer></MudSpacer>
 
                         @foreach (var movie in _upcomingMovies)
                         {
