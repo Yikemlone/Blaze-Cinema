@@ -1,6 +1,9 @@
 ﻿<MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudStack Class="pg-16">
         <MudDivider DividerType="DividerType.Middle" Class="my-6 mx-0" />
+        <MudStack AlignItems="AlignItems.Center">
+            <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+        </MudStack>
         <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
             <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Primary" Variant="Variant.Outlined" Title="MudBlazeor" Class="MudBlazeIcon" Size="Size.Large" Href="https://mudblazor.com/" />
             <MudIconButton Icon="@Icons.Custom.Brands.Facebook" Color="Color.Primary" Variant="Variant.Outlined" Title="Facebook" Class="FaceBookIcon" Size="Size.Large" Href="https://Facebook.com/" />
@@ -13,3 +16,13 @@
         </MudStack>
     </MudStack>
 </MudContainer>
+
+@code {
+private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+  {
+        new BreadcrumbItem("Location", href: "/location"),
+        new BreadcrumbItem("Contact Details", href: "/contactdetails"),
+        new BreadcrumbItem("Privacy Policy", href: "/privacypolicy"),
+        new BreadcrumbItem("Our Team", href: "/ourteam")
+  };
+}
