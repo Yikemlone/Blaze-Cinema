@@ -1,0 +1,25 @@
+﻿@using Cinema.Shared.DTO;
+@inject HttpClient Http
+
+@if (_rooms != null)
+{
+	@foreach (var room in _rooms)
+	{
+		@room.ID
+	}
+}
+
+@code {
+	private List<RoomDTO> _rooms;
+
+	protected override async Task OnInitializedAsync()
+	{
+		_rooms = await GetRoomsAsync();
+	}
+
+	public async Task<List<RoomDTO>> GetRoomsAsync()
+	{
+		return await Http.GetFromJsonAsync<List<RoomDTO>>("/api/manager/rooms");
+	}
+
+}
