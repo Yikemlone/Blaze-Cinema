@@ -6,15 +6,11 @@
 <PageTitle>Register</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Medium">
-
-    @*<MudText Typo="Typo.h3">Create Account</MudText>*@
-
     <EditForm Model="@_model" OnValidSubmit="OnSubmit">
         <DataAnnotationsValidator />
-
-        <MudCard Style="margin: 100px">
+        <MudCard Class="ma-16">
             <MudCardContent>
-                <div style="margin: 20px">
+                <div class="ma-13">
                     <MudTextField Label="Username" @bind-Value="_model.UserName" For="@(() => _model.UserName)" />
                     <MudTextField InputType="InputType.Password" Label="Password" Class="mt-3" @bind-Value="_model.Password" For="@(() => _model.Password)" />
                     <MudTextField InputType="InputType.Password" Label="Password" Class="mt-3" @bind-Value="_model.PasswordConfirm" For="@(() => _model.PasswordConfirm)" />
@@ -26,10 +22,9 @@
             </MudStack>
 
             <MudStack Row="true" Spacing="6" Justify="Justify.Center">
-                <MudButton Style="margin-bottom: 20px" ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Register</MudButton>
-                <MudButton Style="margin-bottom: 20px" Href="/register" Variant="Variant.Outlined" Color="Color.Secondary">Sign in</MudButton>
+                <MudButton Class="mb-6" ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Register</MudButton>
+                <MudButton Class="mb-6" Href="/register" Variant="Variant.Outlined" Color="Color.Secondary">Sign in</MudButton>
             </MudStack>
-
         </MudCard>
     </EditForm>
 </MudContainer>

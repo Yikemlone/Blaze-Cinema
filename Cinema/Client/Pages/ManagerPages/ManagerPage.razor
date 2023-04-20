@@ -23,16 +23,16 @@ Produce a weekly Report:
 
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
 
-    <MudPaper Class="pa-4 ma-3" Elevation="1">
+    <MudPaper Class="pa-4 mt-4" Elevation="1">
         <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
     </MudPaper>
 
-    <MudPaper Class="pa-4 ma-3" Elevation="1">
-        <MudGrid Spacing="3" Justify="Justify.Center">
+    <MudPaper Class="pa-16 mt-4" Elevation="1">
+        <MudGrid Class="pa-16" Spacing="3" Justify="Justify.Center">
 
             <MudItem xs="8" sm="6" md="3">
-                <MudCard Elevation="4">
-                    <MudCardContent >
+                <MudCard Elevation="6">
+                    <MudCardContent>
                         <MudStack AlignItems="AlignItems.Center">
                             <MudIconButton Size="Size.Large" Href="/manager/screenings" Icon="@Icons.Material.Filled.Movie" Color="Color.Primary"></MudIconButton>
                             <MudText Typo="Typo.caption">Manage Screenings</MudText>
@@ -42,7 +42,7 @@ Produce a weekly Report:
             </MudItem>
 
             <MudItem xs="8" sm="6" md="3">
-                <MudCard Elevation="4">
+                <MudCard Elevation="6">
                     <MudCardContent>
                         <MudStack AlignItems="AlignItems.Center">
                             <MudIconButton Size="Size.Large" Href="/manager/report" Icon="@Icons.Material.Filled.Report" Color="Color.Primary"></MudIconButton>
@@ -53,7 +53,7 @@ Produce a weekly Report:
             </MudItem>
 
             <MudItem xs="8" sm="6" md="3">
-                <MudCard Elevation="4">
+                <MudCard Elevation="6">
                     <MudCardContent>
                         <MudStack AlignItems="AlignItems.Center">
                             <MudIconButton Size="Size.Large" Href="/manager/decom" Icon="@Icons.Material.Filled.Handyman" Color="Color.Primary"></MudIconButton>
