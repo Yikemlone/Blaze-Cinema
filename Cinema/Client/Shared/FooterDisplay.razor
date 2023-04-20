@@ -1,47 +1,15 @@
-﻿<style>
-    .footer {
-        font-size:large;
-        bottom: 0;
-        position: unset;
-        width: 50%;
-        height: 100px;
-        margin: auto;
-        text-align: center;
-        padding: 10px;
-        color: #ffffff;
-    }
-
-    .MudBlazeIcon{
-       
-        bottom: 0;
-        
-        height: 60px;
-        width: 25%;
-        text-align: left;
-        position: relative;
-        top: -30px;
-        color: #ffffff;
-    }
-
-    .MoviesIcon {
-        bottom: 0;
-        position: relative;
-        
-        top: -30px; 
-        height: 60px;
-        width: 25%;
-        text-align: right;
-        color: #ffffff;
-    }
-</style>
-
-<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+﻿<MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudStack Class="pg-16">
         <MudDivider DividerType="DividerType.Middle" Class="my-6 mx-0" />
-        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-            <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Title="MudBlazeIcon" Class="MudBlazeIcon" />
-            <MudText Class=" footer" Align="Align.Center" Typo="Typo.subtitle2"> &copy @DateTime.Now.Year Blaze Cinema </MudText>
-            <MudIcon Icon="@Icons.Material.Filled.LocalMovies" Title="MoviesIcon" Class="MoviesIcon" />
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+            <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Primary" Variant="Variant.Outlined" Title="MudBlazeor" Class="MudBlazeIcon" Size="Size.Large" Href="https://mudblazor.com/" />
+            <MudIconButton Icon="@Icons.Custom.Brands.Facebook" Color="Color.Primary" Variant="Variant.Outlined" Title="Facebook" Class="FaceBookIcon" Size="Size.Large" Href="https://Facebook.com/" />
+            <MudIconButton Icon="@Icons.Custom.Brands.Instagram" Color="Color.Primary" Variant="Variant.Outlined" Title="Instagram" Class="InstagramIcon" Size="Size.Large" Href="https://Instagram.com/" />
+            <MudIconButton Icon="@Icons.Custom.Brands.Twitter" Color="Color.Primary" Variant="Variant.Outlined" Title="Twitter" Class="TwitterIcon" Size="Size.Large" Href="https://Twitter.com/" />
+            <MudIconButton Icon="@Icons.Custom.Brands.TikTok" Color="Color.Primary" Variant="Variant.Outlined" Title="Twitter" Class="TwitterIcon" Size="Size.Large" Href="https://TikTok.com/" />
+        </MudStack>
+        <MudStack AlignItems="AlignItems.Center">
+            <MudText Class="footer" Typo="Typo.h4"> &copy @DateTime.Now.Year Blaze Cinema </MudText>
         </MudStack>
     </MudStack>
 </MudContainer>
