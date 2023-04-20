@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\LocationPage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Dialogs\BookingDialogs\BookingDialog.razor" />
   </ItemGroup>
 
@@ -58,7 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Shared\LocationPage.razor" />
+    <None Include="Pages\LocationPage.razor" />
   </ItemGroup>
 
 </Project>

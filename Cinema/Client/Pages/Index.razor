@@ -43,87 +43,88 @@
 </style>
 
 <PageTitle>Blaze Cinema</PageTitle>
+<MudContainer MaxWidth="MaxWidth.False">
 
-<MudGrid Justify="Justify.Center">
+    <MudGrid Justify="Justify.Center">
 
-    <MudItem xs="12">
-        <div class="image_wrapper">
-            <img src="images/website/blurry.jpg" class="background-img" />
-            <div class="overlay overlay_1">
-                <h1>WELCOME TO BLAZE CINEMA</h1>
+        <MudItem xs="12">
+            <div class="image_wrapper">
+                <img src="images/website/blurry.jpg" class="background-img" />
+                <div class="overlay overlay_1">
+                    <h1>WELCOME TO BLAZE CINEMA</h1>
+                </div>
+                <div class="sub-text">
+                    <h1>Where Blazing experinces happen</h1>
+                </div>
             </div>
-            <div class="sub-text">
-                <h1>Where Blazing experinces happen</h1>
-            </div>
-        </div>
-    </MudItem>
+        </MudItem>
 
-    <MudItem xs="12">
-        <MudStack Row="true" Justify="Justify.Center" Spacing="15">
-            <MudButton Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary">VIEW SHOWTIMES</MudButton>
-            <MudButton Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary">PRE-ORDER SNACKS</MudButton>
-        </MudStack>
-    </MudItem>
+        <MudItem xs="12">
+            <MudStack Row="true" Justify="Justify.Center" Spacing="15">
+                <MudButton Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary">VIEW SHOWTIMES</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary">PRE-ORDER SNACKS</MudButton>
+            </MudStack>
+        </MudItem>
 
-    <MudItem xs="12">
+        <MudItem xs="12">
 
-        <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
+            <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
 
-            <MudGrid Spacing="3" Justify="Justify.Center">
+                <MudGrid Spacing="3" Justify="Justify.Center">
 
-                @if (_nowShowingMovies != null)
-                {
-                    <MudItem xs="11">
-                        <MudText Typo="Typo.h1"> <b>Now</b> Showing</MudText>
-                    </MudItem>
-
-                    @foreach (var movie in _nowShowingMovies)
-                    {
-                        <MudItem xs="5" sm="6" md="2" xl="1">
-                            <MovieThumbnail MovieID=@movie.ID/>
-                        </MudItem>
-                    }
-
-                    @if (_upcomingMovies != null) 
+                    @if (_nowShowingMovies != null)
                     {
                         <MudItem xs="11">
-                            <MudText Typo="Typo.h1"><b>Upcoming</b> Movies</MudText>
+                            <MudText Typo="Typo.h1"> <b>Now</b> Showing</MudText>
                         </MudItem>
 
-                        @foreach (var movie in _upcomingMovies)
+                        @foreach (var movie in _nowShowingMovies)
                         {
                             <MudItem xs="5" sm="6" md="2" xl="1">
-                                <MovieThumbnail MovieID=@movie.ID />
+                                <MovieThumbnail MovieID=@movie.ID/>
+                            </MudItem>
+                        }
+
+                        @if (_upcomingMovies != null) 
+                        {
+                            <MudItem xs="11">
+                                <MudText Typo="Typo.h1"><b>Upcoming</b> Movies</MudText>
+                            </MudItem>
+
+                            @foreach (var movie in _upcomingMovies)
+                            {
+                                <MudItem xs="5" sm="6" md="2" xl="1">
+                                    <MovieThumbnail MovieID=@movie.ID />
+                                </MudItem>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        @for (var i = 0; i < 10; i++)
+                        {
+                            <MudItem xs="8" sm="6" md="2">
+                                <MudCard>
+                                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
+                                    <MudCardContent>
+                                        <MudSkeleton Width="30%" Height="42px;" />
+                                        <MudSkeleton Width="80%" />
+                                        <MudSkeleton Width="100%" />
+                                    </MudCardContent>
+                                    <MudCardActions>
+                                        <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+                                        <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+                                    </MudCardActions>
+                                </MudCard>
                             </MudItem>
                         }
                     }
-                }
-                else
-                {
-                    @for (var i = 0; i < 10; i++)
-                    {
-                        <MudItem xs="8" sm="6" md="2">
-                            <MudCard>
-                                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
-                                <MudCardContent>
-                                    <MudSkeleton Width="30%" Height="42px;" />
-                                    <MudSkeleton Width="80%" />
-                                    <MudSkeleton Width="100%" />
-                                </MudCardContent>
-                                <MudCardActions>
-                                    <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
-                                    <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
-                                </MudCardActions>
-                            </MudCard>
-                        </MudItem>
-                    }
-                }
-            </MudGrid>
-        </MudContainer>
-    </MudItem>
+                </MudGrid>
+            </MudContainer>
+        </MudItem>
 
-</MudGrid>
-
+    </MudGrid>
+</MudContainer>
 @code
 {
     private const string API_URL = "api/movie";

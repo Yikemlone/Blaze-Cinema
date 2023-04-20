@@ -4,11 +4,12 @@
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<PageTitle>Booking Page</PageTitle>
+<PageTitle>Booking</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.Medium">
 
-    <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
+    <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1">
+
         <MudGrid Justify="Justify.Center" Spacing="5">
         
             @if (_ticketTypeBookings == null) 
