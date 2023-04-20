@@ -1,7 +1,31 @@
-﻿@page "/location"
-@using Cinema.Shared.DTO
-<h3>LocationPage</h3>
+﻿@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+@page "/location"
 
+<MudStack AlignItems="AlignItems.Center">
+	<MudText Class="footer" Typo="Typo.h4"> Map Location </MudText>
+</MudStack>
+<div id="map" style="width:800px; height:600px; margin: auto;"></div>
 @code {
+	private IJSObjectReference? module;
+	private string? result;
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./location.js");
+			if(module != null)
+			{
+				result = await module.InvokeAsync<string>("load_map");
+			}
+		}
+	}
 
+	async ValueTask IAsyncDisposable.DisposeAsync()
+	{
+		if(module is not null)
+		{
+			await module.DisposeAsync();
+		}
+	}
 }
