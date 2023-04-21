@@ -14,7 +14,7 @@ namespace Cinema.DataAccess.Services.BookingServices
             _context = context;
         }
         
-        public async Task<List<BookingDTO>> GetAsync()
+        public async Task<List<BookingDTO>> GetAllAsync()
         {
             var bookings = await _context.Bookings
                 .Select(b => new BookingDTO()
@@ -28,7 +28,7 @@ namespace Cinema.DataAccess.Services.BookingServices
             return bookings;
         }
 
-        public async Task<List<BookingDTO>> GetAllAsync(int customerID)
+        public async Task<List<BookingDTO>> GetAsync(int customerID)
         {
             var bookings = await _context.Bookings
                 .Where(b => b.CustomerID == customerID)

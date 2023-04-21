@@ -1,5 +1,4 @@
-﻿using Cinema.DataAccess.Services.RepositoryServices;
-using Cinema.Shared.DTO;
+﻿using Cinema.Shared.DTO;
 
 namespace Cinema.DataAccess.Services.SeatScreeningServices
 {
