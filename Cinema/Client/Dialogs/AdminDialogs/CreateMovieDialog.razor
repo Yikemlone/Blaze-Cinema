@@ -123,7 +123,7 @@
     private async Task AddMovieModelAsync()
     {
         var movieID = await Http.PostAsJsonAsync<MovieDTO>(API_URL + "admin/create/", _movie);
-        _content.Add(new StringContent(movieID.ToString()), "movieID");
+
         await Http.PostAsJsonAsync(API_URL + "admin/file/create", _content);
         await MudTable.ReloadServerData();
     }
@@ -131,18 +131,32 @@
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
         _content = new MultipartFormDataContent();
-        foreach (var file in e.GetMultipleFiles(1))
-        {
-            var fileContent = new StreamContent(file.OpenReadStream(_maxFileSize));
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
 
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
             _file = e.File;
 
             _content.Add(
                 content: fileContent,
-                name: "\"file\"",
-                fileName: file.Name
-            );
+                name: "\"files\"",
+                fileName: file.Name);
         }
+
+        //_content = new MultipartFormDataContent();
+        //foreach (var file in e.GetMultipleFiles(1))
+        //{
+        //    var fileContent = new StreamContent(file.OpenReadStream(_maxFileSize));
+        //    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+        //    _file = e.File;
+
+        //    _content.Add(
+        //        content: fileContent,
+        //        name: "\"file\"",
+        //        fileName: "1"
+        //    );
+        //}
     }
 }

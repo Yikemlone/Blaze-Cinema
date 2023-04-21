@@ -44,7 +44,7 @@
 </MudDialog>
 
 @code {
-    private const string API_URL = "api/manager";
+    private const string API_URL = "api/manager/";
     private HttpClient? _client;
     private ScreeningDTO? _newScreening;
     private List<RoomDTO>? _rooms;
@@ -145,12 +145,12 @@
 
     private async Task AddScreeningAsync()
     {
-        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + "/create/", _newScreening);
+        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + "create/", _newScreening);
         await MudTable.ReloadServerData();
     }
 
     private async Task<List<RoomDTO>> GetRoomsModelAsync()
     {
-        return await _client.GetFromJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
+        return await _client.GetFromJsonAsync<List<RoomDTO>>(API_URL + "rooms");
     }
 }

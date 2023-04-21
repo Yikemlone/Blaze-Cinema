@@ -23,7 +23,7 @@ namespace Cinema.Server.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task CreateMovie([FromBody] MovieDTO movie, [FromBody] IFormFile file)
+        public async Task CreateMovie([FromBody] MovieDTO movie)
         {
             var movieID = await _unitOfWork.AdminService.CreateMovieAsync(movie);
 
@@ -53,20 +53,36 @@ namespace Cinema.Server.Controllers
 
         [HttpPost]
         [Route("file/create")]
-        public async Task UploadFile([FromBody] IFormFile file) 
+        public async Task UploadFile(List<IFormFile> files) 
         {
-            var uploadResult = new UploadResult();
-            string trustedFileNameForFileStorage;
-            var untrustedFileName = file.FileName;
-            uploadResult.FileName = untrustedFileName;
-            trustedFileNameForFileStorage = movieID + ".jpg";
+            //var uploadResult = new UploadResult();
+            //string trustedFileNameForFileStorage;
+            //var untrustedFileName = file.FileName;
+            //uploadResult.FileName = untrustedFileName;
+            ////trustedFileNameForFileStorage = movieID + ".jpg";
 
-            Console.WriteLine(_env.WebRootPath);
+            //Console.WriteLine(_env.WebRootPath);
 
-            var path = Path.Combine(_env.WebRootPath, "images", trustedFileNameForFileStorage);
+            //var path = Path.Combine(_env.WebRootPath, "images", untrustedFileName);
 
-            await using FileStream fs = new(path, FileMode.Create);
-            await file.CopyToAsync(fs);
+            //await using FileStream fs = new(path, FileMode.Create);
+            //await file.CopyToAsync(fs);
+
+
+            foreach (var file in files)
+            {
+                var uploadResult = new UploadResult();
+                string trustedFileNameForFileStorage;
+                var untrustedFileName = file.FileName;
+                uploadResult.FileName = untrustedFileName;
+                //var trustedFileNameForDisplay = WebUtility.HtmlEncode(untrustedFileName);
+
+                trustedFileNameForFileStorage = Path.GetRandomFileName();
+                var path = Path.Combine(_env.ContentRootPath, "uploads", trustedFileNameForFileStorage);
+
+                await using FileStream fs = new(path, FileMode.Create);
+                await file.CopyToAsync(fs);
+            }
         }
     }
 }
