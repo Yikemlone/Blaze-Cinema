@@ -1,4 +1,4 @@
-using Cinema.DataAccess.Services.MovieService;
+using Cinema.DataAccess.Services.MovieServices;
 
 namespace Cinema.UnitTests {
     public class BookingTests
@@ -24,7 +24,7 @@ namespace Cinema.UnitTests {
                 var service = new BookingService(context);
 
                 // Act
-                var bookings = await service.GetBookingsAsync();
+                var bookings = await service.GetAllAsync();
 
                 // Assert
                 Assert.Equal(2, bookings.Count);
@@ -53,7 +53,7 @@ namespace Cinema.UnitTests {
                 var service = new BookingService(context);
 
                 // Act
-                var bookings = await service.GetCustomerBookingsAsync(1);
+                var bookings = await service.GetAsync(1);
 
                 // Assert
                 Assert.Contains(bookings, b => b.ID == 1 && b.BookingRef == "Ref1" && b.Status == "Confirmed");
@@ -88,9 +88,9 @@ namespace Cinema.UnitTests {
                 var service = new BookingService(context);
 
                 // Act
-                await service.CreateBookingAsync(BookingDTO, TicketTypeBookingDTO);
+                await service.AddAsync(BookingDTO, TicketTypeBookingDTO);
 
-                var bookings = await service.GetBookingsAsync();
+                var bookings = await service.GetAllAsync();
 
                 var tickets = await context.TicketTypesBookings
                     .Where(b => b.BookingID == bookings[0].ID)

@@ -74,7 +74,7 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpPost]
-        [Route("updateRoom")]
+        [Route("update/room")]
         public async Task UpdateRoom([FromBody] RoomDTO room)
         {
             await _unitOfWork.RoomsService.UpdateAsync(room);

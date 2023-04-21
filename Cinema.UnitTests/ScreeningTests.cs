@@ -1,5 +1,3 @@
-using Cinema.DataAccess.Services.MovieService;
-
 namespace Cinema.UnitTests {
     public class ScreeningTests
     {

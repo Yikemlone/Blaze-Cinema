@@ -60,7 +60,6 @@
 
 @code {
     private const string API_URL = "api/"; // MAKE THIS BOOKING RELATED
-    private HttpClient? _client;
 
     private bool _confirmedDetails;
     private bool _confirmedPayment;
@@ -82,7 +81,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _movieID = 1; // Need to get this legit
         _movie = await GetMovieAsync();
         _confirmedDetails = false; 
@@ -110,7 +108,7 @@
         // After I validate all the information.
         _confirmedPayment = true;
 
-        //await _client.PostAsJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats", Booking.SeatScreenings);
+        //await Http.PostAsJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats", Booking.SeatScreenings);
         await Http.PostAsJsonAsync<BookingAndSeatDTO>(API_URL + "booking/create", new BookingAndSeatDTO
             { 
             BookingDTO = Booking, 
@@ -139,11 +137,11 @@
     // Check if URL is right
     private async Task AddBookingAsync()
     {
-        await _client.PostAsJsonAsync<BookingDTO>(API_URL + "/create/", Booking);
+        await Http.PostAsJsonAsync<BookingDTO>(API_URL + "/create/", Booking);
     }
 
     private async Task<MovieDTO> GetMovieAsync()
     {
-        return await _client.GetFromJsonAsync<MovieDTO>(API_URL + "movie/movies/" + _movieID);
+        return await Http.GetFromJsonAsync<MovieDTO>(API_URL + "movie/movies/" + _movieID);
     }
 }
