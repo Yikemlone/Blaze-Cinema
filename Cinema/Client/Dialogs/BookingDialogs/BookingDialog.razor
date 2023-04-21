@@ -1,4 +1,5 @@
 ﻿@using Cinema.Shared.DTO
+@inject HttpClient Http
 @inject ISnackbar Snackbar
 @inject NavigationManager navigationManager
 
@@ -110,8 +111,8 @@
         _confirmedPayment = true;
 
         //await _client.PostAsJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats", Booking.SeatScreenings);
-        await _client.PostAsJsonAsync<BookingAndSeatDTO>(API_URL + "booking/create", new BookingAndSeatDTO 
-        { 
+        await Http.PostAsJsonAsync<BookingAndSeatDTO>(API_URL + "booking/create", new BookingAndSeatDTO
+            { 
             BookingDTO = Booking, 
             TicketTypeBookingDTO = TicketTypeBooking
         });
@@ -135,15 +136,14 @@
         MudDialog.Close(DialogResult.Cancel());
     }
 
-
-    //// Check if URL is right
-    //private async Task AddBookingAsync()
-    //{
-    //    await _client.PostAsJsonAsync<BookingDTO>(API_URL + "/create/", Booking);
-    //}
+    // Check if URL is right
+    private async Task AddBookingAsync()
+    {
+        await _client.PostAsJsonAsync<BookingDTO>(API_URL + "/create/", Booking);
+    }
 
     private async Task<MovieDTO> GetMovieAsync()
     {
-        return await _client.GetFromJsonAsync<MovieDTO>("api/movie/movies/" + _movieID);
+        return await _client.GetFromJsonAsync<MovieDTO>(API_URL + "movie/movies/" + _movieID);
     }
 }

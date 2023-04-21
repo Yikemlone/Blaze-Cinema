@@ -24,10 +24,10 @@ namespace Cinema.DataAccess.Services.UnitOfWorkServices
             _context = context;
             MovieService = new MovieService(_context);
             BookingService = new BookingService(_context);
+            //CustomerService = new CustomerService(_context);
             RoomsService = new RoomService(_context);
             ScreeningService = new ScreeningService(_context);
             SeatScreeningService = new SeatScreeningService(_context);
-            //CustomerService = new CustomerService(_context);
         }
 
         public void Dispose()
