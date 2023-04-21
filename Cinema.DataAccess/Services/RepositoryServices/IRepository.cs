@@ -2,10 +2,10 @@
 {
     public interface IRepository<T> where T : class
     {
-        void Add(T obj);
-        void Update(T obj);
-        void Delete(T obj);
-        IEnumerable<T> GetAll();
-        T Get(int id);
+        public Task AddAsync(T obj);
+        public Task UpdateAsync(T obj);
+        public Task DeleteAsync(T obj);
+        public Task<List<T>> GetAllAsync();
+        public Task<T> GetAsync(int id);
     }
 }
