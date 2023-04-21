@@ -24,6 +24,7 @@ namespace Cinema.Server.Controllers
             return await _unitOfWork.BookingService.GetAllAsync();
         }
 
+        [Authorize(Policy = "IsCustomer")]
         [HttpGet]
         [Authorize(Policy = "IsCustomer")]
         [Route("bookings/{customerID}")]
@@ -40,6 +41,7 @@ namespace Cinema.Server.Controllers
             await _unitOfWork.SaveAsync();
         }
 
+        [Authorize(Policy = "IsCustomer")]
         [HttpPost]
         [Authorize(Policy = "IsCustomer")]
         [Route("update")]
@@ -49,6 +51,7 @@ namespace Cinema.Server.Controllers
             await _unitOfWork.SaveAsync();
         }
 
+        [Authorize(Policy = "IsCustomer")]
         [HttpPost]
         [Authorize(Policy = "IsCustomer")]
         [Route("delete")]

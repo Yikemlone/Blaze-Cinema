@@ -1,37 +1,43 @@
-﻿@page "/booking/{ID}"
-@using Cinema.Client.Dialogs
+﻿@page "/booking/{ScreeningID:int}"
+@using Cinema.Client.Dialogs.BookingDialogs
 @using Cinema.Shared.DTO
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<PageTitle>Booking Page</PageTitle>
+<PageTitle>Booking</PageTitle>
 
-<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-    <MudGrid Justify="Justify.Center" Spacing="5">
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.Medium">
+
+    <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1">
+
+        <MudGrid Justify="Justify.Center" Spacing="5">
         
-        @if (_ticketTypeBookings == null) 
-        {
-            <MudItem xs="12">
-                <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats"/>
-            </MudItem>
-        }
-        else
-        { 
-            <MudItem xs="12">
-                <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_ticketTypeBookings.Count" />
-            </MudItem>
-
-            @if (_booking.SeatScreenings.Count > 0) 
+            @if (_ticketTypeBookings == null) 
             {
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="ConfirmBooking">Confirm Details</MudButton>
-            } else
-            {
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" Disabled OnClick="ConfirmBooking">Confirm Details</MudButton>
+                <MudItem xs="12">
+                    <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats"/>
+                </MudItem>
             }
-        }
+            else
+            { 
+                <MudItem xs="12">
+                    <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_ticketTypeBookings.Count" />
+                </MudItem>
+
+                @if (_booking.SeatScreenings.Count > 0) 
+                {
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="ConfirmBooking">Confirm Details</MudButton>
+                } else
+                {
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" Disabled OnClick="ConfirmBooking">Confirm Details</MudButton>
+                }
+            }
         
-    </MudGrid>
-</MudPaper>
+        </MudGrid>
+    </MudPaper>
+
+</MudContainer>
+
 
 @code {
     private const string API_URL = "/api";

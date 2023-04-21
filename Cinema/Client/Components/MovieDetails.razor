@@ -1,94 +1,117 @@
 ﻿@using Cinema.Shared.DTO
 @using System.Globalization
+@inject HttpClient Http
 @inherits ComponentBase
+
+<style>
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 */
+        height: 0;
+    }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+</style>
 
 @if (Movie != null) 
 {
-    <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudPaper Class="pa-7 ma-3" Elevation="1">
         <MudGrid Spacing="3" Justify="Justify.Center">
 
+            @*Movie Title *@
             <MudItem xs="12" sm="12" md="12">
-                <MudText Typo="Typo.h2" Align="Align.Left"><b> @Movie.Name </b></MudText>
+                <MudText Typo="Typo.h3" Align="Align.Left"><b> @Movie.Name </b></MudText>
             </MudItem>
 
+            @*Movie Image*@
             <MudItem xs="3" sm="3" md="3">
-                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="225" />
+                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Fill" Fluid=true style="height=100%" />
             </MudItem>
 
-            <MudItem xs="9" sm="9" md="9">
-                <MudTabs Elevation="2" Color="@Color.Primary" ApplyEffectsToContainer="true" Position="Position.Start">
-
-                    <MudTabPanel Text="@("Monday " + _daysOfTheWeek[0])">
-                        @foreach (var screening in Movie.Screenings)
-                        {
-                            <ScreeningTime Screening=@screening />
-                        }
-                    </MudTabPanel>
-
-                    <MudTabPanel Text="@("Tuesday " + _daysOfTheWeek[1])">
-                    </MudTabPanel>
-
-                    <MudTabPanel Text="@("Wednesday " + _daysOfTheWeek[2])">
-                    </MudTabPanel>
-
-                    <MudTabPanel Text="@("Thurday " + _daysOfTheWeek[3])">
-                    </MudTabPanel>
-
-                    <MudTabPanel Text="@("Friday " + _daysOfTheWeek[4])">
-                    </MudTabPanel>
-
-                    <MudTabPanel Text="@("Saturday " + _daysOfTheWeek[5])">
-                    </MudTabPanel>
-
-                    <MudTabPanel Text="@("Sunday " + _daysOfTheWeek[6])">
-                    </MudTabPanel>
-
-                </MudTabs>
-            </MudItem>
-
-            <MudItem xs="9" sm="9" md="1">
-                <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="75" />
-                @*<MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>*@
-            </MudItem>
-
-            <MudItem xs="9" sm="9" md="11">
-
-                <MudText Inline="false" Typo="Typo.subtitle2">Length: @Movie.Duration Minutes</MudText>
-                <MudText Inline="false" Typo="Typo.subtitle2">Release Date: @Movie.ReleaseDate.ToLongDateString()</MudText>
-            </MudItem>
-
-            <MudItem xs="9" sm="9" md="12">
-                <iframe src="https://www.youtube.com/embed/@Movie.Trailer"
-                        style="width: 100%!important;height: 500px!important;"
-                        title="YouTube video player"
+            @*Movie trailer*@
+            @*The height is not scalable, need to adjust*@
+            <MudItem xs="12" sm="12" md="9" xl="12" Class="pa-3">
+                <div class="video-container">
+                    <iframe style="padding-bottom: 109px" width="560" height="315"
+                        src="https://www.youtube.com/embed/@Movie.Trailer"
                         frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen>
-                </iframe>
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
             </MudItem>
-            
 
+            @*Movie Duration and release Date*@
+            <MudItem xs="9" sm="9" md="12">
+                <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="75" />
+                <MudText Typo="Typo.h5">Length: @Movie.Duration Minutes</MudText>
+                <MudText Typo="Typo.h5">Release Date: @Movie.ReleaseDate.ToLongDateString()</MudText>
+            </MudItem>
+
+            @*Movie Description*@
             <MudItem xs="6" sm="8" md="12">
-                <MudPaper Class="d-flex" Elevation="0" Style="overflow:auto">
-                    <MudPaper Elevation="0">
-                        <MudText Typo="Typo.h4">Description:</MudText>
-                        <MudText Typo="Typo.body1">@Movie.Description</MudText>
-                    </MudPaper>
-                </MudPaper>
+                <MudText Typo="Typo.h3">Description:</MudText>
+                <MudText Typo="Typo.body1">@Movie.Description</MudText>
             </MudItem>
 
-            
-            
+            @*Movie Screenings*@
+            @if (Movie.Screenings.Count != 0)
+            {
+                <MudItem xs="9" sm="9" md="12">
+
+                    <MudText Typo="Typo.h3">Screenings</MudText>
+
+                    <MudTabs Elevation="2" Color="@Color.Primary" ApplyEffectsToContainer="true" Position="Position.Start">
+
+                        <MudTabPanel Text="@("Monday " + _daysOfTheWeek[0])">
+                            @foreach (var screening in Movie.Screenings)
+                            {
+                                <ScreeningTime Screening=@screening />
+                            }
+                        </MudTabPanel>
+
+                        <MudTabPanel Text="@("Tuesday " + _daysOfTheWeek[1])">
+                        </MudTabPanel>
+
+                        <MudTabPanel Text="@("Wednesday " + _daysOfTheWeek[2])">
+                        </MudTabPanel>
+
+                        <MudTabPanel Text="@("Thurday " + _daysOfTheWeek[3])">
+                        </MudTabPanel>
+
+                        <MudTabPanel Text="@("Friday " + _daysOfTheWeek[4])">
+                        </MudTabPanel>
+
+                        <MudTabPanel Text="@("Saturday " + _daysOfTheWeek[5])">
+                        </MudTabPanel>
+
+                        <MudTabPanel Text="@("Sunday " + _daysOfTheWeek[6])">
+                        </MudTabPanel>
+
+                    </MudTabs>
+                </MudItem>
+            }
+            else
+            {
+                <MudItem xs="9" sm="9" md="12">
+                    <MudText Typo="Typo.h3">Screenings</MudText>
+                    <MudText Typo="Typo.h5">No Screenings yet.</MudText>
+                </MudItem>
+            }
 
         </MudGrid>
-    </MudContainer>
+    </MudPaper>
 }
 
 @code {
 
     private const string API_URL = "api/movie";
 
-    private HttpClient _client;
     public MovieDTO Movie { get; set; }
 
     private string _imageURL;
@@ -100,10 +123,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         Movie = await GetMovieAsync();
-        _imageURL = $"images/{Movie.ID}.jpg";
-        _ratingURL = $"images/IFCO_{Movie.AgeRating}.png";
+        _imageURL = $"images/movies/{Movie.ID}.jpg";
+        _ratingURL = $"images/age-rating/IFCO_{Movie.AgeRating}.png";
 
         DateTime startOfWeek = DateTime.Today.AddDays(
             (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek -
@@ -133,6 +155,6 @@
 
     public async Task<MovieDTO> GetMovieAsync()
     {
-        return await _client.GetFromJsonAsync<MovieDTO>(API_URL + $"/movies/{MovieID}");
+        return await Http.GetFromJsonAsync<MovieDTO>(API_URL + $"/movies/{MovieID}");
     }
 }

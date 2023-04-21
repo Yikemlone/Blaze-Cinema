@@ -1,35 +1,35 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-<MudStack>
 
-    <MudText Typo="Typo.h2" Align="Align.Left"><b>Select Tickets</b></MudText>
+<MudText Typo="Typo.h3" Color="Color.Primary" Class="ml-16 mb-7" Align="Align.Left"><b>Select Tickets</b></MudText>
+
+<MudStack AlignItems="AlignItems.Center">
 
     @* DISPLAY PRICE OF TICKET*@
     <MudStack Row="true" Justify="Justify.Center">
-        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddAdult"/>
-        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person"/>
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddAdult" />
+        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person" />
         <span><MudText Typo="Typo.body1" Align="Align.Center">Adult: @_adultTicket</MudText></span>
-        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractAdult"/>
+        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractAdult" />
     </MudStack>
 
     @* DISPLAY PRICE OF TICKET*@
     <MudStack Row="true" Justify="Justify.Center">
-        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddChild"/>
-        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning"/>
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddChild" />
+        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning" />
         <span><MudText Typo="Typo.body1" Align="Align.End">Child: @_childTicket</MudText></span>
-        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractChild"/>
+        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractChild" />
     </MudStack>
 
-    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="SelectedTickets">Save Tickets</MudButton>
-    
-    @if (!_valid) 
+    @if (!_valid)
     {
         <span style="color: red">@_errorMessage</span>
     }
 
-</MudStack>
+    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" OnClick="SelectedTickets" Style="margin: auto">Save Tickets</MudButton>
 
+</MudStack>
 
 @code{
     private List<TicketTypeBookingDTO> _tickTypeBookings = new List<TicketTypeBookingDTO>();
@@ -40,7 +40,7 @@
 
     [Parameter] public EventCallback<List<TicketTypeBookingDTO>> OnSelectedTikcets { get; set; }
     [Parameter] public List<SeatScreeningDTO> Seats { get; set; }
-    [Parameter] public List<TicketTypeDTO> TicketTypes { get; set; } // Do I even need this here?
+    [Parameter] public List<TicketTypeDTO> TicketTypes { get; set; }
     [Parameter] public int Availabletickets { get; set; }
 
     public async Task SelectedTickets() 
@@ -101,6 +101,7 @@
     public void SubtractAdult() 
     {
         _adultTicket--;
+
         if (_adultTicket < 0) 
         {
             _adultTicket = 0;
@@ -109,14 +110,13 @@
 
     public void AddChild()
     {
-        // Should validate that they can not add more seats in the room
-        // should also make sure if they are free seats.
         _childTicket++;
     }
 
     public void SubtractChild()
     {
         _childTicket--;
+
         if (_childTicket < 0)
         {
             _childTicket = 0;

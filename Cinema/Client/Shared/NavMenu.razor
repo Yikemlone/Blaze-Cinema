@@ -1,6 +1,16 @@
-﻿<MudNavMenu Class="d-flex justify-space-around"> 
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home"></MudNavLink>
-    <MudNavLink Href="admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Dashboard"></MudNavLink>
-    <MudNavLink Href="manager" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Dashboard"></MudNavLink>
-    <MudNavLink Href="login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person"></MudNavLink>
+﻿<MudNavMenu Bordered=true Color="Color.Dark">
+
+    <MudStack Row=true Spacing="4">
+        <MudButton Href="/">Home</MudButton>
+
+        <AuthorizeView Policy="IsAdmin">
+            <MudButton Href="admin">Admin Dashboard</MudButton>
+        </AuthorizeView>
+
+        <AuthorizeView Policy="IsManager">
+            <MudButton Href="manager">Manager Dashboard</MudButton>
+        </AuthorizeView>
+
+    </MudStack>
+
 </MudNavMenu>
