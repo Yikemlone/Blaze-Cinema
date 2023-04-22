@@ -10,7 +10,6 @@
           Breakpoint="Breakpoint.Sm"
           @ref="_mudTable"
           @bind-SelectedItem="_selected"
-          RowClassFunc="@SelectedRowClassFunc"
           OnRowClick="RowClickEvent"
           Hover="true"
           Dense="true"
@@ -38,7 +37,7 @@
             </MudTh>
             <MudTh>
                 <MudTableSortLabel SortLabel="decom" T="RoomDTO">
-                    State
+                    Decommission State
                 </MudTableSortLabel>
             </MudTh>
         </HeaderContent>
@@ -74,9 +73,9 @@ else
 {
     <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
 }
-}
 
 @code {
+	private const string API_URL = "/api/manager/rooms";
     //private List<RoomDTO> _rooms;
 
     private string _searchString;
@@ -137,7 +136,7 @@ else
 
 	public async Task<List<RoomDTO>> GetRoomsAsync()
 	{
-		return await Http.GetFromJsonAsync<List<RoomDTO>>("/api/manager/rooms");
+		return await Http.GetFromJsonAsync<List<RoomDTO>>(API_URL);
 	}
 
 }
