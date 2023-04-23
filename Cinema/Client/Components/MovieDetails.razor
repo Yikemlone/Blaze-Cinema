@@ -66,7 +66,6 @@
                 </iframe>
             </MudItem>
             
-
             <MudItem xs="6" sm="8" md="12">
                 <MudPaper Class="d-flex" Elevation="0" Style="overflow:auto">
                     <MudPaper Elevation="0">
@@ -83,10 +82,8 @@
 @code {
 
     private const string API_URL = "api/movie";
-
     private HttpClient _client;
     public MovieDTO Movie { get; set; }
-
     string[] _daysOfTheWeek;
     private string _link;
 
