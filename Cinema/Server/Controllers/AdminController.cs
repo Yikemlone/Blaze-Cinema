@@ -23,16 +23,10 @@ namespace Cinema.Server.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task CreateMovie([FromBody] MovieDTO movie)
+        public async Task<ActionResult<int>> CreateMovie([FromBody] MovieDTO movie)
         {
             var movieID = await _unitOfWork.AdminService.CreateMovieAsync(movie);
-
-            // Use that ID to rename the file, then try and save it to the public folder
-            
-
-            //uploadResult.StoredFileName = trustedFileNameForFileStorage;
-            //uploadResult.ContentType = file.ContentType;
-            //uploadResults.Add(uploadResult);
+            return Ok(movieID);
         }
 
         [HttpPost]
@@ -55,28 +49,9 @@ namespace Cinema.Server.Controllers
         [Route("file/create")]
         public async Task UploadFile(List<IFormFile> files) 
         {
-            //var uploadResult = new UploadResult();
-            //string trustedFileNameForFileStorage;
-            //var untrustedFileName = file.FileName;
-            //uploadResult.FileName = untrustedFileName;
-            ////trustedFileNameForFileStorage = movieID + ".jpg";
-
-            //Console.WriteLine(_env.WebRootPath);
-
-            //var path = Path.Combine(_env.WebRootPath, "images", untrustedFileName);
-
-            //await using FileStream fs = new(path, FileMode.Create);
-            //await file.CopyToAsync(fs);
-
-
-
             foreach (var file in files)
             {
-                var uploadResult = new UploadResult();
-                string trustedFileNameForFileStorage;
-                var untrustedFileName = file.FileName + ".jpg";
-                var path = Path.Combine(_env.ContentRootPath, "images", untrustedFileName);
-
+                var path = Path.Combine(_env.ContentRootPath, "images", file.FileName);
                 await using FileStream fs = new(path, FileMode.Create);
                 await file.CopyToAsync(fs);
             }

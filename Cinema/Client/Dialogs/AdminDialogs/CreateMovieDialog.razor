@@ -34,8 +34,8 @@
                 </MudStack>
 
                 <MudStack Row="true" Justify="Justify.Center">
-@*
-                    <MudFileUpload T="InputFileChangeEventArgs" OnChange="@OnInputFileChange" Required RequiredError="You must upload an Image">
+
+   @*                 <MudFileUpload T="InputFileChangeEventArgs" FilesChanged="OnInputFileChange" Required RequiredError="You must upload an Image">
                         <ButtonTemplate>
                             <MudFab HtmlTag="label"
                                     Color="Color.Secondary"
@@ -74,7 +74,8 @@
     private string[] _errors = { };
     private MudTextField<int>? _duration;
     private long _maxFileSize = long.MaxValue;
-    private MultipartFormDataContent _content;
+    private MultipartFormDataContent? _content;
+    private StreamContent? _fileContent;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
@@ -98,8 +99,8 @@
 
     private async Task Close()
     {
-        //_form?.Validate();
-       // if (_errors.Length != 0) return;
+        _form?.Validate();
+        if (_errors.Length != 0) return;
 
         await AddMovieAsync();
 
@@ -122,27 +123,29 @@
 
     private async Task AddMovieAsync()
     {
-        var movieID = await Http.PostAsJsonAsync<MovieDTO>(API_URL + "admin/create/", _movie);
-        //await Http.PostAsync(API_URL + "admin/file/create", _content);
+        var response = await Http.PostAsJsonAsync<MovieDTO>(API_URL + "admin/create/", _movie);
+        var movieID = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(movieID);
+
+        _content.Add(
+            content: _fileContent,
+            name: "\"files\"",
+            fileName: movieID + ".jpg"
+        );
+
+        await Http.PostAsync("/api/admin/File/create", _content);
 
         await MudTable.ReloadServerData();
     }
 
-    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    private void OnInputFileChange(InputFileChangeEventArgs e)
     {
-        using var content = new MultipartFormDataContent();
+        _content = new MultipartFormDataContent();
 
         foreach (var file in e.GetMultipleFiles(1))
         {
-            var fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-
-            content.Add(
-                content: fileContent,
-                name: "\"files\"",
-                fileName: "2");
+            _fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
+            _fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
         }
-
-        var response = await Http.PostAsync("/api/admin/File/create", content);
     }
 }
