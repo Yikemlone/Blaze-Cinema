@@ -1,41 +1,47 @@
 ﻿@page "/booking/{ID}"
-@using Cinema.Client.Dialogs
+@using Cinema.Client.Dialogs.BookingDialogs
 @using Cinema.Shared.DTO
+@inject HttpClient Http
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<PageTitle>Booking Page</PageTitle>
+<PageTitle>Booking</PageTitle>
 
-<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-    <MudGrid Justify="Justify.Center" Spacing="5">
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.Medium">
+
+    <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1">
+
+        <MudGrid Justify="Justify.Center" Spacing="5">
         
-        @if (_ticketTypeBookings == null) 
-        {
-            <MudItem xs="12">
-                <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats"/>
-            </MudItem>
-        }
-        else
-        { 
-            <MudItem xs="12">
-                <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_ticketTypeBookings.Count" />
-            </MudItem>
-
-            @if (_booking.SeatScreenings.Count > 0) 
+            @if (_ticketTypeBookings == null) 
             {
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="ConfirmBooking">Confirm Details</MudButton>
-            } else
-            {
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" Disabled OnClick="ConfirmBooking">Confirm Details</MudButton>
+                <MudItem xs="12">
+                    <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats"/>
+                </MudItem>
             }
-        }
+            else
+            { 
+                <MudItem xs="12">
+                    <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_ticketTypeBookings.Count" />
+                </MudItem>
+
+                @if (_booking.SeatScreenings.Count > 0) 
+                {
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="ConfirmBooking">Confirm Details</MudButton>
+                } else
+                {
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" Disabled OnClick="ConfirmBooking">Confirm Details</MudButton>
+                }
+            }
         
-    </MudGrid>
-</MudPaper>
+        </MudGrid>
+    </MudPaper>
+
+</MudContainer>
+
 
 @code {
-    private const string API_URL = "/api/";
-    private HttpClient? _client;
+    private const string API_URL = "/api";
     private BookingDTO _booking;
     private ScreeningDTO _screening = new ScreeningDTO(); // FIX THIS
     private List<TicketTypeBookingDTO> _ticketTypeBookings;
@@ -46,9 +52,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _booking = new BookingDTO();
-
         _booking.Status = "Pending";
         _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Remove(0, 2);
         
@@ -85,7 +89,7 @@
 
     public async Task<List<SeatScreeningDTO>> GetSeatScreenings() 
     {
-        return await _client.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "movie/seats/" + ID);
+        return await Http.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats/" + ID);
     }
 
 }

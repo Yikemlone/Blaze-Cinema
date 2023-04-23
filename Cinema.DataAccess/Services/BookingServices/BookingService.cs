@@ -14,8 +14,7 @@ namespace Cinema.DataAccess.Services.BookingServices
             _context = context;
         }
         
-        // GET
-        public async Task<List<BookingDTO>> GetBookingsAsync()
+        public async Task<List<BookingDTO>> GetAllAsync()
         {
             var bookings = await _context.Bookings
                 .Select(b => new BookingDTO()
@@ -29,7 +28,7 @@ namespace Cinema.DataAccess.Services.BookingServices
             return bookings;
         }
 
-        public async Task<List<BookingDTO>> GetCustomerBookingsAsync(int customerID)
+        public async Task<List<BookingDTO>> GetAsync(int customerID)
         {
             var bookings = await _context.Bookings
                 .Where(b => b.CustomerID == customerID)
@@ -44,11 +43,8 @@ namespace Cinema.DataAccess.Services.BookingServices
             return bookings;
         }
 
-
-        // CREATE
-        public async Task CreateBookingAsync(BookingDTO booking, List<TicketTypeBookingDTO> ticketTypeBookings)
+        public async Task AddAsync(BookingDTO booking, List<TicketTypeBookingDTO> ticketTypeBookings)
         {
-            // Create Booking
             var newBooking = new Booking()
             {
                 BookingRef = booking.BookingRef,
@@ -91,8 +87,7 @@ namespace Cinema.DataAccess.Services.BookingServices
             await _context.AddRangeAsync(tickets);
         }
 
-        // UPDATE
-        public async Task UpdateBookingAsync(BookingDTO booking, List<TicketTypeBookingDTO> ticketTypeBookings)
+        public async Task UpdateAsync(BookingDTO booking, List<TicketTypeBookingDTO> ticketTypeBookings)
         {
             var oldBooking = await _context.Bookings
                 .Where(b => b.ID == booking.ID)
@@ -116,8 +111,7 @@ namespace Cinema.DataAccess.Services.BookingServices
             }
         }
 
-        // DELETE
-        public async Task DeleteBookingAsync(int bookingID)
+        public async Task DeleteAsync(int bookingID)
         {
             var bookingToRemove = await _context.Bookings
                 .Where(b => b.ID == bookingID)
@@ -139,6 +133,5 @@ namespace Cinema.DataAccess.Services.BookingServices
             // THIS NEEDS TO BE TESTED
             _context.Remove(bookingToRemove);
         }
-
     }
 }

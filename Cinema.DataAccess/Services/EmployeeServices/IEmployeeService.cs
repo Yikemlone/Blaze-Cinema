@@ -1,11 +1,9 @@
-﻿using Cinema.Shared.DTO;
+﻿using Cinema.DataAccess.Services.RepositoryServices;
+using Cinema.Shared.DTO;
 
 namespace Cinema.DataAccess.Services.EmployeeServices
 {
-    public interface IEmployeeService 
+    public interface IEmployeeService : IRepository<EmployeeDTO>
     {
-        // Employees
-        public Task<List<EmployeeDTO>> GetEmployeesAsync();
-        public Task<EmployeeDTO> GetEmployeeAsync(int empolyeeID);
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Cinema.DataAccess.Services.UnitOfWorkServices;
 using Cinema.Shared.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
 {
+    [Authorize(Policy = "IsManager")]
     [ApiController]
     [Route("/api/[controller]")]
     public class ManagerController
@@ -18,9 +20,9 @@ namespace Cinema.Server.Controllers
         // Screenings
         [HttpPost]
         [Route("create")]
-        public async Task CreateMovieScreening([FromBody] ScreeningDTO screening)
+        public async Task CreateScreening([FromBody] ScreeningDTO screening)
         {
-            await _unitOfWork.ManagerService.CreateMovieScreeningAsync(screening);
+            await _unitOfWork.ScreeningService.AddAsync(screening);
             await _unitOfWork.SaveAsync();
         }
 
@@ -28,34 +30,32 @@ namespace Cinema.Server.Controllers
         [Route("update")]
         public async Task UpdateScreening([FromBody] ScreeningDTO screening)
         {
-            await _unitOfWork.ManagerService.UpdateMovieScreeningAsync(screening);
+            await _unitOfWork.ScreeningService.UpdateAsync(screening);
             await _unitOfWork.SaveAsync();
         }
 
         [HttpPost]
-        [Route("delete/{screeningID}")]
-        public async Task DeleteMovieScreening(int screeningID)
+        [Route("delete")]
+        public async Task DeleteScreening([FromBody] ScreeningDTO Screeningscreening)
         {
-            await _unitOfWork.ManagerService.DeleteMovieScreeningAsync(screeningID);
+            await _unitOfWork.ScreeningService.DeleteAsync(Screeningscreening);
             await _unitOfWork.SaveAsync();
         }
 
-
         // Employees
-        [HttpGet]
-        [Route("employees")]
-        public async Task<List<EmployeeDTO>> GetEmployees()
-        {
+        //[HttpGet]
+        //[Route("employees")]
+        //public async Task<List<EmployeeDTO>> GetEmployees()
+        //{
+        //    return await _unitOfWork.ManagerService.GetEmployeesAsync();
+        //}
 
-            return await _unitOfWork.ManagerService.GetEmployeesAsync();
-        }
-
-        [HttpGet]
-        [Route("employees/{employeeID}")]
-        public async Task<EmployeeDTO> GetEmployee(int employeeID)
-        {
-            return await _unitOfWork.ManagerService.GetEmployeeAsync(employeeID);
-        }
+        //[HttpGet]
+        //[Route("employees/{employeeID}")]
+        //public async Task<EmployeeDTO> GetEmployee(int employeeID)
+        //{
+        //    return await _unitOfWork.ManagerService.GetEmployeeAsync(employeeID);
+        //}
 
 
         // Rooms
@@ -63,21 +63,21 @@ namespace Cinema.Server.Controllers
         [Route("rooms/{roomID}")]
         public async Task<RoomDTO> GetRoom(int roomID)
         {
-            return await _unitOfWork.ManagerService.GetRoomAsync(roomID);
+            return await _unitOfWork.RoomsService.GetAsync(roomID);
         }
 
         [HttpGet]
         [Route("rooms")]
         public async Task<List<RoomDTO>> GetRooms()
         {
-            return await _unitOfWork.ManagerService.GetRoomsAsync();
+            return await _unitOfWork.RoomsService.GetAllAsync();
         }
 
         [HttpPost]
-        [Route("updateRoom")]
+        [Route("update/room")]
         public async Task UpdateRoom([FromBody] RoomDTO room)
         {
-            await _unitOfWork.ManagerService.UpdateRoomAsync(room);
+            await _unitOfWork.RoomsService.UpdateAsync(room);
             await _unitOfWork.SaveAsync();
         }
     }

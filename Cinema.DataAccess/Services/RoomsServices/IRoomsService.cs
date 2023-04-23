@@ -9,8 +9,8 @@ namespace Cinema.DataAccess.Services.RoomsServices
 {
     public interface IRoomsService
     {
-        public Task<List<RoomDTO>> GetRoomsAsync();
-        public Task<RoomDTO> GetRoomAsync(int roomID);
-        public Task UpdateRoomAsync(RoomDTO roomDTO);
+        public Task<List<RoomDTO>> GetAllAsync();
+        public Task<RoomDTO> GetAsync(int roomID);
+        public Task UpdateAsync(RoomDTO roomDTO);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Cinema.DataAccess.Context;
+using Cinema.DataAccess.Services.RepositoryServices;
 using Cinema.Models.Models;
 using Cinema.Shared.DTO;
 
@@ -14,7 +15,7 @@ namespace Cinema.DataAccess.Services.MovieServices
         }
 
         // Movies
-        public async Task<MovieDTO> GetMovieAsync(int movieID)
+        public async Task<MovieDTO> GetAsync(int movieID)
         {
             var movie = _context.Movies
                  .Where(m => m.ID == movieID)
@@ -45,7 +46,7 @@ namespace Cinema.DataAccess.Services.MovieServices
             return movie;
         }
 
-        public async Task<List<MovieDTO>> GetMoviesAsync()
+        public async Task<List<MovieDTO>> GetAllAsync()
         {
             var movies = _context.Movies
                 .Select(m => new MovieDTO() 
@@ -76,98 +77,7 @@ namespace Cinema.DataAccess.Services.MovieServices
             return movies;
         }
 
-
-        // Screenings
-
-
-
-        // SeatScreenings
-        public async Task<List<SeatScreeningDTO>> GetSeatsScreeningAsync(int screeningID)
-        {
-            var seatScreenings = _context.SeatScreenings
-                .Where(sc => sc.ScreeningID == screeningID)
-                .Select(sc => new SeatScreeningDTO()
-                {
-                    ID = sc.ID,
-                    Booked = sc.Booked,
-                    Seat = (_context.Seats
-                        .Where(s => s.ID == sc.SeatID)
-                        .Select(s => new SeatDTO 
-                        {
-                            ID = s.ID,
-                            SeatNumber = s.SeatNumber,
-                            RoomID = s.RoomID,
-                            DisabiltySeat = s.DisabiltySeat,
-                        })
-                        .FirstOrDefault()
-                    ),
-                    BookingID = sc.BookingID,
-                    ScreeningID = sc.ScreeningID
-                })
-                .ToList();
-
-           return seatScreenings;
-        }
-
-        public async Task<SeatScreeningDTO> GetSeatScreeningAsync(int seatScreeningID)
-        {
-            var SeatScreening = _context.SeatScreenings
-                .Where(sc => sc.ID == seatScreeningID)
-                .Select(sc => new SeatScreeningDTO()
-                {
-                    ID = sc.ID,
-                    Booked = sc.Booked,
-                    Seat = (_context.Seats
-                        .Where(s => s.ID == sc.SeatID)
-                        .Select(s => new SeatDTO
-                        {
-                            ID = s.ID,
-                            SeatNumber = s.SeatNumber,
-                            RoomID = s.RoomID,
-                            DisabiltySeat = s.DisabiltySeat,
-                        })
-                        .FirstOrDefault()
-                    ),
-                    BookingID = sc.BookingID,
-                    ScreeningID = sc.ScreeningID
-                })
-                .SingleOrDefault();
-
-            return SeatScreening;
-        }
-
-        public async Task UpdateSeatScreeningAsync(SeatScreeningDTO seatScreening)
-        {
-            var oldSeatScreening = _context.SeatScreenings
-                .Where(sc => sc.ID == seatScreening.ID)
-                .Select(s => s)
-                .SingleOrDefault();
-
-            if (oldSeatScreening == null) return;
-            oldSeatScreening.Booked = seatScreening.Booked;
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateSeatsScreeningAsync(List<SeatScreeningDTO> seatsScreening)
-        {
-            foreach (var seatScreening in seatsScreening)
-            {
-                var oldSeatScreening = _context.SeatScreenings
-                    .Where(sc => sc.ID == seatScreening.ID)
-                    .Select(s => s)
-                    .SingleOrDefault();
-
-                if (oldSeatScreening == null) return;
-                oldSeatScreening.Booked = seatScreening.Booked;
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-
-        // ADMIN METHODS
-        public async Task CreateMovieAsync(MovieDTO movie)
+        public async Task AddAsync(MovieDTO movie)
         {
             var newMovie = new Movie()
             {
@@ -182,7 +92,7 @@ namespace Cinema.DataAccess.Services.MovieServices
             await _context.AddAsync(newMovie);
         }
 
-        public async Task UpdateMovieAsync(MovieDTO movie)
+        public async Task UpdateAsync(MovieDTO movie)
         {
             var oldMovie = _context.Movies
                  .Select(m => m)
@@ -199,14 +109,14 @@ namespace Cinema.DataAccess.Services.MovieServices
             oldMovie.Trailer = movie.Trailer;
         }
 
-        public async Task DeleteMovieAsync(int movieID)
+        public async Task DeleteAsync(MovieDTO movie)
         {
-            var movie = _context.Movies
-               .FirstOrDefault(x => x.ID == movieID);
+            var movieToDelete = _context.Movies
+               .FirstOrDefault(x => x.ID == movie.ID);
 
-            if (movie == null) return;
+            if (movieToDelete == null) return;
 
-            _context.Movies.Remove(movie);
+            _context.Movies.Remove(movieToDelete);
         }
     }
 }

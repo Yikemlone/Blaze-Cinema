@@ -1,4 +1,5 @@
 ﻿@using Cinema.Shared.DTO
+@inject HttpClient Http
 @inject ISnackbar Snackbar
 
 <MudDialog>
@@ -13,17 +14,11 @@
 
 
 @code {
-    private const string API_URL = "api/manager/";
-    private HttpClient? _client;
+    private const string API_URL = "api/manager";
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public RoomDTO Room { get; set; }
     [Parameter] public MudTable<RoomDTO> MudTable { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-    }
 
     public async Task Close()
     {

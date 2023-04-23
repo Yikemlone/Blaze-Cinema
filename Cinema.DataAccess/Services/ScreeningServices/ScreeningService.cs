@@ -14,7 +14,7 @@ namespace Cinema.DataAccess.Services.ScreeningServices
             _context = context;
         }
 
-        public async Task<List<ScreeningDTO>> GetScreeningsAsync()
+        public async Task<List<ScreeningDTO>> GetAllAsync()
         {
             var Screenings = _context.Screenings
                 .Select(m => new ScreeningDTO()
@@ -29,7 +29,7 @@ namespace Cinema.DataAccess.Services.ScreeningServices
             return Screenings;
         }
 
-        public async Task<ScreeningDTO> GetMovieScreeningAsync(int screeningID)
+        public async Task<ScreeningDTO> GetAsync(int screeningID)
         {
             var Screening = _context.Screenings
                 .Where(m => m.ID == screeningID)
@@ -46,7 +46,7 @@ namespace Cinema.DataAccess.Services.ScreeningServices
             return Screening;
         }
 
-        public async Task CreateMovieScreeningAsync(ScreeningDTO screening)
+        public async Task AddAsync(ScreeningDTO screening)
         {
             var newScreening = new Screening()
             {
@@ -78,7 +78,7 @@ namespace Cinema.DataAccess.Services.ScreeningServices
             await _context.AddRangeAsync(screeningSeats);
         }
 
-        public async Task UpdateMovieScreeningAsync(ScreeningDTO screening)
+        public async Task UpdateAsync(ScreeningDTO screening)
         {
             var oldScreening = await _context.Screenings
                 .Where(m => m.ID == screening.ID)
@@ -116,21 +116,21 @@ namespace Cinema.DataAccess.Services.ScreeningServices
             _context.SeatScreenings.RemoveRange(oldScreeningsSeats);
         }
 
-        public async Task DeleteMovieScreeningAsync(int screeningID)
+        public async Task DeleteAsync(ScreeningDTO screening)
         {
-            var screening = await _context.Screenings
-                .Where(m => m.ID == screeningID)
+            var screeningToDelete = await _context.Screenings
+                .Where(m => m.ID == screening.ID)
                 .Select(s => s)
             .FirstOrDefaultAsync();
 
             if (screening == null) return;
 
             var seatScreenings = await _context.SeatScreenings
-                .Where(s => s.ScreeningID == screening.ID)
+                .Where(s => s.ScreeningID == screeningToDelete.ID)
             .Select(s => s)
             .ToListAsync();
 
-            _context.Screenings.Remove(screening);
+            _context.Screenings.Remove(screeningToDelete);
             _context.SeatScreenings.RemoveRange(seatScreenings);
         }
     }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.DataAccess.Services.EmployeeServices
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeeService
     {
         private readonly CinemaDBContext _context;
 
@@ -13,8 +13,6 @@ namespace Cinema.DataAccess.Services.EmployeeServices
         {
             _context = context;
         }
-
-
 
         // Employees
         public async Task<List<EmployeeDTO>> GetEmployeesAsync()
@@ -52,48 +50,6 @@ namespace Cinema.DataAccess.Services.EmployeeServices
             if (employee == null) return new EmployeeDTO();
 
             return employee;
-        }
-
-
-        // Rooms
-        public async Task<RoomDTO> GetRoomAsync(int roomID)
-        {
-            var room = await _context.Rooms
-                 .Where(m => m.ID == roomID)
-                 .Select(m => new RoomDTO()
-                 {
-                     ID = m.ID,
-                     Decom = m.Decom,
-                 })
-                 .FirstOrDefaultAsync();
-
-            if (room == null) return new RoomDTO();
-
-            return room;
-        }
-
-        public async Task<List<RoomDTO>> GetRoomsAsync()
-        {
-            var rooms = await _context.Rooms
-              .Select(m => new RoomDTO()
-              {
-                  ID = m.ID,
-                  Decom = m.Decom,
-              })
-              .ToListAsync();
-
-            return rooms;
-        }
-        
-        public async Task UpdateRoomAsync(RoomDTO roomDTO)
-        {
-            var oldRoom = await _context.Rooms
-               .Select(m => m)
-               .Where(m => m.ID == roomDTO.ID)
-               .FirstOrDefaultAsync();
-
-            if (oldRoom == null) return;
-            oldRoom.Decom = roomDTO.Decom;
         }
     }
 }
