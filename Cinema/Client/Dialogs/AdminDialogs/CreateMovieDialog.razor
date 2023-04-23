@@ -135,17 +135,6 @@
         await MudTable.ReloadServerData();
     }
 
-    private void OnInputFileChange(InputFileChangeEventArgs e)
-    {
-        _content = new MultipartFormDataContent();
-
-        foreach (var file in e.GetMultipleFiles(1))
-        {
-            _fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
-            _fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-        }
-    }
-
     private void UploadFiles(IBrowserFile file)
     {
         _file = file;
