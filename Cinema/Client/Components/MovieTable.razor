@@ -241,7 +241,12 @@ else
         var parameters = new DialogParameters();
         parameters.Add("MovieID", imageID);
 
-        DialogService.Show<MovieImageDialog>("Movie Image", parameters, _dialogOptions);
+        DialogService.Show<MovieImageDialog>("Movie Image", parameters, new DialogOptions()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium,
+            DisableBackdropClick = true
+        });
     }
 
     // Server Reload Data
