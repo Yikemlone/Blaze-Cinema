@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Cinema.Shared
+﻿namespace Cinema.Shared
 {
     public class UserInfo
     {

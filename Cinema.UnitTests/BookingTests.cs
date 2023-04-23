@@ -1,5 +1,3 @@
-using Cinema.DataAccess.Services.MovieServices;
-
 namespace Cinema.UnitTests {
     public class BookingTests
     {
