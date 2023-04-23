@@ -1,4 +1,5 @@
 ﻿using Cinema.DataAccess.Services.UnitOfWorkServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
@@ -9,12 +10,13 @@ namespace Cinema.Server.Controllers
     {
         private readonly IWebHostEnvironment _env;
 
-        public FileController(IUnitOfWork unitOfWork, IWebHostEnvironment env)
+        public FileController(IWebHostEnvironment env)
         {
             _env = env;
         }
 
         [HttpPost]
+        [Authorize(Policy = ("IsAdmin"))]
         [Route("create")]
         public async Task UploadFile(List<IFormFile> files)
         {

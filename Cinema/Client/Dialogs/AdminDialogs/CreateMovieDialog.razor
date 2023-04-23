@@ -35,7 +35,7 @@
 
                 <MudStack Row="true" Justify="Justify.Center">
 
-                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Required RequiredError="You must upload an Image">
+                    <MudFileUpload T="IBrowserFile" FilesChanged="FilesChanged" Required RequiredError="You must upload an Image">
                         <ButtonTemplate>
                             <MudFab HtmlTag="label"
                                     Color="Color.Secondary"
@@ -67,15 +67,13 @@
     private const string API_URL = "api/";
     private MovieDTO? _movie;
     private MudForm? _form;
-    private UploadResult _uploadResult;
     private IBrowserFile _file;
     private DateTime? _releaseDate;
     private string[] _errors = { };
     private MudTextField<int>? _duration;
-    private long _maxFileSize = long.MaxValue;
+    private long _maxFileSize = 1024 * 1000;
     private MultipartFormDataContent? _content;
     private StreamContent? _fileContent;
-    IList<IBrowserFile> files = new List<IBrowserFile>();
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
@@ -84,7 +82,6 @@
     {
         _movie = new MovieDTO();
         _form = new MudForm();
-        _uploadResult = new();
     }
 
     private IEnumerable<string> DurationLength(int duration)
@@ -99,6 +96,11 @@
     {
         _form?.Validate();
         if (_errors.Length != 0) return;
+
+        if (_releaseDate != null)
+        {
+            _movie.ReleaseDate = (DateTime) _releaseDate;
+        }
 
         await AddMovieAsync();
 
@@ -121,7 +123,7 @@
 
     private async Task AddMovieAsync()
     {
-        var response = await Http.PostAsJsonAsync<MovieDTO>(API_URL + "admin/create/", _movie);
+        var response = await Http.PostAsJsonAsync<MovieDTO>(API_URL + "movie/create", _movie);
         var movieID = await response.Content.ReadAsStringAsync();
 
         _content.Add(
@@ -135,12 +137,14 @@
         await MudTable.ReloadServerData();
     }
 
-    private void UploadFiles(IBrowserFile file)
+    private void FilesChanged(IBrowserFile file)
     {
+        // Do validations here for file size and type
+
         _file = file;
         _content = new MultipartFormDataContent();
 
-        _fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
+        _fileContent = new StreamContent(file.OpenReadStream(_maxFileSize));
         _fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
     }
 }

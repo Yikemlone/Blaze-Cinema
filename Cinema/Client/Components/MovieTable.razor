@@ -87,6 +87,7 @@
 
             <MudTh>Trailer</MudTh>
             <MudTh>Description</MudTh>
+            <MudTh>Image</MudTh>
         </HeaderContent>
 
         <RowTemplate>
@@ -101,6 +102,9 @@
             <MudTd DataLabel="Trailer">@context.Trailer</MudTd>
             <MudTd DataLabel="Description">
                 <MudButton Variant="Variant.Outlined" Color="Color.Secondary" @onclick="@(() => OpenDescriptonDialog(@context.Description))">View Description</MudButton>
+            </MudTd>
+            <MudTd DataLabel="Description">
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" @onclick="@(() => OpenImageDialog(@context.ID.ToString()))">View Image</MudButton>
             </MudTd>
         </RowTemplate>
 
@@ -232,6 +236,13 @@ else
         DialogService.Show<DescriptionDialog>("Movie Description", parameters, _dialogOptions);
     }
 
+    private void OpenImageDialog(string imageID) 
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("MovieID", imageID);
+
+        DialogService.Show<MovieImageDialog>("Movie Image", parameters, _dialogOptions);
+    }
 
     // Server Reload Data
     protected async Task<TableData<MovieDTO>> ServerReload(TableState state)

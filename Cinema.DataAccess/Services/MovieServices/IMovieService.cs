@@ -4,14 +4,14 @@ using Cinema.Shared.DTO;
 
 namespace Cinema.DataAccess.Services.MovieServices
 {
-    public interface IMovieService : IRepository<MovieDTO>
+    public interface IMovieService 
     {
-        //public Task<List<MovieDTO>> GetMoviesAsync();
-        //public Task<MovieDTO> GetMovieAsync(int movieID);
+        public Task<List<MovieDTO>> GetAllAsync();
+        public Task<MovieDTO> GetAsync(int movieID);
 
-        //// ADMIN METHODS
-        //public Task CreateMovieAsync(MovieDTO movie);
-        //public Task UpdateMovieAsync(MovieDTO movieID);
-        //public Task DeleteMovieAsync(int movieID);
+        // ADMIN METHODS
+        public Task<int> AddAsync(MovieDTO movie);
+        public Task UpdateAsync(MovieDTO movieID);
+        public Task DeleteAsync(MovieDTO movieID);
     }
 }

@@ -85,10 +85,11 @@ namespace Cinema.Server.Controllers
         [HttpPost]
         [Authorize(Policy=("IsAdmin"))]
         [Route("create")]
-        public async Task CreateMovie([FromBody] MovieDTO movie)
+        public async Task<int> CreateMovie([FromBody] MovieDTO movie)
         {
-            await _unitOfWork.MovieService.AddAsync(movie);
+            var movieID = await _unitOfWork.MovieService.AddAsync(movie);
             await _unitOfWork.SaveAsync();
+            return movieID;
         }
 
         [HttpPost]

@@ -81,6 +81,7 @@
         {
             Movie.ReleaseDate = (DateTime) _releaseDate;
         }
+
         await Http.PostAsJsonAsync<MovieDTO>(API_URL + "/update", Movie);
         await MudTable.ReloadServerData();
     }

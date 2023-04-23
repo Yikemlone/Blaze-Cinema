@@ -2,6 +2,7 @@
 using Cinema.DataAccess.Services.RepositoryServices;
 using Cinema.Models.Models;
 using Cinema.Shared.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.DataAccess.Services.MovieServices
 {
@@ -17,7 +18,7 @@ namespace Cinema.DataAccess.Services.MovieServices
         // Movies
         public async Task<MovieDTO> GetAsync(int movieID)
         {
-            var movie = _context.Movies
+            var movie = await _context.Movies
                  .Where(m => m.ID == movieID)
                  .Select(m => new MovieDTO()
                  {
@@ -41,14 +42,14 @@ namespace Cinema.DataAccess.Services.MovieServices
                             .ToList()
                     ),
 				 })
-                 .SingleOrDefault();
+                 .FirstOrDefaultAsync();
             
             return movie;
         }
 
         public async Task<List<MovieDTO>> GetAllAsync()
         {
-            var movies = _context.Movies
+            var movies = await _context.Movies
                 .Select(m => new MovieDTO() 
                 {
                     ID = m.ID,
@@ -72,12 +73,12 @@ namespace Cinema.DataAccess.Services.MovieServices
                     ),
                     
 				})
-                .ToList();
+                .ToListAsync();
 
             return movies;
         }
 
-        public async Task AddAsync(MovieDTO movie)
+        public async Task<int> AddAsync(MovieDTO movie)
         {
             var newMovie = new Movie()
             {
@@ -90,14 +91,17 @@ namespace Cinema.DataAccess.Services.MovieServices
             };
 
             await _context.AddAsync(newMovie);
+            await _context.SaveChangesAsync();
+
+            return newMovie.ID;
         }
 
         public async Task UpdateAsync(MovieDTO movie)
         {
-            var oldMovie = _context.Movies
+            var oldMovie = await _context.Movies
                  .Select(m => m)
                  .Where(m => m.ID == movie.ID)
-                 .SingleOrDefault();
+                 .FirstOrDefaultAsync();
 
             if (oldMovie == null) return;
 
@@ -111,8 +115,8 @@ namespace Cinema.DataAccess.Services.MovieServices
 
         public async Task DeleteAsync(MovieDTO movie)
         {
-            var movieToDelete = _context.Movies
-               .FirstOrDefault(x => x.ID == movie.ID);
+            var movieToDelete = await _context.Movies
+               .FirstOrDefaultAsync(x => x.ID == movie.ID);
 
             if (movieToDelete == null) return;
 
