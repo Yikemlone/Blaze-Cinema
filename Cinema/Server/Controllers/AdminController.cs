@@ -21,10 +21,10 @@ namespace Cinema.Server.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<ActionResult<int>> CreateMovie([FromBody] MovieDTO movie)
+        public async Task<int> CreateMovie([FromBody] MovieDTO movie)
         {
             var movieID = await _unitOfWork.AdminService.CreateMovieAsync(movie);
-            return Ok(movieID);
+            return movieID;
         }
 
         [HttpPost]

@@ -12,7 +12,7 @@
             </MudItem>
 
             <MudItem xs="3" sm="3" md="3">
-                <MudImage Src="@_imageURL" ObjectFit="ObjectFit.Cover" Width="225" />
+                <img src="https://localhost:7016/api/file/@(Movie.ID)" width="100%">
             </MudItem>
 
             <MudItem xs="9" sm="9" md="9">
@@ -47,8 +47,7 @@
             </MudItem>
 
             <MudItem xs="9" sm="9" md="1">
-                <MudImage Src="@_ratingURL" ObjectFit="ObjectFit.Cover" Width="75" />
-                @*<MudText Inline="false" Typo="Typo.subtitle2">@Movie.AgeRating</MudText>*@
+                <img src="https://localhost:7016/api/file/IFCO@(Movie.AgeRating)" width="100%">
             </MudItem>
 
             <MudItem xs="9" sm="9" md="11">
@@ -77,9 +76,6 @@
                 </MudPaper>
             </MudItem>
 
-            
-            
-
         </MudGrid>
     </MudContainer>
 }
@@ -91,9 +87,7 @@
     private HttpClient _client;
     public MovieDTO Movie { get; set; }
 
-    private string _imageURL;
     string[] _daysOfTheWeek;
-    private string _ratingURL;
     private string _link;
 
     [Parameter] public int MovieID { get; set; }
@@ -102,8 +96,6 @@
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         Movie = await GetMovieAsync();
-        _imageURL = $"images/{Movie.ID}.jpg";
-        _ratingURL = $"images/IFCO_{Movie.AgeRating}.png";
 
         DateTime startOfWeek = DateTime.Today.AddDays(
             (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek -

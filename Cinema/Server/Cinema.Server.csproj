@@ -23,12 +23,12 @@
     <None Remove="images\7.jpg" />
     <None Remove="images\8.jpg" />
     <None Remove="images\9.jpg" />
-    <None Remove="images\IFCO_12A.png" />
-    <None Remove="images\IFCO_15A.png" />
-    <None Remove="images\IFCO_16.png" />
-    <None Remove="images\IFCO_18.png" />
-    <None Remove="images\IFCO_G.png" />
-    <None Remove="images\IFCO_PG.png" />
+    <None Remove="images\IFCO12A.jpg" />
+    <None Remove="images\IFCO15A.jpg" />
+    <None Remove="images\IFCO16.jpg" />
+    <None Remove="images\IFCO18.jpg" />
+    <None Remove="images\IFCOG.jpg" />
+    <None Remove="images\IFCOPG.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -96,27 +96,27 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="images\IFCO_12A.png">
+    <Content Include="images\IFCO12A.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="images\IFCO_15A.png">
+    <Content Include="images\IFCO15A.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="images\IFCO_16.png">
+    <Content Include="images\IFCO16.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="images\IFCO_18.png">
+    <Content Include="images\IFCO18.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="images\IFCO_G.png">
+    <Content Include="images\IFCOG.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="images\IFCO_PG.png">
+    <Content Include="images\IFCOPG.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

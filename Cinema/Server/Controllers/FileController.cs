@@ -26,10 +26,10 @@ namespace Cinema.Server.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetImage(int id)
+        [HttpGet("{filename}")]
+        public IActionResult GetImage(string filename)
         {
-            var path = Path.Combine(_env.ContentRootPath, "images", $"{id}.jpg");
+            var path = Path.Combine(_env.ContentRootPath, "images", $"{filename}.jpg");
             byte[] imageBytes = System.IO.File.ReadAllBytes(path);
 
             return new FileContentResult(imageBytes, "image/jpeg");
