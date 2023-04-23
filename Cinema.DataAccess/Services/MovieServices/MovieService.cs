@@ -99,8 +99,8 @@ namespace Cinema.DataAccess.Services.MovieServices
         public async Task UpdateAsync(MovieDTO movie)
         {
             var oldMovie = await _context.Movies
-                 .Select(m => m)
                  .Where(m => m.ID == movie.ID)
+                 .Select(m => m)
                  .FirstOrDefaultAsync();
 
             if (oldMovie == null) return;
@@ -119,6 +119,8 @@ namespace Cinema.DataAccess.Services.MovieServices
                .FirstOrDefaultAsync(x => x.ID == movie.ID);
 
             if (movieToDelete == null) return;
+
+            // Here, need to delete all screenings related to this movie as well
 
             _context.Movies.Remove(movieToDelete);
         }

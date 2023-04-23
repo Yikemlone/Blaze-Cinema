@@ -14,13 +14,13 @@
 
 
 @code {
-    private const string API_URL = "api/movie";
+    private const string API_URL = "api/";
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MovieDTO Movie { get; set; }
     [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
 
-    public async Task Close()
+    private async Task Close()
     {
         await DeleteMovieAsync();
 
@@ -35,15 +35,15 @@
         MudDialog.Close(DialogResult.Ok(true));
     }
 
-    void Cancel()
+    private void Cancel()
     {
         MudDialog.Close(DialogResult.Cancel());
     }
 
     public async Task DeleteMovieAsync()
     {
-        await Http.PostAsJsonAsync<MovieDTO>(API_URL + "/delete", Movie);
+        await Http.PostAsJsonAsync<int>(API_URL + "file/delete/", Movie.ID);
+        await Http.PostAsJsonAsync<MovieDTO>(API_URL + "movie/delete", Movie);
         await MudTable.ReloadServerData();
     }
-
 }

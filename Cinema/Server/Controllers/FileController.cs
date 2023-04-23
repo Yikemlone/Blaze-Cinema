@@ -29,12 +29,19 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpGet("{filename}")]
-        public IActionResult GetImage(string filename)
+        public async Task<IActionResult> GetImage(string filename)
         {
             var path = Path.Combine(_env.ContentRootPath, "images", $"{filename}.jpg");
             byte[] imageBytes = System.IO.File.ReadAllBytes(path);
 
             return new FileContentResult(imageBytes, "image/jpeg");
+        }
+
+        [HttpPost("delete")]
+        public async Task DeleteImage([FromBody] int filename)
+        {
+            var path = Path.Combine(_env.ContentRootPath, "images", $"{filename}.jpg");
+            System.IO.File.Delete(path);
         }
     }
 }
