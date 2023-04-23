@@ -98,10 +98,10 @@
 
     private async Task Close()
     {
-        _form?.Validate();
-        if (_errors.Length != 0) return;
+        //_form?.Validate();
+       // if (_errors.Length != 0) return;
 
-        await AddMovieModelAsync();
+        await AddMovieAsync();
 
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
@@ -120,43 +120,29 @@
         MudDialog.Close(DialogResult.Cancel());
     }
 
-    private async Task AddMovieModelAsync()
+    private async Task AddMovieAsync()
     {
         var movieID = await Http.PostAsJsonAsync<MovieDTO>(API_URL + "admin/create/", _movie);
+        //await Http.PostAsync(API_URL + "admin/file/create", _content);
 
-        await Http.PostAsJsonAsync(API_URL + "admin/file/create", _content);
         await MudTable.ReloadServerData();
     }
 
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
-        _content = new MultipartFormDataContent();
+        using var content = new MultipartFormDataContent();
 
-        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        foreach (var file in e.GetMultipleFiles(1))
         {
-            var fileContent = new StreamContent(file.OpenReadStream(maxFileSize));
+            var fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-            _file = e.File;
 
-            _content.Add(
+            content.Add(
                 content: fileContent,
                 name: "\"files\"",
-                fileName: file.Name);
+                fileName: "2");
         }
 
-        //_content = new MultipartFormDataContent();
-        //foreach (var file in e.GetMultipleFiles(1))
-        //{
-        //    var fileContent = new StreamContent(file.OpenReadStream(_maxFileSize));
-        //    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-
-        //    _file = e.File;
-
-        //    _content.Add(
-        //        content: fileContent,
-        //        name: "\"file\"",
-        //        fileName: "1"
-        //    );
-        //}
+        var response = await Http.PostAsync("/api/admin/File/create", content);
     }
 }

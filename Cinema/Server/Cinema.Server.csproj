@@ -23,5 +23,9 @@
     <ProjectReference Include="..\Shared\Cinema.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="images\" />
+  </ItemGroup>
+
 
 </Project>

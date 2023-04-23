@@ -69,16 +69,13 @@ namespace Cinema.Server.Controllers
             //await file.CopyToAsync(fs);
 
 
+
             foreach (var file in files)
             {
                 var uploadResult = new UploadResult();
                 string trustedFileNameForFileStorage;
-                var untrustedFileName = file.FileName;
-                uploadResult.FileName = untrustedFileName;
-                //var trustedFileNameForDisplay = WebUtility.HtmlEncode(untrustedFileName);
-
-                trustedFileNameForFileStorage = Path.GetRandomFileName();
-                var path = Path.Combine(_env.ContentRootPath, "uploads", trustedFileNameForFileStorage);
+                var untrustedFileName = file.FileName + ".jpg";
+                var path = Path.Combine(_env.ContentRootPath, "images", untrustedFileName);
 
                 await using FileStream fs = new(path, FileMode.Create);
                 await file.CopyToAsync(fs);
