@@ -13,12 +13,10 @@ namespace Cinema.Server.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _env;
 
         public AdminController(IUnitOfWork unitOfWork, IWebHostEnvironment env)
         {
             _unitOfWork = unitOfWork;
-            _env = env;
         }
 
         [HttpPost]
@@ -43,28 +41,6 @@ namespace Cinema.Server.Controllers
         {
             await _unitOfWork.AdminService.DeleteMovieAsync(movieID);
             await _unitOfWork.SaveAsync();
-        }
-
-        [HttpPost]
-        [Route("file/create")]
-        public async Task UploadFile(List<IFormFile> files) 
-        {
-            foreach (var file in files)
-            {
-                var path = Path.Combine(_env.ContentRootPath, "images", file.FileName);
-                await using FileStream fs = new(path, FileMode.Create);
-                await file.CopyToAsync(fs);
-            }
-        }
-
-        [HttpGet("images/{id}")]
-        public IActionResult GetImage(int id)
-        {
-            // Your code to read the image file from the server goes here
-            var path = Path.Combine(_env.ContentRootPath, "images", $"{id}.jpg");
-            byte[] imageBytes = System.IO.File.ReadAllBytes(path);
-
-            return new FileContentResult(imageBytes, "image/jpeg");
         }
     }
 }
