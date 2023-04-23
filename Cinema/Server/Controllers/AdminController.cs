@@ -56,5 +56,15 @@ namespace Cinema.Server.Controllers
                 await file.CopyToAsync(fs);
             }
         }
+
+        [HttpGet("images/{id}")]
+        public IActionResult GetImage(int id)
+        {
+            // Your code to read the image file from the server goes here
+            var path = Path.Combine(_env.ContentRootPath, "images", $"{id}.jpg");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(path);
+
+            return new FileContentResult(imageBytes, "image/jpeg");
+        }
     }
 }

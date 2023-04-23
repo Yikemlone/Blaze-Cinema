@@ -35,7 +35,7 @@
 
                 <MudStack Row="true" Justify="Justify.Center">
 
-   @*                 <MudFileUpload T="InputFileChangeEventArgs" FilesChanged="OnInputFileChange" Required RequiredError="You must upload an Image">
+                    <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles" Required RequiredError="You must upload an Image">
                         <ButtonTemplate>
                             <MudFab HtmlTag="label"
                                     Color="Color.Secondary"
@@ -43,14 +43,13 @@
                                     Label="Upload picture"
                                     for="@context" />
                         </ButtonTemplate>
-                    </MudFileUpload>*@
-
-                    <InputFile OnChange="OnInputFileChange"></InputFile>
+                    </MudFileUpload>
 
                     @if (_file != null)
                     {
-                        @_file.Name <code>@_file.Size bytes</code>
+                        @_file.Name <code>@(_file.Size / 1024) MB</code>
                     }
+
                 </MudStack>
 
             </MudForm>
@@ -76,6 +75,7 @@
     private long _maxFileSize = long.MaxValue;
     private MultipartFormDataContent? _content;
     private StreamContent? _fileContent;
+    IList<IBrowserFile> files = new List<IBrowserFile>();
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
@@ -125,7 +125,6 @@
     {
         var response = await Http.PostAsJsonAsync<MovieDTO>(API_URL + "admin/create/", _movie);
         var movieID = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(movieID);
 
         _content.Add(
             content: _fileContent,
@@ -133,7 +132,7 @@
             fileName: movieID + ".jpg"
         );
 
-        await Http.PostAsync("/api/admin/File/create", _content);
+        await Http.PostAsync(API_URL + "file/create", _content);
 
         await MudTable.ReloadServerData();
     }
@@ -147,5 +146,14 @@
             _fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
             _fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
         }
+    }
+
+    private void UploadFiles(IBrowserFile file)
+    {
+        _file = file;
+        _content = new MultipartFormDataContent();
+
+        _fileContent = new StreamContent(file.OpenReadStream(long.MaxValue));
+        _fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
     }
 }
