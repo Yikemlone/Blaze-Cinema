@@ -13,7 +13,7 @@
 
 
 @code {
-    private const string API_URL = "api/manager";
+    private const string API_URL = "api/manager/";
     private HttpClient? _client;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
@@ -47,7 +47,7 @@
 
     public async Task DeleteMovieScreeningAysnc()
     {
-        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/{Screening.ID}", Screening.ID);
+        await _client.PostAsJsonAsync<int>(API_URL + $"delete/{Screening.ID}", Screening.ID);
         await MudTable.ReloadServerData();
     }
 

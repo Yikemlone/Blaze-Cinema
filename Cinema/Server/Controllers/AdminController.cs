@@ -1,26 +1,30 @@
 ﻿using Cinema.DataAccess.Services.UnitOfWorkServices;
+using Cinema.Models.Models;
+using Cinema.Shared;
 using Cinema.Shared.DTO;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Server.Controllers
 {
     [ApiController]
     [Route("/api/[controller]")]
-    public class AdminController
+    public class AdminController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public AdminController(IUnitOfWork unitOfWork)
+        public AdminController(IUnitOfWork unitOfWork, IWebHostEnvironment env)
         {
             _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
         [Route("create")]
-        public async Task CreateMovie([FromBody] MovieDTO movie)
+        public async Task<int> CreateMovie([FromBody] MovieDTO movie)
         {
-            await _unitOfWork.AdminService.CreateMovieAsync(movie);
-            await _unitOfWork.SaveAsync();
+            var movieID = await _unitOfWork.AdminService.CreateMovieAsync(movie);
+            return movieID;
         }
 
         [HttpPost]
