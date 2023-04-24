@@ -149,7 +149,10 @@ namespace Cinema.DataAccess.Services.MovieServices
 
             if (!bookings)
             {
-                _context.RemoveRange(seatScreenings);
+                foreach (var ss in seatScreenings) 
+                { 
+                    _context.RemoveRange(ss);
+                }
                 _context.RemoveRange(screenings);
                 _context.Movies.Remove(movieToDelete);
 

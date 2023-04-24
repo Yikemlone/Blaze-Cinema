@@ -22,17 +22,19 @@
         <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractChild" />
     </MudStack>
 
-    @if (!_valid)
-    {
-        <span style="color: red">@_errorMessage</span>
-    }
+    <MudStack Row="true" Justify="Justify.Center">
+        @if (!_valid)
+        {
+            <span style="color: red">@_errorMessage</span>
+        }
+    </MudStack>
 
     <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" OnClick="SelectedTickets" Style="margin: auto">Save Tickets</MudButton>
 
 </MudStack>
 
 @code{
-    private List<TicketTypeBookingDTO> _tickTypeBookings = new List<TicketTypeBookingDTO>();
+    private List<TicketTypeBookingDTO> _tickTypeBookings;
     private int _adultTicket;
     private int _childTicket;
     private bool _valid = true;
@@ -45,6 +47,8 @@
 
     public async Task SelectedTickets() 
     {
+        _tickTypeBookings = new List<TicketTypeBookingDTO>();
+
         for (int i = 0; i < _adultTicket; i++)
         {
             _tickTypeBookings.Add(new TicketTypeBookingDTO
@@ -80,21 +84,18 @@
             _errorMessage = "Children must be with an adult.";
             return;
         }
-        else if ((_adultTicket + _childTicket) > 20 || _adultTicket > 20)
+        else if ((_adultTicket + _childTicket) > 9 || _adultTicket > 9)
         {
             _valid = false;
-            _errorMessage = "Can't book more than 20 seats at a time.";
+            _errorMessage = "Can't book more than 9 seats at a time.";
             return;
         }
 
         await OnSelectedTikcets.InvokeAsync(_tickTypeBookings);
-        _tickTypeBookings = new List<TicketTypeBookingDTO>();
     }
 
     public void AddAdult() 
     {
-        // Should validate that they can not add more seats in the room
-        // should also make sure if they are free seats.
         _adultTicket++;
     }
 
@@ -122,5 +123,4 @@
             _childTicket = 0;
         }
     }
-
 }
