@@ -1,4 +1,7 @@
 ﻿@page "/contactdetails"
+
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
 @using Cinema.Shared.DTO
 
 <PageTitle>Contact</PageTitle>
@@ -26,4 +29,33 @@
 		<MudText Typo="Typo.body1">Ireland</MudText>
 	</MudStack>
 
+	
+	
 </MudPaper>
+<MudStack AlignItems="AlignItems.Center">
+	<MudText Color="Color.Primary" Typo="Typo.h4"> Location </MudText>
+</MudStack>
+<div id="map" style="width:800px; height:600px; margin: auto;"></div>
+@code {
+	private IJSObjectReference? module;
+	private string? result;
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./location.js");
+			if (module != null)
+			{
+				result = await module.InvokeAsync<string>("load_map");
+			}
+		}
+	}
+
+	async ValueTask IAsyncDisposable.DisposeAsync()
+	{
+		if (module is not null)
+		{
+			await module.DisposeAsync();
+		}
+	}
+	}
