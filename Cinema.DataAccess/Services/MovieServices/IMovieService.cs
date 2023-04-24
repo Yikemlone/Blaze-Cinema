@@ -12,6 +12,6 @@ namespace Cinema.DataAccess.Services.MovieServices
         // ADMIN METHODS
         public Task<int> AddAsync(MovieDTO movie);
         public Task UpdateAsync(MovieDTO movieID);
-        public Task DeleteAsync(MovieDTO movieID);
+        public Task<bool> DeleteAsync(MovieDTO movieID);
     }
 }

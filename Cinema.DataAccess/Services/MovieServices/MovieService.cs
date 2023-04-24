@@ -113,16 +113,52 @@ namespace Cinema.DataAccess.Services.MovieServices
             oldMovie.Trailer = movie.Trailer;
         }
 
-        public async Task DeleteAsync(MovieDTO movie)
+        public async Task<bool> DeleteAsync(MovieDTO movie)
         {
             var movieToDelete = await _context.Movies
                .FirstOrDefaultAsync(x => x.ID == movie.ID);
 
-            if (movieToDelete == null) return;
+            if (movieToDelete == null) return false;
 
-            // Here, need to delete all screenings related to this movie as well
+            var screenings = await _context.Screenings
+                .Where(s => movieToDelete.ID == s.MovieID)
+                .Select(s => s)
+                .ToListAsync();
 
-            _context.Movies.Remove(movieToDelete);
+            var seatScreenings = new List<List<SeatScreening>>();
+
+            bool bookings = false;
+
+            foreach (var screening in screenings) 
+            {
+                var seats = await _context.SeatScreenings
+                    .Where(ss => ss.ScreeningID == screening.ID)
+                    .ToListAsync();
+
+                foreach (var seat in seats) 
+                {
+                    if (seat.BookingID != null) 
+                    {
+                        bookings = true;
+                        break;
+                    }
+                }
+
+                seatScreenings.Add(seats);
+            }
+
+            if (!bookings)
+            {
+                _context.RemoveRange(seatScreenings);
+                _context.RemoveRange(screenings);
+                _context.Movies.Remove(movieToDelete);
+
+                return true;
+            }
+            else 
+            {
+                return false;
+            }
         }
     }
 }

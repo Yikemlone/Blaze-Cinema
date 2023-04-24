@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Reflection.Emit;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Threading;
 
@@ -29,17 +31,15 @@ namespace Cinema.DataAccess.Context
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+
+            builder
+                .Entity<Seat>()
+                .HasOne(e => e.Room)
+                .WithMany(e => e.Seats)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

@@ -289,7 +289,7 @@ namespace Cinema.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SeatNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DisabiltySeat = table.Column<bool>(type: "bit", nullable: false),
-                    RoomID = table.Column<int>(type: "int", nullable: true)
+                    RoomID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

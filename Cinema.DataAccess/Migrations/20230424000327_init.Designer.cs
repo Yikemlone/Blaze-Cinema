@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cinema.DataAccess.Migrations
 {
     [DbContext(typeof(CinemaDBContext))]
-    [Migration("20230423201412_init")]
+    [Migration("20230424000327_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -267,6 +267,7 @@ namespace Cinema.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("RoomID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("SeatNumber")
@@ -517,7 +518,9 @@ namespace Cinema.DataAccess.Migrations
                 {
                     b.HasOne("Cinema.Models.Models.Room", "Room")
                         .WithMany("Seats")
-                        .HasForeignKey("RoomID");
+                        .HasForeignKey("RoomID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
 
                     b.Navigation("Room");
                 });

@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("/api/[controller]")]
-    public class MovieController
+    public class MovieController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -104,10 +103,19 @@ namespace Cinema.Server.Controllers
         [HttpPost]
         [Authorize(Policy = ("IsAdmin"))]
         [Route("delete")]
-        public async Task DeleteMovie([FromBody] MovieDTO movie)
+        public async Task<IActionResult> DeleteMovie([FromBody] MovieDTO movie)
         {
-            await _unitOfWork.MovieService.DeleteAsync(movie);
-            await _unitOfWork.SaveAsync();
+            var deletedMovie = await _unitOfWork.MovieService.DeleteAsync(movie);
+
+            if (deletedMovie)
+            {
+                await _unitOfWork.SaveAsync();
+                return Ok("Deleted Movie");
+            }
+            else 
+            {
+                return BadRequest("Can't delete movies with bookings");
+            }
         }
     }
 }

@@ -7,3 +7,6 @@ INSERT INTO Rooms VALUES
 ('false'),
 ('false'),
 ('true');
+
+
+DELETE FROM Rooms WHERE ID = 4

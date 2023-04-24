@@ -7,8 +7,8 @@ using System.Security.Claims;
 
 namespace Cinema.Server.Controllers
 {
-    [Route("api/[controller]/[action]")]
     [ApiController]
+    [Route("api/[controller]/[action]")]
     public class AuthorizeController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
