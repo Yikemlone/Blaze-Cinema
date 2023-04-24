@@ -25,10 +25,11 @@
                     <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_ticketTypeBookings.Count" />
                 </MudItem>
 
-                @if (_booking.SeatScreenings.Count > 0) 
+                @if (_booking.SeatScreenings.Count > 0 && _booking.SeatScreenings.Count == _ticketTypeBookings.Count)
                 {
                     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="ConfirmBooking">Confirm Details</MudButton>
-                } else
+                }
+                else
                 {
                     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" Disabled OnClick="ConfirmBooking">Confirm Details</MudButton>
                 }
@@ -54,7 +55,7 @@
     {
         _booking = new BookingDTO();
         _booking.Status = "Pending";
-        _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Remove(0, 2);
+        _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Remove(0, 2); // This doesn't work
         
         _seats = await GetSeatScreenings();
         _availableSeats = _seats.Where(s => s.Booked != true).Select(s => s).Count();
