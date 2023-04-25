@@ -1,29 +1,59 @@
 ﻿@page "/contactdetails"
-@using Cinema.Shared.DTO
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
 
-<PageTitle>Contact</PageTitle>
+<PageTitle>Contact Details</PageTitle>
 
 <MudPaper Class="pa-15 ma-3" Elevation="1">
+	<MudStack>	
+		<MudStack>
+			<MudText Align="Align.Start" Color="Color.Primary" Typo="Typo.h2"><b>Contact Details</b></MudText>
 
-	<MudText Align="Align.Start" Color="Color.Primary" Typo="Typo.h2"><b>Contact Details</b></MudText>
+			<MudText Color="Color.Primary" Typo="Typo.h6">PHONE NUMBER:</MudText>
+			<MudText Typo="Typo.body1">0749186000</MudText>
 
-	<MudStack>
-		<MudText Color="Color.Primary" Typo="Typo.h6">PHONE NUMBER:</MudText>
-		<MudText Typo="Typo.body1">0749186000</MudText>
+			<MudText Color="Color.Primary" Typo="Typo.h6">FAX:</MudText>
+			<MudText Typo="Typo.body1">0749186005</MudText>
 
-		<MudText Color="Color.Primary" Typo="Typo.h6">FAX:</MudText>
-		<MudText Typo="Typo.body1">0749186005</MudText>
+			<MudText Color="Color.Primary" Typo="Typo.h6">EMAIL:</MudText>
+			<MudText Typo="Typo.body1">reception.blazecinema@gmail.com</MudText>
 
-		<MudText Color="Color.Primary" Typo="Typo.h6">EMAIL:</MudText>
-		<MudText Typo="Typo.body1">reception.blazecinema@gmail.com</MudText>
+			<MudText Color="Color.Primary" Typo="Typo.h6">ADDRESS:</MudText>
+			<MudText Typo="Typo.body1">Blaze Cinema</MudText>
+			<MudText Typo="Typo.body1">Port Road</MudText>
+			<MudText Typo="Typo.body1">Letterkenny</MudText>
+			<MudText Typo="Typo.body1">Co.Donegal</MudText>
+			<MudText Typo="Typo.body1">F92 FC93</MudText>
+			<MudText Typo="Typo.body1">Ireland</MudText>
+		</MudStack>
+	
+		<MudStack AlignItems="AlignItems.Start" >
+			<MudText  Color="Color.Primary" Typo="Typo.h2"><b>Map</b></MudText>
+			<div id="map" style="width:800px; height:600px; "></div>
+			@code 
+			{
+				private IJSObjectReference? module;
+				private string? result;
+				protected override async Task OnAfterRenderAsync(bool firstRender)
+				{
+					if (firstRender)
+					{
+					module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./location.js");
+					if (module != null)
+					{
+						result = await module.InvokeAsync<string>("load_map");
+					}
+					}
+				}
 
-		<MudText Color="Color.Primary" Typo="Typo.h6">ADDRESS:</MudText>
-		<MudText Typo="Typo.body1">Blaze Cinema</MudText>
-		<MudText Typo="Typo.body1">Port Road</MudText>
-		<MudText Typo="Typo.body1">Letterkenny</MudText>
-		<MudText Typo="Typo.body1">Co.Donegal</MudText>
-		<MudText Typo="Typo.body1">F92 FC93</MudText>
-		<MudText Typo="Typo.body1">Ireland</MudText>
-	</MudStack>
-
+				async ValueTask IAsyncDisposable.DisposeAsync()
+				{
+					if (module is not null)
+					{
+					await module.DisposeAsync();
+					}
+				}
+			 }
+		</MudStack>
+	</MudStack>	
 </MudPaper>

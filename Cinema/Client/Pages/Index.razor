@@ -54,7 +54,7 @@
                     <h1>WELCOME TO BLAZE CINEMA</h1>
                 </div>
                 <div class="sub-text">
-                    <h1>Where Blazing experinces happen</h1>
+                    <h1>Where ablazing experinces happen</h1>
                 </div>
             </div>
         </MudItem>
@@ -80,7 +80,7 @@
 
                         @foreach (var movie in _nowShowingMovies)
                         {
-                            <MudItem xs="5" sm="6" md="2" xl="1">
+                            <MudItem xs="5" sm="6" md="2" xl="2">
                                 <MovieThumbnail MovieID=@movie.ID/>
                             </MudItem>
                         }
@@ -93,7 +93,7 @@
 
                             @foreach (var movie in _upcomingMovies)
                             {
-                                <MudItem xs="5" sm="6" md="2" xl="1">
+                                <MudItem xs="5" sm="6" md="2" xl="2">
                                     <MovieThumbnail MovieID=@movie.ID />
                                 </MudItem>
                             }
