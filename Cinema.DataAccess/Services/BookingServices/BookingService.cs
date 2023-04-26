@@ -129,9 +129,21 @@ namespace Cinema.DataAccess.Services.BookingServices
                 seat.BookingID = null; // Removes the booking ID
             }
 
-
             // THIS NEEDS TO BE TESTED
             _context.Remove(bookingToRemove);
+        }
+
+        public async Task<List<TicketTypeDTO>> GetTicketTypesAsync()
+        {
+            var ticketTypes = await _context.TicketTypes
+                .Select(t => new TicketTypeDTO() 
+                { 
+                    Price = t.Price,
+                    Type = t.Type
+                })
+                .ToListAsync();
+
+            return ticketTypes;
         }
     }
 }

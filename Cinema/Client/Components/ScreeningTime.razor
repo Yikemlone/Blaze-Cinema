@@ -5,8 +5,9 @@
 </MudButton>
 
 @code {
-    [Parameter] public ScreeningDTO Screening { get; set;}
     private string _link;
+
+    [Parameter] public ScreeningDTO Screening { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

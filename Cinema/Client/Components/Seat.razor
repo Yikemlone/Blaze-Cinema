@@ -15,7 +15,7 @@
 
 </style>
 
-<div class="seat" @onclick="OnSelected">
+<div class="seat" @onclick="OnSelectedAsync">
     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
         x="0px" y="0px" viewBox="0 0 90.4 122.88" style="enable-background:new 0 0 90.4 122.88">
         <g>
@@ -45,7 +45,7 @@
         }
     }
 
-    public void ChangeColour() {
+    private void ChangeColour() {
         if (_colour.Equals("Green"))
         {
             _colour = "Grey";
@@ -60,7 +60,7 @@
         StateHasChanged();
     }
 
-    public async Task OnSelected() 
+    private async Task OnSelectedAsync() 
     {
         if (SeatScreening.Booked) return;
         ChangeColour();

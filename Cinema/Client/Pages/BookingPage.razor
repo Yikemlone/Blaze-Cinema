@@ -16,7 +16,7 @@
             @if (_ticketTypeBookings == null) 
             {
                 <MudItem xs="12">
-                    <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats"/>
+                    <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats" TicketTypes="_ticketTypes"/>
                 </MudItem>
             }
             else
@@ -42,11 +42,13 @@
 
 
 @code {
-    private const string API_URL = "/api";
+    private const string API_URL = "/api/";
     private BookingDTO _booking;
-    private ScreeningDTO _screening = new ScreeningDTO(); // FIX THIS
+    private MovieDTO _movie;
+    private ScreeningDTO _screening; // I THINK I NEED THE ACTUAL SCREENING THAT WAS SELECTED
     private List<TicketTypeBookingDTO> _ticketTypeBookings;
     private List<SeatScreeningDTO> _seats;
+    private List<TicketTypeDTO> _ticketTypes;
     private int _availableSeats;
 
     [Parameter] public string ID { get; set; }
@@ -56,8 +58,11 @@
         _booking = new BookingDTO();
         _booking.Status = "Pending";
         _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Remove(0, 2); // This doesn't work
-        
-        _seats = await GetSeatScreenings();
+
+        _screening = await GetScreeningAsync(); 
+        _movie = await GetMovieAsync();
+        _seats = await GetSeatScreeningsAsync();
+        _ticketTypes = await GetTicketTypesAsync();
         _availableSeats = _seats.Where(s => s.Booked != true).Select(s => s).Count();
     }
 
@@ -71,13 +76,32 @@
         _ticketTypeBookings = ticketTypes;
     }
 
-    public async Task ConfirmBooking() 
+    private async Task ConfirmBooking() 
     {
         var parameters = new DialogParameters();
         parameters.Add("Booking", _booking);
+        parameters.Add("Movie", _movie);
         parameters.Add("TicketTypeBooking", _ticketTypeBookings);
         parameters.Add("Screening", _screening);
-        parameters.Add("Total", 19.99m); // GET THIS LEGIT
+
+        decimal subtotal = 0M;
+        foreach (var ticket in _ticketTypeBookings) 
+        { 
+            if (ticket.TicketTypeID == 1)
+            {
+                subtotal += _ticketTypes[0].Price;
+            }
+            else if (ticket.TicketTypeID == 2) 
+            {
+                subtotal += _ticketTypes[1].Price;
+            }
+            else if (ticket.TicketTypeID == 3)
+            {
+                subtotal += _ticketTypes[2].Price;
+            }
+        }
+
+        parameters.Add("Total", subtotal);
 
         DialogService.Show<BookingDialog>("Confirm Booking", parameters, new DialogOptions()
         {
@@ -88,9 +112,23 @@
         });
     }
 
-    public async Task<List<SeatScreeningDTO>> GetSeatScreenings() 
+    private async Task<List<SeatScreeningDTO>> GetSeatScreeningsAsync()
     {
-        return await Http.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats/" + ID);
+        return await Http.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "movie/seats/" + ID);
     }
 
+    private async Task<List<TicketTypeDTO>> GetTicketTypesAsync()
+    {
+        return await Http.GetFromJsonAsync<List<TicketTypeDTO>>(API_URL + "booking/tickets");
+    }
+
+    private async Task<ScreeningDTO> GetScreeningAsync()
+    {
+        return await Http.GetFromJsonAsync<ScreeningDTO>(API_URL + "movie/screenings/" + ID);
+    }
+
+    private async Task<MovieDTO> GetMovieAsync()
+    {
+        return await Http.GetFromJsonAsync<MovieDTO>(API_URL + "movie/movies/" + _screening.MovieID);
+    }
 }

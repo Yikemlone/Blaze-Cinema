@@ -17,9 +17,8 @@
 		_rooms = await GetRoomsAsync();
 	}
 
-	public async Task<List<RoomDTO>> GetRoomsAsync()
+	private async Task<List<RoomDTO>> GetRoomsAsync()
 	{
 		return await Http.GetFromJsonAsync<List<RoomDTO>>("/api/manager/rooms");
 	}
-
 }

@@ -141,26 +141,21 @@ else
     private DialogOptions _dialogOptions;
     private IEnumerable<MovieDTO>? _movies;
 
-    // Set up
-    public MovieTable()
+    protected override async Task OnInitializedAsync()
     {
         _buttonDisabled = true;
         _searchString = "";
         _pageSizeOptions = new int[] { 5, 10, 20 };
-        _dialogOptions = new DialogOptions 
-        { 
-            CloseButton = true, 
+        _dialogOptions = new DialogOptions
+        {
+            CloseButton = true,
             MaxWidth = MaxWidth.Medium,
-            FullWidth = true, 
+            FullWidth = true,
             DisableBackdropClick = true
         };
-    }
 
-    protected override async Task OnInitializedAsync()
-    {
         _movies = await GetMoviesAsync();
     }
-
 
     // Table Event Functions
     private void RowClickEvent(TableRowClickEventArgs<MovieDTO> tableRowClickEventArgs)
@@ -287,7 +282,7 @@ else
         return new TableData<MovieDTO>() { TotalItems = _totalItems, Items = _movies };
     }
 
-    public async Task<List<MovieDTO>> GetMoviesAsync()
+    private async Task<List<MovieDTO>> GetMoviesAsync()
     {
         return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }

@@ -5,12 +5,12 @@
 
 <MudDialog>
     <DialogContent>
-        <MudPaper>
+        <MudPaper Elevation="0">
             
             @if (Booking != null && !_confirmedDetails)
             {
                 <p>
-                    Movie: Puss in Boots: The Last Stand
+                    Movie: @Movie.Name
                 </p>
                 <p>
                     Seats Types:
@@ -25,7 +25,7 @@
                     }
                 </p>
                 <p>
-                    Total: @Total
+                    Total: €@Total
                 </p>
             }
             else if (!_confirmedPayment) 
@@ -59,12 +59,12 @@
 </MudDialog>
 
 @code {
-    private const string API_URL = "api/"; // MAKE THIS BOOKING RELATED
+    private const string API_URL = "api/";
 
     private bool _confirmedDetails;
     private bool _confirmedPayment;
 
-    private MovieDTO _movie;
+    
     private ScreeningDTO _screening;
 
     private int _adultTickets;
@@ -75,14 +75,13 @@
 
     [Parameter] public BookingDTO Booking { get; set; }
     [Parameter] public List<TicketTypeBookingDTO> TicketTypeBooking { get; set; }
+    [Parameter] public MovieDTO Movie { get; set; }
     [Parameter] public ScreeningDTO Screening { get; set; }
     [Parameter] public decimal Total { get; set; }
     [Parameter] public List<TicketTypeDTO> TicketTypes { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        _movieID = 1; // Need to get this legit
-        _movie = await GetMovieAsync();
         _confirmedDetails = false; 
         _confirmedPayment = false;
 
@@ -110,7 +109,7 @@
 
         //await Http.PostAsJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats", Booking.SeatScreenings);
         await Http.PostAsJsonAsync<BookingAndSeatDTO>(API_URL + "booking/create", new BookingAndSeatDTO
-            { 
+        { 
             BookingDTO = Booking, 
             TicketTypeBookingDTO = TicketTypeBooking
         });
@@ -134,14 +133,8 @@
         MudDialog.Close(DialogResult.Cancel());
     }
 
-    // Check if URL is right
     private async Task AddBookingAsync()
     {
-        await Http.PostAsJsonAsync<BookingDTO>(API_URL + "/create/", Booking);
-    }
-
-    private async Task<MovieDTO> GetMovieAsync()
-    {
-        return await Http.GetFromJsonAsync<MovieDTO>(API_URL + "movie/movies/" + _movieID);
+        await Http.PostAsJsonAsync<BookingDTO>(API_URL + "create/", Booking);
     }
 }

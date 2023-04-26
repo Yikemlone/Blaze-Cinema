@@ -128,8 +128,7 @@ else
         Selector = (e) => e.MovieID
     };
 
-    // Set up
-    public ScreeningTable()
+    protected override async Task OnInitializedAsync()
     {
         _buttonDisabled = true;
         _searchString = "";
@@ -140,10 +139,7 @@ else
             FullWidth = true,
             DisableBackdropClick = true
         };
-    }
 
-    protected override async Task OnInitializedAsync()
-    {
         _movies = await GetMoviesAsync();
         _screenings = await GetScreeningsAsync();
     }
@@ -253,12 +249,12 @@ else
         return new TableData<ScreeningDTO>() { TotalItems = _totalItems, Items = _screenings };
     }
 
-    public async Task<List<MovieDTO>> GetMoviesAsync()
+    private async Task<List<MovieDTO>> GetMoviesAsync()
     {
         return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 
-    public async Task<List<ScreeningDTO>> GetScreeningsAsync()
+    private async Task<List<ScreeningDTO>> GetScreeningsAsync()
     {
         return await Http.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
     }

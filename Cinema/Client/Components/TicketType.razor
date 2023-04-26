@@ -4,34 +4,43 @@
 
 <MudText Typo="Typo.h3" Color="Color.Primary" Class="ml-16 mb-7" Align="Align.Left"><b>Select Tickets</b></MudText>
 
-<MudStack AlignItems="AlignItems.Center">
+@if (TicketTypes != null)
+{
+    <MudStack AlignItems="AlignItems.Center">
 
-    @* DISPLAY PRICE OF TICKET*@
-    <MudStack Row="true" Justify="Justify.Center">
-        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddAdult" />
-        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person" />
-        <span><MudText Typo="Typo.body1" Align="Align.Center">Adult: @_adultTicket</MudText></span>
-        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractAdult" />
+        <MudStack Row="true" Justify="Justify.Center">
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddAdult" />
+            <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person" />
+            <MudText Typo="Typo.body1" Class="mt-2" Align="Align.Center">Adult: @_adultTicket</MudText>
+            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Price: €@TicketTypes[0].Price</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractAdult" />
+        </MudStack>
+
+        <MudStack Row="true" Justify="Justify.Center">
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddChild" />
+            <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning" />
+            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Child: @_childTicket</MudText>
+            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Price: €@TicketTypes[1].Price</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractChild" />
+        </MudStack>
+
+        <MudStack Row="true" Justify="Justify.Center">
+            <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.AttachMoney" />
+            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Total: €@_subtotal</MudText>
+        </MudStack>
+
+
+        <MudStack Row="true" Justify="Justify.Center">
+            @if (!_valid)
+            {
+                <span style="color: red">@_errorMessage</span>
+            }
+        </MudStack>
+
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" OnClick="SelectedTickets" Style="margin: auto">Save Tickets</MudButton>
+
     </MudStack>
-
-    @* DISPLAY PRICE OF TICKET*@
-    <MudStack Row="true" Justify="Justify.Center">
-        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddChild" />
-        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning" />
-        <span><MudText Typo="Typo.body1" Align="Align.End">Child: @_childTicket</MudText></span>
-        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractChild" />
-    </MudStack>
-
-    <MudStack Row="true" Justify="Justify.Center">
-        @if (!_valid)
-        {
-            <span style="color: red">@_errorMessage</span>
-        }
-    </MudStack>
-
-    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" OnClick="SelectedTickets" Style="margin: auto">Save Tickets</MudButton>
-
-</MudStack>
+}
 
 @code{
     private List<TicketTypeBookingDTO> _tickTypeBookings;
@@ -39,6 +48,7 @@
     private int _childTicket;
     private bool _valid = true;
     private string _errorMessage = "";
+    private decimal _subtotal;
 
     [Parameter] public EventCallback<List<TicketTypeBookingDTO>> OnSelectedTikcets { get; set; }
     [Parameter] public List<SeatScreeningDTO> Seats { get; set; }
@@ -93,28 +103,40 @@
         await OnSelectedTikcets.InvokeAsync(_tickTypeBookings);
     }
 
-    public void AddAdult() 
+    private void AddAdult() 
     {
         _adultTicket++;
+        _subtotal += TicketTypes[0].Price;
     }
 
-    public void SubtractAdult() 
+    private void SubtractAdult() 
     {
+        if (_adultTicket > 0)
+        {
+            _subtotal -= TicketTypes[0].Price;
+        }
+
         _adultTicket--;
 
-        if (_adultTicket < 0) 
+        if (_adultTicket < 0)
         {
             _adultTicket = 0;
         }
     }
 
-    public void AddChild()
+    private void AddChild()
     {
         _childTicket++;
+        _subtotal += TicketTypes[1].Price;
     }
 
-    public void SubtractChild()
+    private void SubtractChild()
     {
+        if (_childTicket > 0)
+        {
+            _subtotal -= TicketTypes[1].Price;
+        }
+
         _childTicket--;
 
         if (_childTicket < 0)
