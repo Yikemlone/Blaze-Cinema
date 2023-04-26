@@ -32,8 +32,6 @@
         left: 16px;
         padding-left: 70px;
         color: rgba(255, 255, 255, 0.7);
-        font-size: 8px;
-        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
     }
 
     .overlay_1 {
@@ -50,11 +48,13 @@
         <MudItem xs="12">
             <div class="image_wrapper">
                 <img src="images/website/blurry.jpg" class="background-img" />
-                <div class="overlay overlay_1">
-                    <h1>WELCOME TO BLAZE CINEMA</h1>
+                <div class="overlay overlay_1 mb-16">
+                    <MudText Typo="Typo.h1"><b>WELCOME TO</b><b class="mud-primary-text">BLAZE CINEMA</b></MudText>
                 </div>
                 <div class="sub-text">
-                    <h1>Where Blazing experinces happen</h1>
+                    <MudText Class="mt-2" Typo="Typo.body1">Where blazing experinces happen</MudText>
+                    <br/>
+                    <MudButton Class="mt-2" Variant="Variant.Filled" Size="Size.Large" Color="Color.Primary">SHOWING TODAY</MudButton>
                 </div>
             </div>
         </MudItem>
@@ -75,12 +75,12 @@
                     @if (_nowShowingMovies != null)
                     {
                         <MudItem xs="11">
-                            <MudText Typo="Typo.h1"> <b>Now</b> Showing</MudText>
+                            <MudText Typo="Typo.h1"><b class="mud-primary-text">Now</b> Showing</MudText>
                         </MudItem>
 
                         @foreach (var movie in _nowShowingMovies)
                         {
-                            <MudItem xs="5" sm="6" md="2" xl="1">
+                            <MudItem xs="5" sm="6" md="2" xl="2">
                                 <MovieThumbnail MovieID=@movie.ID/>
                             </MudItem>
                         }
@@ -88,12 +88,12 @@
                         @if (_upcomingMovies != null) 
                         {
                             <MudItem xs="11">
-                                <MudText Typo="Typo.h1"><b>Upcoming</b> Movies</MudText>
+                                <MudText Typo="Typo.h1"><b class="mud-primary-text">Upcoming</b> Movies</MudText>
                             </MudItem>
 
                             @foreach (var movie in _upcomingMovies)
                             {
-                                <MudItem xs="5" sm="6" md="2" xl="1">
+                                <MudItem xs="5" sm="6" md="2" xl="2">
                                     <MovieThumbnail MovieID=@movie.ID />
                                 </MudItem>
                             }

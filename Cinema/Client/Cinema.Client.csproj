@@ -45,16 +45,4 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Pages\LocationPage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\LocationPage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\LocationPage.razor" />
-  </ItemGroup>
-
 </Project>
