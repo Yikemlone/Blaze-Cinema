@@ -3,32 +3,57 @@
 
 <MudDialog>
     <DialogContent>
-        <p>Are you sure you want to decommission room <b>@Room.ID</b></p>
+        <MudPaper>
+
+            <MudForm>
+                @if (Room != null)
+                {
+                    <p><b>Change Decommission State of room @Room.ID :</b></p>
+                    //<MudSwitch @bind-Checked="@Decom" Color="Color.Secondary" UnCheckedColor="Color.Primary" />
+                    <MudCheckBox @bind-Checked="@Room.Decom" Color="Color.Primary"></MudCheckBox>
+                }
+            </MudForm>
+        </MudPaper>
     </DialogContent>
+
     <DialogActions>
-        <MudButton Color="Color.Primary" OnClick="Close">Decommission</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Close">Save</MudButton>
         <MudButton Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
 
 
 @code {
-    private const string API_URL = "api/manager";
+    private const string API_URL = "/api/manager";
     private HttpClient? _client;
+    private bool Decom { get; set; }
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public RoomDTO Room { get; set; }
     [Parameter] public MudTable<RoomDTO> MudTable { get; set; }
 
+ 
+
     protected override async Task OnInitializedAsync()
     {
         _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
+        Decom = Room.Decom;
     }
-
-    public async Task Close()
+    
+    async void Close()
     {
+        Snackbar.Configuration.SnackbarVariant = Variant.Filled;
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
 
-        MudDialog.Close(DialogResult.Ok(true));
+        await UpdateRoomAsync();
+
+        Snackbar.Add("Room Updated", Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 1000;
+            config.Icon = @Icons.Material.Outlined.Check;
+        });
+
+        MudDialog?.Close(DialogResult.Ok(true));
     }
 
     void Cancel()
@@ -36,5 +61,15 @@
         MudDialog.Close(DialogResult.Cancel());
     }
 
+    private async Task UpdateRoomAsync()
+    {
+        await _client.PostAsJsonAsync<RoomDTO>(API_URL + $"/update/", Room);
+        await MudTable.ReloadServerData();
+    }
+
+    public async Task<List<RoomDTO>> GetRoomsAsync()
+    {
+        return await _client.GetFromJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
+    }
 }
 
