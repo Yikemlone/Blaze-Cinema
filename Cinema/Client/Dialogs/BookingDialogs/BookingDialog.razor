@@ -46,6 +46,11 @@
             else if (!_confirmedPayment) 
             {
                 <MudPaper Elevation="0">
+                    <AuthorizeView Policy="IsCustomer">
+                        <NotAuthorized>
+                            <MudTextField @bind-Value="_userEmail" Required RequiredError="Must enter an email" Label="Email" />
+                        </NotAuthorized>
+                    </AuthorizeView>
                     <MudForm @ref="_paymentForm" @bind-Errors="_errors">
                         <MudStack Row="true">
                             <MudTextField @bind-Value="_name" Required RequiredError="Must enter name on card" Label="Name on Card" />
@@ -98,6 +103,7 @@
     private string _date = "";
     private int _adultTickets;
     private int _childTickets;
+    private string _userEmail;
 
     private FluentValueValidator<string> _ccValidator = new FluentValueValidator<string>(x => x
         .NotEmpty()
@@ -144,10 +150,14 @@
 
         _confirmedPayment = true;
 
-        await Http.PostAsJsonAsync<BookingAndSeatDTO>(API_URL + "booking/create", new BookingAndSeatDTO
+        await Http.PostAsJsonAsync<ConfirmBookingDTO>(API_URL + "booking/create", new ConfirmBookingDTO
         { 
             BookingDTO = Booking, 
-            TicketTypeBookingDTO = TicketTypeBooking
+            TicketTypeBookingDTO = TicketTypeBooking,
+            ScreeningDTO = Screening,
+            Email = _userEmail,
+            Movie = Movie.Name,
+            Total = Total
         });
     }
 
@@ -166,7 +176,6 @@
             DisableBackdropClick = true
         });
     }
-
 
     // Validations
     private IEnumerable<string> ValidCVC(string cvc)
@@ -220,11 +229,5 @@
         }
 
         public Func<T, IEnumerable<string>> Validation => ValidateValue;
-    }
-
-
-    private async Task AddBookingAsync()
-    {
-        await Http.PostAsJsonAsync<BookingDTO>(API_URL + "create/", Booking);
     }
 }

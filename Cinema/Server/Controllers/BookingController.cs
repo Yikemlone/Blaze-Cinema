@@ -37,21 +37,23 @@ namespace Cinema.Server.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task CreateBookingAsync([FromBody] BookingAndSeatDTO bookingAndSeatDTO) 
+        public async Task CreateBookingAsync([FromBody] ConfirmBookingDTO confirmbooking) 
         {
-            await _unitOfWork.BookingService.AddAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
+            await _unitOfWork.BookingService.AddAsync(confirmbooking.BookingDTO, confirmbooking.TicketTypeBookingDTO);
             await _unitOfWork.SaveAsync();
-
-            await _emailService.SendEmail(bookingAndSeatDTO.BookingDTO, "test@gmail.com");
+            await _emailService.SendEmail(confirmbooking.BookingDTO, confirmbooking.ScreeningDTO, 
+                confirmbooking.Movie, confirmbooking.Total, confirmbooking.Email);
         }
 
         [HttpPost]
         [Authorize(Policy = "IsCustomer")]
         [Route("update")]
-        public async Task UpdateBookingAsync([FromBody] BookingAndSeatDTO bookingAndSeatDTO)
+        public async Task UpdateBookingAsync([FromBody] ConfirmBookingDTO confirmbooking)
         {
-            await _unitOfWork.BookingService.UpdateAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
+            await _unitOfWork.BookingService.UpdateAsync(confirmbooking.BookingDTO, confirmbooking.TicketTypeBookingDTO);
             await _unitOfWork.SaveAsync();
+            await _emailService.SendEmail(confirmbooking.BookingDTO, confirmbooking.ScreeningDTO,
+                confirmbooking.Movie, confirmbooking.Total, confirmbooking.Email);
         }
 
         [HttpPost]

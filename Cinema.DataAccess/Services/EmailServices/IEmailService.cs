@@ -9,6 +9,6 @@ namespace Cinema.DataAccess.Services.EmailServices
 {
     public interface IEmailService
     {
-        public Task SendEmail(BookingDTO booking, string toEmail);
+        public Task SendEmail(BookingDTO booking, ScreeningDTO screening, string movie, decimal total, string toEmail);
     }
 }

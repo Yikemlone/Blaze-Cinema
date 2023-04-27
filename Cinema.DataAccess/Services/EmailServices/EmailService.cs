@@ -1,4 +1,5 @@
-﻿using Cinema.Shared.DTO;
+﻿using Cinema.Models.Models;
+using Cinema.Shared.DTO;
 using FluentEmail.Core;
 using FluentEmail.Smtp;
 using System.Net.Mail;
@@ -8,7 +9,7 @@ namespace Cinema.DataAccess.Services.EmailServices
 {
     public class EmailService : IEmailService
     {
-        public async Task SendEmail(BookingDTO booking, string toEmail)
+        public async Task SendEmail(BookingDTO booking, ScreeningDTO screening, string movie, decimal total, string toEmail)
         {
             var sender = new SmtpSender(() => new SmtpClient("localhost")
             {
@@ -19,10 +20,26 @@ namespace Cinema.DataAccess.Services.EmailServices
                 //PickupDirectoryLocation = @"C:\EmailTests"
             });
 
+            string seatNumbers = "";
+
+            foreach(var seat in booking.SeatScreenings)
+            {
+                seatNumbers += seat.Seat.SeatNumber + " ";
+            }
+
             StringBuilder template = new();
-            template.AppendLine("Hey there!");
-            template.AppendLine("<p>Thanks for booking with Blaze Cinema! Here is your booking details.</p>");
-            template.AppendLine("<ul><li>@Model.BookingRef</li><ul>");
+            template.AppendLine("Hello there!");
+            template.AppendLine("");
+            template.AppendLine("Thanks for booking with Blaze Cinema! Here is your booking details:");
+            template.AppendLine("");
+            template.AppendLine($"- Booking reference: {booking.BookingRef}");
+            template.AppendLine($"- Movie: {movie}");
+            template.AppendLine($"- Date: {screening.DateTime.ToString()}");
+            template.AppendLine($"- Room: {screening.RoomID}");
+            template.AppendLine($"- Seat Qty: {booking.SeatScreenings.Count}");
+            template.AppendLine($"- Seat Numbers: {seatNumbers}");
+            template.AppendLine($"- Total: {total}");
+            template.AppendLine("");
             template.AppendLine("- Blaze Cinema");
 
             Email.DefaultSender = sender;
@@ -31,7 +48,7 @@ namespace Cinema.DataAccess.Services.EmailServices
                 .From("blazeCinema@blaze.com")
                 .To(toEmail, toEmail)
                 .Subject("Booking Confirmation")
-                .UsingTemplate(template.ToString(), booking)
+                .Body(template.ToString())
                 .SendAsync();
         }
     }
