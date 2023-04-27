@@ -15,6 +15,16 @@ namespace Cinema.Server.Controllers
             _env = env;
         }
 
+        [HttpGet]
+        [Route("{filename}")]
+        public async Task<IActionResult> GetImage(string filename)
+        {
+            var path = Path.Combine(_env.ContentRootPath, "images", $"{filename}.jpg");
+            byte[] imageBytes = System.IO.File.ReadAllBytes(path);
+
+            return new FileContentResult(imageBytes, "image/jpeg");
+        }
+
         [HttpPost]
         [Authorize(Policy = ("IsAdmin"))]
         [Route("create")]
@@ -28,16 +38,9 @@ namespace Cinema.Server.Controllers
             }
         }
 
-        [HttpGet("{filename}")]
-        public async Task<IActionResult> GetImage(string filename)
-        {
-            var path = Path.Combine(_env.ContentRootPath, "images", $"{filename}.jpg");
-            byte[] imageBytes = System.IO.File.ReadAllBytes(path);
-
-            return new FileContentResult(imageBytes, "image/jpeg");
-        }
-
-        [HttpPost("delete")]
+        [HttpPost]
+        [Authorize(Policy = ("IsAdmin"))]
+        [Route("delete")]
         public async Task DeleteImage([FromBody] int filename)
         {
             var path = Path.Combine(_env.ContentRootPath, "images", $"{filename}.jpg");
