@@ -1,4 +1,5 @@
-﻿using Cinema.DataAccess.Services.UnitOfWorkServices;
+﻿using Cinema.DataAccess.Services.EmailServices;
+using Cinema.DataAccess.Services.UnitOfWorkServices;
 using Cinema.Shared.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace Cinema.Server.Controllers
     public class BookingController
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailService _emailService;
 
-        public BookingController(IUnitOfWork bookingService)
+        public BookingController(IUnitOfWork bookingService, IEmailService emailService)
         {
             _unitOfWork = bookingService;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -38,6 +41,8 @@ namespace Cinema.Server.Controllers
         {
             await _unitOfWork.BookingService.AddAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
             await _unitOfWork.SaveAsync();
+
+            await _emailService.SendEmail(bookingAndSeatDTO.BookingDTO, "test@gmail.com");
         }
 
         [HttpPost]
