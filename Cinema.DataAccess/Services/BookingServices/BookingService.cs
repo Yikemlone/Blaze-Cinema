@@ -30,8 +30,8 @@ namespace Cinema.DataAccess.Services.BookingServices
 
         public async Task<List<BookingDTO>> GetAsync(int customerID)
         {
-            var bookings = await _context.Bookings
-                .Where(b => b.CustomerID == customerID)
+            var bookings = await _context.Customers
+                .Where(b => b.App == customerID)
                 .Select(b => new BookingDTO()
                 {
                     ID = b.ID,

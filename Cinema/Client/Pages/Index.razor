@@ -140,7 +140,7 @@
         _nowShowingMovies = _movies.Where(m => m.ReleaseDate < DateTime.Now).ToList();
     }
 
-    public async Task<List<MovieDTO>> GetMoviesAsync()
+    private async Task<List<MovieDTO>> GetMoviesAsync()
     {
         return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }

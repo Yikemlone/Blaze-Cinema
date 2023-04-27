@@ -29,8 +29,8 @@ namespace Cinema.Server.Controllers
 
         [HttpGet]
         [Authorize(Policy = "IsCustomer")]
-        [Route("bookings/{customerID}")]
-        public async Task<List<BookingDTO>> GetCustomerBookingsAsync(int customerID)
+        [Route("bookings")]
+        public async Task<List<BookingDTO>> GetCustomerBookingsAsync([FromBody] Guid customerID)
         {
             return await _unitOfWork.BookingService.GetAsync(customerID);
         }

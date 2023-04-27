@@ -13,8 +13,6 @@ namespace Cinema.DataAccess.Context
 {
     public class CinemaDBContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
-        private bool _isUserCreated = false;
-
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Employee> Employees { get; set; }

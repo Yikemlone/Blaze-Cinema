@@ -1,5 +1,7 @@
-﻿using Cinema.Models.Models;
+﻿using Cinema.DataAccess.Context;
+using Cinema.Models.Models;
 using Cinema.Shared;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +15,13 @@ namespace Cinema.Server.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly CinemaDBContext _context;
 
-        public AuthorizeController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AuthorizeController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, CinemaDBContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         [HttpPost]
@@ -73,15 +77,23 @@ namespace Cinema.Server.Controllers
         }
 
         [HttpGet]
-        public UserInfo UserInfo()
+        public async Task<UserInfo> UserInfo()
         {
             //var user = await _userManager.GetUserAsync(HttpContext.User);
-            return BuildUserInfo();
+            return await BuildUserInfo();
         }
 
 
-        private UserInfo BuildUserInfo()
+        private async Task<UserInfo> BuildUserInfo()
         {
+            var UserID = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Guid? guid = null;
+
+            if (UserID != null) 
+            {
+                guid = UserID.Id;
+            }
+
             return new UserInfo
             {
                 IsAuthenticated = User.Identity.IsAuthenticated,
@@ -89,7 +101,8 @@ namespace Cinema.Server.Controllers
                 ExposedClaims = User.Claims
                     //Optionally: filter the claims you want to expose to the client
                     //.Where(c => c.Type == "test-claim")
-                    .ToDictionary(c => c.Type, c => c.Value)
+                    .ToDictionary(c => c.Type, c => c.Value),
+                UserID = guid
             };
         }
     }

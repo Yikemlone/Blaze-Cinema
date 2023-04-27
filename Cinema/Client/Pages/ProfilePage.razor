@@ -1,6 +1,7 @@
 ﻿@page "/profile"
 @attribute [Authorize(Policy = "IsCustomer")]
 @inject HttpClient Http
+@using Cinema.Shared.DTO
 
 <PageTitle>Profile</PageTitle>
 
@@ -11,5 +12,22 @@
 </AuthorizeView>
 
 @code {
-    // Using the http, grab all the info about the user and display it here and offer to view bookings
+    private List<BookingDTO> _bookings;
+    private UserInfo _userInfo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _userInfo = await GetUserInfoAsync();
+        _bookings = await GetBookingsAsync();
+    }
+
+    private async Task<List<BookingDTO>> GetBookingsAsync()
+    {
+        return await Http.GetFromJsonAsync<List<BookingDTO>>("api/booking/" + _userInfo.UserID);
+    }
+
+    public async Task<UserInfo> GetUserInfoAsync()
+    {
+        return await Http.GetFromJsonAsync<UserInfo>("api/Authorize/UserInfo");
+    }
 }
