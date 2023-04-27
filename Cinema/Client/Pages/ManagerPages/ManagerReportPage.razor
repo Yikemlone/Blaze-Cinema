@@ -11,7 +11,7 @@
 
 
  
-
+<MudPaper Class="pa-15 ma-3" Elevation="1">
     @code {
         private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
 
@@ -76,21 +76,17 @@
             </div>
         </MudCarouselItem>
     </MudCarousel>
-    <MudSelect @bind-Value="transition" Label="Transition" Class="ma-2">
-        <MudSelectItem Value="@Transition.Fade">Fade</MudSelectItem>
-        <MudSelectItem Value="@Transition.Slide">Slide</MudSelectItem>
-        <MudSelectItem Value="@Transition.None">None</MudSelectItem>
-    </MudSelect>
+ 
    
 
     @code {
         private bool arrows = true;
         private bool bullets = true;
         private bool enableSwipeGesture = true;
-        private bool autocycle = true;
+        private bool autocycle = false;
         private Transition transition = Transition.Slide;
     }
-
+    </MudPaper>
 </MudContainer>
 
 @code {
