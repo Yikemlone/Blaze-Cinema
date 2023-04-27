@@ -3,6 +3,7 @@ using Cinema.DataAccess.Context;
 using Cinema.Models.Models;
 using Cinema.DataAccess.Services.UnitOfWorkServices;
 using Microsoft.AspNetCore.Identity;
+using Cinema.DataAccess.Services.EmailServices;
 
 namespace Cinema
 {
@@ -16,6 +17,7 @@ namespace Cinema
             builder.Services.AddRazorPages();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddDbContext<CinemaDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"))
