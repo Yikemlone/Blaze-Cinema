@@ -19,27 +19,26 @@
         }
 </style>
 
-@if (Movie != null) 
+@if (_movie != null) 
 {
-    <MudPaper Class="pa-7 ma-3" Elevation="1">
+    <MudPaper Class="pa-16 ma-3" Elevation="1">
         <MudGrid Spacing="3" Justify="Justify.Center">
 
             @*Movie Title *@
             <MudItem xs="12" sm="12" md="12">
-                <MudText Typo="Typo.h3" Align="Align.Left"><b> @Movie.Name </b></MudText>
+                <MudText Typo="Typo.h1" Align="Align.Left" Color="Color.Primary"><b>@_movie.Name</b></MudText>
             </MudItem>
 
             @*Movie Image*@
             <MudItem xs="3" sm="3" md="3">
-                <img src="https://localhost:7016/api/file/@(Movie.ID)" width="100%">
+                <img src="https://localhost:7016/api/file/@(_movie.ID)" width="100%">
             </MudItem>
 
             @*Movie trailer*@
-            @*The height is not scalable, need to adjust*@
-            <MudItem xs="12" sm="12" md="9" xl="12" Class="pa-3">
+            <MudItem xs="12" sm="12" md="9" Class="pa-3">
                 <div class="video-container">
-                    <iframe style="padding-bottom: 109px" width="560" height="315"
-                        src="https://www.youtube.com/embed/@Movie.Trailer"
+                    <iframe class="mb-10" width="560" height="315"
+                        src="https://www.youtube.com/embed/@_movie.Trailer"
                         frameborder="0"
                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen></iframe>
@@ -48,28 +47,29 @@
 
             @*Movie Duration and release Date*@
             <MudItem xs="9" sm="9" md="12">
-                <img src="https://localhost:7016/api/file/IFCO@(Movie.AgeRating)" width="55px">
-                <MudText Typo="Typo.h5">Length: @Movie.Duration Minutes</MudText>
-                <MudText Typo="Typo.h5">Release Date: @Movie.ReleaseDate.ToLongDateString()</MudText>
+                <img src="https://localhost:7016/api/file/IFCO@(_movie.AgeRating)" width="55px">
+                <MudText Typo="Typo.h4" Color="Color.Primary"><b>Length</b></MudText>
+                <MudText Typo="Typo.body1">@_movie.Duration Minutes</MudText>
+                <MudText Typo="Typo.h4" Color="Color.Primary"><b>Release Date</b></MudText>
+                <MudText Typo="Typo.body1">@_movie.ReleaseDate.ToLongDateString()</MudText>
             </MudItem>
 
             @*Movie Description*@
             <MudItem xs="6" sm="8" md="12">
-                <MudText Typo="Typo.h3">Description:</MudText>
-                <MudText Typo="Typo.body1">@Movie.Description</MudText>
+                <MudText Typo="Typo.h3" Color="Color.Primary"><b>Description</b></MudText>
+                <MudText Typo="Typo.body1">@_movie.Description</MudText>
             </MudItem>
 
             @*Movie Screenings*@
-            @if (Movie.Screenings.Count != 0)
-            {
-                <MudItem xs="9" sm="9" md="12">
+            <MudItem xs="9" sm="9" md="12">
+                <MudText Typo="Typo.h3" Color="Color.Primary"><b>Screenings</b></MudText>
 
-                    <MudText Typo="Typo.h3">Screenings</MudText>
-
+                @if (_movie.Screenings.Count != 0)
+                {
                     <MudTabs Elevation="2" Color="@Color.Primary" ApplyEffectsToContainer="true" Position="Position.Start">
 
                         <MudTabPanel Text="@("Monday " + _daysOfTheWeek[0])">
-                            @foreach (var screening in Movie.Screenings)
+                            @foreach (var screening in _movie.Screenings)
                             {
                                 <ScreeningTime Screening=@screening />
                             }
@@ -94,16 +94,13 @@
                         </MudTabPanel>
 
                     </MudTabs>
-                </MudItem>
-            }
-            else
-            {
-                <MudItem xs="9" sm="9" md="12">
-                    <MudText Typo="Typo.h3">Screenings</MudText>
+                }
+                else
+                {
                     <MudText Typo="Typo.h5">No Screenings yet.</MudText>
-                </MudItem>
-            }
+                }
 
+            </MudItem>
         </MudGrid>
     </MudPaper>
 }
@@ -113,13 +110,20 @@
     private const string API_URL = "api/movie";
     private string _link;
     private string[] _daysOfTheWeek;
+    private List<ScreeningDTO> _screenings;
+    private MovieDTO _movie;
 
-    public MovieDTO Movie { get; set; }
     [Parameter] public int MovieID { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Movie = await GetMovieAsync();
+        _movie = await GetMovieAsync();
+        _screenings = _movie.Screenings;
+
+        //foreach (var screening in _screenings) 
+        //{
+            
+        //}
 
         DateTime startOfWeek = DateTime.Today.AddDays(
             (int)CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek -
@@ -132,19 +136,6 @@
              .ToString("dd MMMM")));
 
         _daysOfTheWeek = result.Split(",");
-
-
-        // Now we must filter the screenings by the days of the week. 
-        // Only show screenings for this week.
-
-        // These will all be lists containing their day of booking. We must make sure to also filter by THIS week.
-        // mondayScreenings
-        // tuesdayScreenings
-        // wednesdayScreenings
-        // thursdayScreenings
-        // fridayScreenings
-        // saturdayScreenings
-        // sundayScreenings
     }
 
     private async Task<MovieDTO> GetMovieAsync()

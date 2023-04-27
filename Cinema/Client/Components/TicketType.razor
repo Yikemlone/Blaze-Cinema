@@ -11,16 +11,14 @@
         <MudStack Row="true" Justify="Justify.Center">
             <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddAdult" />
             <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person" />
-            <MudText Typo="Typo.body1" Class="mt-2" Align="Align.Center">Adult: @_adultTicket</MudText>
-            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Price: €@TicketTypes[0].Price</MudText>
+            <MudText Typo="Typo.body1" Class="mt-2" Align="Align.Center">Adult €@TicketTypes[0].Price: @_adultTicket</MudText>
             <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractAdult" />
         </MudStack>
 
         <MudStack Row="true" Justify="Justify.Center">
             <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddChild" />
             <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning" />
-            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Child: @_childTicket</MudText>
-            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Price: €@TicketTypes[1].Price</MudText>
+            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Child €@TicketTypes[1].Price: @_childTicket</MudText>
             <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractChild" />
         </MudStack>
 
@@ -84,7 +82,7 @@
         else if (_tickTypeBookings.Count > Availabletickets)
         {
             _valid = false;
-            _errorMessage = "There are not that many seats available.";
+            _errorMessage = "There are not that many seats available. " + Availabletickets + " seats are left.";
             return;
         }
         else if (_adultTicket == 0 && _childTicket > 0)

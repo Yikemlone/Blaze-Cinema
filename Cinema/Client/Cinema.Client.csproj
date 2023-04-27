@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.0" />
     <Compile Remove="Dialogs\BookingDialogs\**" />
     <Content Remove="Dialogs\BookingDialogs\**" />
@@ -16,6 +17,9 @@
 
   <ItemGroup>
     <Content Include="Dialogs\BookingDialogs\BookingDialog.razor" />
+    <Content Include="Dialogs\BookingDialogs\CancelBookingDialog.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

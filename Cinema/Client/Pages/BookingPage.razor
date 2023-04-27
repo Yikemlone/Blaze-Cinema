@@ -45,7 +45,7 @@
     private const string API_URL = "/api/";
     private BookingDTO _booking;
     private MovieDTO _movie;
-    private ScreeningDTO _screening; // I THINK I NEED THE ACTUAL SCREENING THAT WAS SELECTED
+    private ScreeningDTO _screening;
     private List<TicketTypeBookingDTO> _ticketTypeBookings;
     private List<SeatScreeningDTO> _seats;
     private List<TicketTypeDTO> _ticketTypes;
@@ -57,13 +57,16 @@
     {
         _booking = new BookingDTO();
         _booking.Status = "Pending";
-        _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Remove(0, 2); // This doesn't work
+        _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "");
 
         _screening = await GetScreeningAsync(); 
         _movie = await GetMovieAsync();
         _seats = await GetSeatScreeningsAsync();
         _ticketTypes = await GetTicketTypesAsync();
-        _availableSeats = _seats.Where(s => s.Booked != true).Select(s => s).Count();
+        _availableSeats = _seats
+            .Where(s => s.Booked != true)
+            .Select(s => s)
+            .Count();
     }
 
     protected async Task SelectedSeats(List<SeatScreeningDTO> seatScreenings)
@@ -105,7 +108,7 @@
 
         DialogService.Show<BookingDialog>("Confirm Booking", parameters, new DialogOptions()
         {
-            CloseButton = true,
+            CloseButton = false,
             MaxWidth = MaxWidth.Medium,
             DisableBackdropClick = true,
             FullWidth = true

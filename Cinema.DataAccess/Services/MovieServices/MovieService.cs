@@ -3,6 +3,7 @@ using Cinema.DataAccess.Services.RepositoryServices;
 using Cinema.Models.Models;
 using Cinema.Shared.DTO;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Cinema.DataAccess.Services.MovieServices
 {
@@ -22,14 +23,14 @@ namespace Cinema.DataAccess.Services.MovieServices
                  .Where(m => m.ID == movieID)
                  .Select(m => new MovieDTO()
                  {
-                    ID = m.ID,
-                    Name = m.Name,
-                    AgeRating = m.AgeRating,
-                    Duration = m.Duration,
-                    Trailer = m.Trailer,
-                    Description = m.Description,
-                    ReleaseDate = (DateTime)m.ReleaseDate,
-                    Screenings = (_context.Screenings
+                     ID = m.ID,
+                     Name = m.Name,
+                     AgeRating = m.AgeRating,
+                     Duration = m.Duration,
+                     Trailer = m.Trailer,
+                     Description = m.Description,
+                     ReleaseDate = m.ReleaseDate,
+                     Screenings = (_context.Screenings
                             .Where(s => s.MovieID == m.ID)
                             .Select(s => new ScreeningDTO()
                             {
@@ -41,9 +42,27 @@ namespace Cinema.DataAccess.Services.MovieServices
                             .OrderBy(s => s.DateTime)
                             .ToList()
                     ),
-				 })
+                 })
                  .FirstOrDefaultAsync();
-            
+
+            // UGGGGHH I need to filter out the seats 
+
+            foreach (var screening in movie.Screenings)
+            {
+                var seats = await _context.SeatScreenings
+                    .Where(ss => ss.ScreeningID == screening.ID)
+                    .Select(s => new SeatScreeningDTO()
+                    {
+                        ScreeningID = s.ScreeningID,
+                        Booked = s.Booked,
+                    })
+                    .ToListAsync();
+
+                seats.Where(s => s.Booked != true);
+
+                Console.WriteLine(seats.Count);
+            }
+
             return movie;
         }
 
@@ -58,20 +77,19 @@ namespace Cinema.DataAccess.Services.MovieServices
                     Duration = m.Duration,
                     Trailer = m.Trailer,
                     Description = m.Description,
-                    ReleaseDate = (DateTime)m.ReleaseDate,
+                    ReleaseDate = m.ReleaseDate,
                     Screenings = (_context.Screenings
                             .Where(s => s.MovieID == m.ID)
                             .Select(s => new ScreeningDTO()
                             {
                                 ID = s.ID,
                                 DateTime = s.DateTime,
-                                MovieID = m.ID,
+                                MovieID = m.ID, 
                                 RoomID = s.RoomID
                             })
                             .OrderBy(s => s.DateTime)
                             .ToList()
                     ),
-                    
 				})
                 .ToListAsync();
 

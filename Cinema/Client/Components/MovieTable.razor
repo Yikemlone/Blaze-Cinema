@@ -88,6 +88,7 @@
             <MudTh>Trailer</MudTh>
             <MudTh>Description</MudTh>
             <MudTh>Image</MudTh>
+
         </HeaderContent>
 
         <RowTemplate>
@@ -101,10 +102,10 @@
             <MudTd DataLabel="Duration">@context.Duration</MudTd>
             <MudTd DataLabel="Trailer">@context.Trailer</MudTd>
             <MudTd DataLabel="Description">
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" @onclick="@(() => OpenDescriptonDialog(@context.Description))">View Description</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="@(() => OpenDescriptonDialog(@context.Description))">View Description</MudButton>
             </MudTd>
-            <MudTd DataLabel="Description">
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" @onclick="@(() => OpenImageDialog(@context.ID.ToString()))">View Image</MudButton>
+            <MudTd DataLabel="Image">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="@(() => OpenImageDialog(@context.ID.ToString()))">View Image</MudButton>
             </MudTd>
         </RowTemplate>
 
