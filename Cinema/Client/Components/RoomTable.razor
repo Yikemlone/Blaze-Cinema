@@ -3,6 +3,21 @@
 @inject IDialogService DialogService
 @inject HttpClient Http
 
+<style>
+    .selected {
+        background-color: #ff4081 !important;
+    }
+
+        .selected > td {
+            color: white !important;
+        }
+
+            .selected > td .mud-input {
+                color: white !important;
+            }
+
+</style>
+
 @if (_rooms != null)
 {
     <MudTable Items="@_rooms"
@@ -10,6 +25,7 @@
           Breakpoint="Breakpoint.Sm"
           @ref="_mudTable"
           @bind-SelectedItem="_selected"
+          RowClassFunc="@SelectedRowClassFunc"
           OnRowClick="RowClickEvent"
           Hover="true"
           Dense="true"
@@ -75,7 +91,7 @@ else
 }
 
 @code {
-	private const string API_URL = "/api/manager/rooms";
+    private const string API_URL = "/api/manager/rooms";
     //private List<RoomDTO> _rooms;
 
     private string _searchString;
@@ -88,14 +104,15 @@ else
     private DialogOptions _dialogOptions;
     private IEnumerable<RoomDTO>? _rooms;
     private IEnumerable<ScreeningDTO>? _screenings;
-    
 
 
 
-	protected override async Task OnInitializedAsync()
-	{
-		_rooms = await GetRoomsAsync();
-	}
+
+    protected override async Task OnInitializedAsync()
+    {
+        _rooms = await GetRoomsAsync();
+        //_mudTable = new MudTable<RoomDTO>();
+    }
 
 
     // Table Event Functions
@@ -113,7 +130,7 @@ else
         }
     }
 
-    private string SelectedRowClassFunc(ScreeningDTO element, int rowNumber)
+    private string SelectedRowClassFunc(RoomDTO element, int rowNumber)
     {
         if (_selected != null && _selected.Equals(element))
         {
@@ -138,4 +155,19 @@ else
 	{
 		return await Http.GetFromJsonAsync<List<RoomDTO>>(API_URL);
 	}
+
+    // Server Reload Data
+    protected async Task<TableData<RoomDTO>> ServerReload(TableState state)
+    {
+        IEnumerable<RoomDTO> updatedRooms = await GetRoomsAsync();
+
+        _totalItems = updatedRooms.Count();
+
+
+        _rooms = updatedRooms.Skip(state.Page * state.PageSize).Take(state.PageSize);
+        _selected = null;
+        _buttonDisabled = true;
+
+        return new TableData<RoomDTO>() { TotalItems = _totalItems, Items = _rooms };
+    }
 }

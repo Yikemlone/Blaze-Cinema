@@ -66,34 +66,11 @@
 
                 @if (_movie.Screenings.Count != 0)
                 {
-                    <MudTabs Elevation="2" Color="@Color.Primary" ApplyEffectsToContainer="true" Position="Position.Start">
-
-                        <MudTabPanel Text="@("Monday " + _daysOfTheWeek[0])">
-                            @foreach (var screening in _movie.Screenings)
-                            {
-                                <ScreeningTime Screening=@screening />
-                            }
-                        </MudTabPanel>
-
-                        <MudTabPanel Text="@("Tuesday " + _daysOfTheWeek[1])">
-                        </MudTabPanel>
-
-                        <MudTabPanel Text="@("Wednesday " + _daysOfTheWeek[2])">
-                        </MudTabPanel>
-
-                        <MudTabPanel Text="@("Thurday " + _daysOfTheWeek[3])">
-                        </MudTabPanel>
-
-                        <MudTabPanel Text="@("Friday " + _daysOfTheWeek[4])">
-                        </MudTabPanel>
-
-                        <MudTabPanel Text="@("Saturday " + _daysOfTheWeek[5])">
-                        </MudTabPanel>
-
-                        <MudTabPanel Text="@("Sunday " + _daysOfTheWeek[6])">
-                        </MudTabPanel>
-
-                    </MudTabs>
+                    @foreach (var screening in _movie.Screenings)
+                    {
+                        <ScreeningTime Screening=@screening />
+                    }
+                        
                 }
                 else
                 {

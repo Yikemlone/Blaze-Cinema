@@ -11,7 +11,7 @@
                 {
                     <p><b>Change Decommission State of room @Room.ID :</b></p>
                     //<MudSwitch @bind-Checked="@Decom" Color="Color.Secondary" UnCheckedColor="Color.Primary" />
-                    <MudCheckBox @bind-Checked="@Room.Decom" Color="Color.Primary"></MudCheckBox>
+                    <MudSwitch @bind-Checked="@Room.Decom" Color="Color.Primary"></MudSwitch>
                 }
             </MudForm>
         </MudPaper>
@@ -45,17 +45,16 @@
     
     async void Close()
     {
+        await MudTable.ReloadServerData();
+
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-
-        await UpdateRoomAsync();
 
         Snackbar.Add("Room Updated", Severity.Success, config =>
         {
             config.VisibleStateDuration = 1000;
             config.Icon = @Icons.Material.Outlined.Check;
         });
-
         MudDialog?.Close(DialogResult.Ok(true));
     }
 
@@ -67,7 +66,6 @@
     private async Task UpdateRoomAsync()
     {
         await Http.PostAsJsonAsync<RoomDTO>(API_URL + "/update/room", Room);
-        await MudTable.ReloadServerData();
     }
 
     public async Task<List<RoomDTO>> GetRoomsAsync()
