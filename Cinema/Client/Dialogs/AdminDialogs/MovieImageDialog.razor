@@ -1,0 +1,27 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudStack AlignItems="AlignItems.Center">
+            <div style="width:300px; height: auto;">
+                <img src="https://localhost:7016/api/file/@(MovieID)" width="100%">
+            </div>
+        </MudStack>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Color="Color.Secondary" OnClick="Close">Close</MudButton>
+    </DialogActions>
+
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string MovieID { get; set; }
+
+    private async void Close()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

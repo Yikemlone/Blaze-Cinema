@@ -1,0 +1,173 @@
+﻿@using Cinema.Client.Dialogs.ManagerDialogs;
+@using Cinema.Shared.DTO;
+@inject IDialogService DialogService
+@inject HttpClient Http
+
+<style>
+    .selected {
+        background-color: #ff4081 !important;
+    }
+
+        .selected > td {
+            color: white !important;
+        }
+
+            .selected > td .mud-input {
+                color: white !important;
+            }
+
+</style>
+
+@if (_rooms != null)
+{
+    <MudTable Items="@_rooms"
+          T="RoomDTO"
+          Breakpoint="Breakpoint.Sm"
+          @ref="_mudTable"
+          @bind-SelectedItem="_selected"
+          RowClassFunc="@SelectedRowClassFunc"
+          OnRowClick="RowClickEvent"
+          Hover="true"
+          Dense="true"
+          FixedHeader="true"
+          GroupHeaderStyle="background-color: #424242"
+          GroupFooterClass="mb-4">
+
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Edit Room Commission State</MudText>
+            <MudSpacer />
+
+            <MudSpacer />
+
+            <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Primary">
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" Disabled=@_buttonDisabled OnClick="OpenDecomDialog" />
+            </MudTooltip>
+
+        </ToolBarContent>
+
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel SortLabel="ID" T="RoomDTO">
+                    Room ID
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="decom" T="RoomDTO">
+                    Decommission State
+                </MudTableSortLabel>
+            </MudTh>
+        </HeaderContent>
+
+        <GroupHeaderTemplate>
+            <MudTh Class="mud-table-cell-custom-group" colspan="5">
+                @foreach (var Room in _rooms)
+                {
+                    if (Room.ID == Int32.Parse(context.Key.ToString()))
+                    {
+                        @Room.Decom
+                    }
+                }
+            </MudTh>
+        </GroupHeaderTemplate>
+
+        <RowTemplate>
+            <MudTd DataLabel="RoomID">@context.ID</MudTd>
+            <MudTd DataLabel="CommissionState">@context.Decom</MudTd>
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+
+    </MudTable>
+}
+else
+{
+    <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+}
+
+@code {
+    private const string API_URL = "/api/manager/rooms";
+    //private List<RoomDTO> _rooms;
+
+    private string _searchString;
+    private bool _buttonDisabled;
+    private int _totalItems;
+    private int[] _pageSizeOptions;
+
+    private RoomDTO? _selected;
+    private MudTable<RoomDTO>? _mudTable;
+    private DialogOptions _dialogOptions;
+    private IEnumerable<RoomDTO>? _rooms;
+    private IEnumerable<ScreeningDTO>? _screenings;
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _rooms = await GetRoomsAsync();
+        //_mudTable = new MudTable<RoomDTO>();
+    }
+
+
+    // Table Event Functions
+    private void RowClickEvent(TableRowClickEventArgs<RoomDTO> tableRowClickEventArgs)
+    {
+        _selected = tableRowClickEventArgs.Item;
+
+        if (_selected != null)
+        {
+            _buttonDisabled = false;
+        }
+        else
+        {
+            _buttonDisabled = true;
+        }
+    }
+
+    private string SelectedRowClassFunc(RoomDTO element, int rowNumber)
+    {
+        if (_selected != null && _selected.Equals(element))
+        {
+            return "selected";
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+
+    private void OpenDecomDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Room", _selected);
+        parameters.Add("MudTable", _mudTable);
+
+        DialogService.Show<DecomRoomDialog>("Update Room State", parameters, _dialogOptions);
+    }
+
+	public async Task<List<RoomDTO>> GetRoomsAsync()
+	{
+		return await Http.GetFromJsonAsync<List<RoomDTO>>(API_URL);
+	}
+
+    // Server Reload Data
+    protected async Task<TableData<RoomDTO>> ServerReload(TableState state)
+    {
+        IEnumerable<RoomDTO> updatedRooms = await GetRoomsAsync();
+
+        _totalItems = updatedRooms.Count();
+
+
+        _rooms = updatedRooms.Skip(state.Page * state.PageSize).Take(state.PageSize);
+        _selected = null;
+        _buttonDisabled = true;
+
+        return new TableData<RoomDTO>() { TotalItems = _totalItems, Items = _rooms };
+    }
+}

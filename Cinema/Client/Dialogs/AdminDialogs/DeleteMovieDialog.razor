@@ -1,9 +1,15 @@
 ﻿@using Cinema.Shared.DTO
+@using System.Net
+@inject HttpClient Http
 @inject ISnackbar Snackbar
 
 <MudDialog>
     <DialogContent>
         <p>Are you sure you want to delete <b>@Movie.Name?</b></p>
+        @if (error != null) 
+        {
+            <span style="color: red">@error</span>
+        }
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="Close">Delete</MudButton>
@@ -13,21 +19,21 @@
 
 
 @code {
-    private const string API_URL = "api/admin";
-    private HttpClient? _client;
+    private const string API_URL = "api/";
+    private string error;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MovieDTO Movie { get; set; }
     [Parameter] public MudTable<MovieDTO> MudTable { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-    }
-
-    public async Task Close()
+    private async Task Close()
     {
         await DeleteMovieAsync();
+
+        if (error != null) 
+        {
+            return;
+        }
 
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
@@ -40,15 +46,22 @@
         MudDialog.Close(DialogResult.Ok(true));
     }
 
-    void Cancel()
+    private void Cancel()
     {
         MudDialog.Close(DialogResult.Cancel());
     }
 
     public async Task DeleteMovieAsync()
     {
-        await _client.PostAsJsonAsync<int>(API_URL + $"/delete/{Movie.ID}", Movie.ID);
+        var response = await Http.PostAsJsonAsync<MovieDTO>(API_URL + "movie/delete", Movie);
+       
+        if (response.StatusCode == HttpStatusCode.BadRequest) 
+        {
+            error = await response.Content.ReadAsStringAsync();
+            return;
+        }
+
+        await Http.PostAsJsonAsync<int>(API_URL + "file/delete/", Movie.ID);
         await MudTable.ReloadServerData();
     }
-
 }

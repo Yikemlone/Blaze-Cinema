@@ -1,5 +1,7 @@
-﻿using Cinema.DataAccess.Services.BookingService;
+﻿using Cinema.DataAccess.Services.EmailServices;
+using Cinema.DataAccess.Services.UnitOfWorkServices;
 using Cinema.Shared.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Server.Controllers
@@ -8,49 +10,67 @@ namespace Cinema.Server.Controllers
     [Route("/api/[controller]")]
     public class BookingController
     {
-        private readonly IBookingService _bookingService;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailService _emailService;
 
-        public BookingController(IBookingService bookingService)
+        public BookingController(IUnitOfWork bookingService, IEmailService emailService)
         {
-            _bookingService = bookingService;
+            _unitOfWork = bookingService;
+            _emailService = emailService;
         }
 
-        // Gets
         [HttpGet]
+        [Authorize(Policy = "IsManager")]
         [Route("bookings")]
-        public async Task<List<BookingDTO>> GetBookings()
+        public async Task<List<BookingDTO>> GetBookingsAsync()
         {
-            return await _bookingService.GetBookingsAsync();
+            return await _unitOfWork.BookingService.GetAllAsync();
         }
 
         [HttpGet]
+        [Authorize(Policy = "IsCustomer")]
         [Route("bookings/{customerID}")]
-        public async Task<List<BookingDTO>> GetCustomerBookings(int customerID)
+        public async Task<List<BookingDTO>> GetCustomerBookingsAsync(int customerID)
         {
-            return await _bookingService.GetCustomerBookingsAsync(customerID);
+            return await _unitOfWork.BookingService.GetAsync(customerID);
         }
 
-
-        // Create, Update and Delete
         [HttpPost]
         [Route("create")]
-        public async Task CreateBooking([FromBody] BookingAndSeatDTO bookingAndSeatDTO) 
+        public async Task CreateBookingAsync([FromBody] ConfirmBookingDTO confirmbooking) 
         {
-            await _bookingService.CreateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
+            await _unitOfWork.BookingService.AddAsync(confirmbooking.BookingDTO, confirmbooking.TicketTypeBookingDTO);
+            await _unitOfWork.SaveAsync();
+            await _emailService.SendEmail(confirmbooking.BookingDTO, confirmbooking.ScreeningDTO, 
+                confirmbooking.Movie, confirmbooking.Total, confirmbooking.Email);
         }
 
         [HttpPost]
+        [Authorize(Policy = "IsCustomer")]
         [Route("update")]
-        public async Task UpdateBooking([FromBody] BookingAndSeatDTO bookingAndSeatDTO)
+        public async Task UpdateBookingAsync([FromBody] ConfirmBookingDTO confirmbooking)
         {
-            await _bookingService.UpdateBookingAsync(bookingAndSeatDTO.BookingDTO, bookingAndSeatDTO.TicketTypeBookingDTO);
+            await _unitOfWork.BookingService.UpdateAsync(confirmbooking.BookingDTO, confirmbooking.TicketTypeBookingDTO);
+            await _unitOfWork.SaveAsync();
+            await _emailService.SendEmail(confirmbooking.BookingDTO, confirmbooking.ScreeningDTO,
+                confirmbooking.Movie, confirmbooking.Total, confirmbooking.Email);
         }
 
         [HttpPost]
-        [Route("delete/{bookingID}")]
-        public async Task DeleteBooking(int bookingID)
+        [Authorize(Policy = "IsCustomer")]
+        [Route("delete")]
+        public async Task DeleteBookingAsync([FromBody] int bookingID)
         {
-           await _bookingService.DeleteBookingAsync(bookingID);
+            await _unitOfWork.BookingService.DeleteAsync(bookingID);
+            await _unitOfWork.SaveAsync();
+        }
+
+
+        [HttpGet]
+        [Route("tickets")]
+        public async Task<List<TicketTypeDTO>> GetTicketsAsync()
+        {
+            return await _unitOfWork.BookingService.GetTicketTypesAsync();
         }
     }
 }

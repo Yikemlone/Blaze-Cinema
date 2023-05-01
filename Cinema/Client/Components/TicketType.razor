@@ -1,50 +1,62 @@
 ﻿@using Cinema.Shared.DTO
 @inherits ComponentBase
 
-<MudStack>
 
-    <MudText Typo="Typo.h2" Align="Align.Left"><b>Select Tickets</b></MudText>
+<MudText Typo="Typo.h3" Color="Color.Primary" Class="ml-16 mb-7" Align="Align.Left"><b>Select Tickets</b></MudText>
 
-    @* DISPLAY PRICE OF TICKET*@
-    <MudStack Row="true" Justify="Justify.Center">
-        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddAdult"/>
-        <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person"/>
-        <span><MudText Typo="Typo.body1" Align="Align.Center">Adult: @_adultTicket</MudText></span>
-        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractAdult"/>
+@if (TicketTypes != null)
+{
+    <MudStack AlignItems="AlignItems.Center">
+
+        <MudStack Row="true" Justify="Justify.Center">
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddAdult" />
+            <MudIcon Size="Size.Large" Icon="@Icons.Filled.Person" />
+            <MudText Typo="Typo.body1" Class="mt-2" Align="Align.Center">Adult €@TicketTypes[0].Price: @_adultTicket</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractAdult" />
+        </MudStack>
+
+        <MudStack Row="true" Justify="Justify.Center">
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="AddChild" />
+            <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning" />
+            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Child €@TicketTypes[1].Price: @_childTicket</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Primary" OnClick="SubtractChild" />
+        </MudStack>
+
+        <MudStack Row="true" Justify="Justify.Center">
+            <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.AttachMoney" />
+            <MudText Class="mt-2" Typo="Typo.body1" Align="Align.End">Total: €@_subtotal</MudText>
+        </MudStack>
+
+
+        <MudStack Row="true" Justify="Justify.Center">
+            @if (!_valid)
+            {
+                <span style="color: red">@_errorMessage</span>
+            }
+        </MudStack>
+
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Primary" OnClick="SelectedTickets" Style="margin: auto">Save Tickets</MudButton>
+
     </MudStack>
-
-    @* DISPLAY PRICE OF TICKET*@
-    <MudStack Row="true" Justify="Justify.Center">
-        <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddChild"/>
-        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.EscalatorWarning"/>
-        <span><MudText Typo="Typo.body1" Align="Align.End">Child: @_childTicket</MudText></span>
-        <MudIconButton Icon="@Icons.Material.Filled.Remove" Color="Color.Secondary" OnClick="SubtractChild"/>
-    </MudStack>
-
-    <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Button" Color="Color.Secondary" OnClick="SelectedTickets">Save Tickets</MudButton>
-    
-    @if (!_valid) 
-    {
-        <span style="color: red">@_errorMessage</span>
-    }
-
-</MudStack>
-
+}
 
 @code{
-    private List<TicketTypeBookingDTO> _tickTypeBookings = new List<TicketTypeBookingDTO>();
+    private List<TicketTypeBookingDTO> _tickTypeBookings;
     private int _adultTicket;
     private int _childTicket;
     private bool _valid = true;
     private string _errorMessage = "";
+    private decimal _subtotal;
 
     [Parameter] public EventCallback<List<TicketTypeBookingDTO>> OnSelectedTikcets { get; set; }
     [Parameter] public List<SeatScreeningDTO> Seats { get; set; }
-    [Parameter] public List<TicketTypeDTO> TicketTypes { get; set; } // Do I even need this here?
+    [Parameter] public List<TicketTypeDTO> TicketTypes { get; set; }
     [Parameter] public int Availabletickets { get; set; }
 
     public async Task SelectedTickets() 
     {
+        _tickTypeBookings = new List<TicketTypeBookingDTO>();
+
         for (int i = 0; i < _adultTicket; i++)
         {
             _tickTypeBookings.Add(new TicketTypeBookingDTO
@@ -61,7 +73,6 @@
             });
         }
 
-        // Validation for seats.
         if (_tickTypeBookings.Count == 0)
         {
             _valid = false;
@@ -71,7 +82,7 @@
         else if (_tickTypeBookings.Count > Availabletickets)
         {
             _valid = false;
-            _errorMessage = "There are not that many seats available.";
+            _errorMessage = "There are not that many seats available. " + Availabletickets + " seats are left.";
             return;
         }
         else if (_adultTicket == 0 && _childTicket > 0)
@@ -80,47 +91,55 @@
             _errorMessage = "Children must be with an adult.";
             return;
         }
-        else if ((_adultTicket + _childTicket) > 20 || _adultTicket > 20)
+        else if ((_adultTicket + _childTicket) > 9 || _adultTicket > 9)
         {
             _valid = false;
-            _errorMessage = "Can't book more than 20 seats at a time.";
+            _errorMessage = "Can't book more than 9 seats at a time.";
             return;
         }
 
         await OnSelectedTikcets.InvokeAsync(_tickTypeBookings);
-        _tickTypeBookings = new List<TicketTypeBookingDTO>();
     }
 
-    public void AddAdult() 
+    private void AddAdult() 
     {
-        // Should validate that they can not add more seats in the room
-        // should also make sure if they are free seats.
         _adultTicket++;
+        _subtotal += TicketTypes[0].Price;
     }
 
-    public void SubtractAdult() 
+    private void SubtractAdult() 
     {
+        if (_adultTicket > 0)
+        {
+            _subtotal -= TicketTypes[0].Price;
+        }
+
         _adultTicket--;
-        if (_adultTicket < 0) 
+
+        if (_adultTicket < 0)
         {
             _adultTicket = 0;
         }
     }
 
-    public void AddChild()
+    private void AddChild()
     {
-        // Should validate that they can not add more seats in the room
-        // should also make sure if they are free seats.
         _childTicket++;
+        _subtotal += TicketTypes[1].Price;
     }
 
-    public void SubtractChild()
+    private void SubtractChild()
     {
+        if (_childTicket > 0)
+        {
+            _subtotal -= TicketTypes[1].Price;
+        }
+
         _childTicket--;
+
         if (_childTicket < 0)
         {
             _childTicket = 0;
         }
     }
-
 }

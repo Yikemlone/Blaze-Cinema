@@ -1,71 +1,147 @@
 ﻿@page "/"
 @using Cinema.Shared.DTO
+@inject HttpClient Http
+
+<style>
+    .image_wrapper {
+        position: relative;
+    }
+
+    .background-img {
+        object-fit: cover;
+        width: 100%;
+        height: 600px;
+    }
+
+    .overlay {
+        position: absolute;
+        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.9), rgba(0,0,0,1));
+        backdrop-filter: blur(8px);
+        display: flex;
+
+        align-items: center;
+        justify-content: left;
+        padding-left: 60px;
+        color: white;
+        font-size: 40px;
+    }
+
+    .sub-text {
+        position: relative;
+        bottom: 200px;
+        left: 16px;
+        padding-left: 70px;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .overlay_1 {
+      inset: 0;
+    }
+
+</style>
 
 <PageTitle>Blaze Cinema</PageTitle>
+<MudContainer MaxWidth="MaxWidth.False">
 
-<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudGrid Justify="Justify.Center">
 
-    <MudPaper Class="pa-5 ma-2" Elevation="2">
-        <MudItem xs="12" sm="6" md="4">
-            <MovieSelect Movies="@Movies"/>
+        <MudItem xs="12">
+            <div class="image_wrapper">
+                <img src="images/website/blurry.jpg" class="background-img" />
+                <div class="overlay overlay_1 mb-16">
+                    <MudText Typo="Typo.h1"><b>WELCOME TO</b><b class="mud-primary-text"> BLAZE CINEMA</b></MudText>
+                </div>
+                <div class="sub-text">
+                    <MudText Class="mt-2" Typo="Typo.body1">Where blazing experinces happen</MudText>
+                    <br/>
+                    <MudButton Class="mt-2" Variant="Variant.Filled" Size="Size.Large" Color="Color.Primary">SHOWING TODAY</MudButton>
+                </div>
+            </div>
         </MudItem>
-    </MudPaper>
 
-    <MudPaper Class="pa-10 ma-2" Elevation="2">
-        <MudGrid Spacing="3" Justify="Justify.Center">
-            @if (Movies.Count != 0)
-            {
-                @foreach(var movie in Movies)
-                {
-                    <MudItem xs="8" sm="6" md="3">
-                        <MovieThumbnail MovieID=@(movie.ID) />
-                    </MudItem>
-                }
-            } 
-            else 
-            {
-                @for (var i = 0; i < 10; i++)
-                {
-                    <MudItem xs="8" sm="6" md="3">
-                        <MudCard>
-                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px"/>
-                            <MudCardContent>
-                                <MudSkeleton Width="30%" Height="42px;" />
-                                <MudSkeleton Width="80%" />
-                                <MudSkeleton Width="100%" />
-                            </MudCardContent>
-                            <MudCardActions>
-                                <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
-                                <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
-                            </MudCardActions>
-                        </MudCard>
-                    </MudItem>
-                }
-            }
-        </MudGrid>
-    </MudPaper>
+        <MudItem xs="12">
+            <MudStack Row="true" Justify="Justify.Center" Spacing="15">
+                <MudButton Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary">VIEW SHOWTIMES</MudButton>
+                <MudButton Variant="Variant.Outlined" Size="Size.Large" Color="Color.Primary">PRE-ORDER SNACKS</MudButton>
+            </MudStack>
+        </MudItem>
+
+        <MudItem xs="12">
+
+            <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
+
+                <MudGrid Spacing="3" Justify="Justify.Center">
+
+                    @if (_nowShowingMovies != null)
+                    {
+                        <MudItem xs="11">
+                            <MudText Typo="Typo.h1"><b class="mud-primary-text">Now</b> Showing</MudText>
+                        </MudItem>
+
+                        @foreach (var movie in _nowShowingMovies)
+                        {
+                            <MudItem xs="5" sm="6" md="2" xl="2">
+                                <MovieThumbnail MovieID=@movie.ID/>
+                            </MudItem>
+                        }
+
+                        @if (_upcomingMovies != null) 
+                        {
+                            <MudItem xs="11">
+                                <MudText Typo="Typo.h1"><b class="mud-primary-text">Upcoming</b> Movies</MudText>
+                            </MudItem>
+
+                            @foreach (var movie in _upcomingMovies)
+                            {
+                                <MudItem xs="5" sm="6" md="2" xl="2">
+                                    <MovieThumbnail MovieID=@movie.ID />
+                                </MudItem>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        @for (var i = 0; i < 10; i++)
+                        {
+                            <MudItem xs="8" sm="6" md="2">
+                                <MudCard>
+                                    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="200px" />
+                                    <MudCardContent>
+                                        <MudSkeleton Width="30%" Height="42px;" />
+                                        <MudSkeleton Width="80%" />
+                                        <MudSkeleton Width="100%" />
+                                    </MudCardContent>
+                                    <MudCardActions>
+                                        <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+                                        <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+                                    </MudCardActions>
+                                </MudCard>
+                            </MudItem>
+                        }
+                    }
+                </MudGrid>
+            </MudContainer>
+        </MudItem>
+
+    </MudGrid>
 </MudContainer>
 
 @code
 {
     private const string API_URL = "api/movie";
-    private HttpClient _client;
-    public List<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
-    public List<ScreeningDTO> Screenings { get; set; } // This will used inside of the movie details page.
+    private List<MovieDTO> _movies;
+    private List<MovieDTO> _upcomingMovies;
+    private List<MovieDTO> _nowShowingMovies;
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-        Movies = await GetMoviesAsync();
+        _movies = await GetMoviesAsync();
+        _upcomingMovies = _movies.Where(m => m.ReleaseDate > DateTime.Now).ToList();
+        _nowShowingMovies = _movies.Where(m => m.ReleaseDate < DateTime.Now).ToList();
     }
 
     public async Task<List<MovieDTO>> GetMoviesAsync()
     {
-        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
-    }
-
-    public async Task<List<ScreeningDTO>> GetScreeningsAsync()
-    {
-        return await _client.GetFromJsonAsync<List<ScreeningDTO>>(API_URL + "/screenings");
+        return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 }

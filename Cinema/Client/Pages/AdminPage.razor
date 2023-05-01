@@ -1,26 +1,25 @@
 ﻿@page "/admin"
 @using Cinema.Shared.DTO
+@attribute [Authorize(Policy = "IsAdmin")]
 
-<PageTitle>Admin Dashoard</PageTitle>
+<PageTitle>Admin</PageTitle>
 
-<MudPaper Class="pa-3 ma-2" Elevation="1">
-    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
-</MudPaper>
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
 
-<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-    <MudGrid Justify="Justify.Center" Spacing="5">
+    <MudPaper Class="pa-4 mt-4 mb-4" Elevation="1">
+        <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+    </MudPaper>
+
+    <MudGrid Justify="Justify.Center">
         <MudItem xs="12">
-            <MovieTable/>
+            <MovieTable />
         </MudItem>
-    </MudGrid> 
-</MudPaper>
+    </MudGrid>
+</MudContainer>
 
 @code {
-    private string _name = "Mikey";
-
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
         new BreadcrumbItem("Admin Dashboard", href: "/admin", icon: Icons.Material.Filled.Lock)
     };
 }

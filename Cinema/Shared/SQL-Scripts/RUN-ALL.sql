@@ -13,6 +13,14 @@ INSERT INTO Rooms VALUES
 ('false'),
 ('false');
 
+INSERT INTO dbo.AspNetUsers(Id, UserName, NormalizedUserName, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, AccessFailedCount, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled) VALUES
+('89e26fe7-69ee-4e83-a015-130edf3d6a69', 'admin@admin.com', 'ADMIN@ADMIN.COM', 1, 'AQAAAAEAACcQAAAAEHbUISQrifGLs6MKzzhaxJz3ktSkzEX8becxRB4Y2CUjisBuLwf13dqdmuYZLATZkA==', 'VN7O72AE53QFLV7XTSYMB6AX7OTHSALU', '668c2037-73ef-4f10-a6cd-331c2b28717c', 0, 0, 0, 0),
+('89e26fe7-69ee-4e83-a015-130edf3d6a79', 'manager@manager.com', 'MANAGER@MANAGER.COM', 1, 'AQAAAAEAACcQAAAAEHbUISQrifGLs6MKzzhaxJz3ktSkzEX8becxRB4Y2CUjisBuLwf13dqdmuYZLATZkA==', 'VN7O72AE53QFLV7XTSYMB6AX7OTHSALU', '668c2037-73ef-4f10-a6cd-331c2b28717c', 0, 0, 0, 0);
+
+INSERT INTO dbo.AspNetUserClaims(UserId, ClaimType, ClaimValue) VALUES
+('89e26fe7-69ee-4e83-a015-130edf3d6a69', 'AdminRole', 'admin'),
+('89e26fe7-69ee-4e83-a015-130edf3d6a79', 'ManagerRole', 'manager');
+
 
 INSERT INTO Employees VALUES
 ('Manager','Conor','Mc Daid','ConorMcDaid01','Password123'),
@@ -24,6 +32,12 @@ INSERT INTO Employees VALUES
 ('Admin','Patrick','Mc Dermott','PatrickMcDermott04','Password109'),
 ('Admin','Sean','Mc Laughlin','SeanMcLaughlin02','Password924'),
 ('Admin','Sarah','Mullan','SarahMullan97','Password206');
+
+
+INSERT INTO TicketTypes VALUES
+(9.99, 'Adult'),
+(5.99, 'Child'),
+(5, 'TuesdayDeal');
 
 
 INSERT INTO Movies(Name, Duration, AgeRating, Trailer, Description, ReleaseDate) VALUES

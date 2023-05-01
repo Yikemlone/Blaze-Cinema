@@ -1,19 +1,21 @@
 ﻿@using Cinema.Shared.DTO
+@using System.Net.Http.Headers
+@inject HttpClient Http
 @inject ISnackbar Snackbar
 
 <MudDialog>
 
     <DialogContent>
-        <MudPaper>
-            <MudForm>
+        <MudPaper Class="pa-3 ma-3" Elevation="0">
+            <MudForm @ref="_form" @bind-Errors="@_errors">
 
                 <MudStack Row=true>
                     <MudTextField T="string" Label="Name" Variant="Variant.Filled" Required RequiredError="You must enter a Name." @bind-Value=Movie.Name></MudTextField>
-                    <MudTextField T="int" Label="Duration" Variant="Variant.Filled" Required RequiredError="You must enter a Duration." @bind-Value=@Movie.Duration></MudTextField>
+                    <MudTextField T="int" Label="Duration" Variant="Variant.Filled" @ref="@_duration" Validation="@(new Func<int, IEnumerable<string>>(DurationLength))" Required RequiredError="You must enter a Duration." @bind-Value=@Movie.Duration></MudTextField>
                 </MudStack>
 
                     <MudStack>
-                    <MudDatePicker Label="Date" Variant="Variant.Filled" DateFormat="dd/MM/yyyy" @bind-Date="_ReleaseDate" />
+                    <MudDatePicker Label="Date" Variant="Variant.Filled" DateFormat="dd/MM/yyyy" @bind-Date="_releaseDate" />
                     <MudSelect @bind-Value="Movie.AgeRating" Variant="Variant.Filled" Required RequiredError="You must select a Age Rating.">
                         <MudSelectItem Value="@("G")">  G </MudSelectItem>
                         <MudSelectItem Value="@("PG")"> PG </MudSelectItem>
@@ -29,6 +31,24 @@
                     <MudTextField T="string" Label="Description" Variant="Variant.Filled" Required RequiredError="You must enter a Description." @bind-Value=Movie.Description Lines="5"></MudTextField>
                 </MudStack>
 
+                <MudStack AlignItems="AlignItems.Start">
+                    <MudFileUpload Class="ma-4 pa-2" T="IBrowserFile" Validation="@(new Func<IBrowserFile, IEnumerable<string>>(ValidFile))" FilesChanged="FilesChanged" Required RequiredError="You must upload an Image">
+                        <ButtonTemplate>
+                            <MudFab HtmlTag="label"
+                                    Color="Color.Secondary"
+                                    Icon="@Icons.Material.Filled.Image"
+                                    Label="Upload picture"
+                                    for="@context" />
+                        </ButtonTemplate>
+                    </MudFileUpload>
+
+                    @if (_file != null)
+                    {
+                        <MudText Class="ml-5" Typo="Typo.body1">@_file.Name <code>@(_file.Size / 1024)KB</code></MudText>
+                    }
+
+                </MudStack>
+
             </MudForm>
         </MudPaper>
     </DialogContent>
@@ -42,10 +62,15 @@
 
 
 @code {
-    private const string API_URL = "api/admin";
-    private HttpClient _client;
-    private DateTime? _ReleaseDate;
-
+    private const string API_URL = "api/";
+    private DateTime? _releaseDate;
+    private MudForm? _form;
+    private IBrowserFile _file;
+    private MudTextField<int>? _duration;
+    private long _maxFileSize = 1024 * 3000;
+    private string[] _errors = { };
+    private MultipartFormDataContent? _content;
+    private StreamContent? _fileContent;
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MovieDTO Movie { get; set; }
@@ -53,13 +78,39 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
-
-        _ReleaseDate = Movie.ReleaseDate;
+        _releaseDate = Movie.ReleaseDate;
     }
 
-    async void Close() 
+    private IEnumerable<string> DurationLength(int duration)
+    {
+        if (duration <= 0)
+        {
+            yield return "Movie must be longer than 0 mins";
+        }
+    }
+
+    private IEnumerable<string> ValidFile(IBrowserFile file)
+    {
+        if (!(file.ContentType.Equals("image/png") || file.ContentType.Equals("image/jpeg")))
+        {
+            yield return "File must be a PNG or JPG.";
+        }
+        else if (file.Size > _maxFileSize)
+        {
+            yield return "File is too large!";
+        }
+    }
+
+    private async void Close() 
     { 
+        _form?.Validate();
+        if (_errors.Length != 0) return;
+
+        if (_releaseDate != null)
+        {
+            Movie.ReleaseDate = (DateTime)_releaseDate;
+        }
+
         await UpdateMovieModel();
 
         Snackbar.Configuration.SnackbarVariant = Variant.Filled;
@@ -73,19 +124,30 @@
         MudDialog.Close(DialogResult.Ok(true));
     }
 
-    void Cancel() 
+    private void Cancel() 
     { 
         MudDialog.Close(DialogResult.Cancel()); 
     }
 
     private async Task UpdateMovieModel() 
     {
-        if (_ReleaseDate != null)
-        {
-            Movie.ReleaseDate = (DateTime)_ReleaseDate;
-        }
-        await _client.PostAsJsonAsync<MovieDTO>(API_URL + $"/update/", Movie);
+        await Http.PostAsJsonAsync<MovieDTO>(API_URL + "movie/update", Movie);
+
+        _content.Add(
+            content: _fileContent,
+            name: "\"files\"",
+            fileName: Movie.ID + ".jpg"
+        );
+
+        await Http.PostAsync(API_URL + "file/create", _content);
         await MudTable.ReloadServerData();
     }
 
+    private void FilesChanged(IBrowserFile file)
+    {
+        _file = file;
+        _content = new MultipartFormDataContent();
+        _fileContent = new StreamContent(file.OpenReadStream(_maxFileSize));
+        _fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+    }
 }

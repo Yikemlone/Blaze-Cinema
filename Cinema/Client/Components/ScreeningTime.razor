@@ -1,12 +1,13 @@
 ﻿@using Cinema.Shared.DTO
 
-<MudButton Href="@_link" Variant="Variant.Filled" EndIcon="@Icons.TwoTone.WatchLater" Color="Color.Secondary">
-    <MudText Typo="Typo.subtitle2">@Screening.DateTime.TimeOfDay</MudText>
+<MudButton Class="mt-4" Href="@_link" Variant="Variant.Filled" EndIcon="@Icons.TwoTone.WatchLater" Color="Color.Secondary">
+    <MudText Typo="Typo.subtitle2">@Screening.DateTime.ToString()</MudText>
 </MudButton>
 
 @code {
-    [Parameter] public ScreeningDTO Screening { get; set;}
     private string _link;
+
+    [Parameter] public ScreeningDTO Screening { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

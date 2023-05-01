@@ -1,62 +1,76 @@
-﻿@page "/booking/{ScreeningID:int}"
-@using Cinema.Client.Dialogs
+﻿@page "/booking/{ID}"
+@using Cinema.Client.Dialogs.BookingDialogs
 @using Cinema.Shared.DTO
+@inject HttpClient Http
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<PageTitle>Booking Page</PageTitle>
+<PageTitle>Booking</PageTitle>
 
-<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-    <MudGrid Justify="Justify.Center" Spacing="5">
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.Medium">
+
+    <MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1">
+
+        <MudGrid Justify="Justify.Center" Spacing="5">
         
-        @if (_ticketTypeBookings == null) 
-        {
-            <MudItem xs="12">
-                <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats"/>
-            </MudItem>
-        }
-        else
-        { 
-            <MudItem xs="12">
-                <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_ticketTypeBookings.Count" />
-            </MudItem>
-
-            @if (_booking.SeatScreenings.Count > 0) 
+            @if (_ticketTypeBookings == null) 
             {
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="ConfirmBooking">Confirm Details</MudButton>
-            } else
-            {
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" Disabled OnClick="ConfirmBooking">Confirm Details</MudButton>
+                <MudItem xs="12">
+                    <TicketType OnSelectedTikcets="SelectedTickets" Availabletickets="_availableSeats" TicketTypes="_ticketTypes"/>
+                </MudItem>
             }
-        }
+            else
+            { 
+                <MudItem xs="12">
+                    <RoomLayout SeatScreenings="_seats" OnSeatsSelected="SelectedSeats" AmountOfSeatsSelected="_ticketTypeBookings.Count" />
+                </MudItem>
+
+                @if (_booking.SeatScreenings.Count > 0 && _booking.SeatScreenings.Count == _ticketTypeBookings.Count)
+                {
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" OnClick="ConfirmBooking">Confirm Details</MudButton>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.LocalMovies" Color="Color.Primary" Disabled OnClick="ConfirmBooking">Confirm Details</MudButton>
+                }
+            }
         
-    </MudGrid>
-</MudPaper>
+        </MudGrid>
+    </MudPaper>
+
+</MudContainer>
+
 
 @code {
-    private const string API_URL = "/api";
-    private HttpClient? _client;
+    private const string API_URL = "/api/";
     private BookingDTO _booking;
-    private ScreeningDTO _screening = new ScreeningDTO(); // FIX THIS
+    private MovieDTO _movie;
+    private ScreeningDTO _screening;
     private List<TicketTypeBookingDTO> _ticketTypeBookings;
     private List<SeatScreeningDTO> _seats;
+    private List<TicketTypeDTO> _ticketTypes;
     private int _availableSeats;
 
-    [Parameter] public int ScreeningID { get; set; }
+    [Parameter] public string ID { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _booking = new BookingDTO();
         _booking.Status = "Pending";
-        _booking.BookingRef = Guid.NewGuid().ToString();
-        _seats = await GetSeatScreenings();
-        _availableSeats = _seats.Where(s => s.Booked != true).Select(s => s).Count();
+        _booking.BookingRef = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "");
+
+        _screening = await GetScreeningAsync(); 
+        _movie = await GetMovieAsync();
+        _seats = await GetSeatScreeningsAsync();
+        _ticketTypes = await GetTicketTypesAsync();
+        _availableSeats = _seats
+            .Where(s => s.Booked != true)
+            .Select(s => s)
+            .Count();
     }
 
     protected async Task SelectedSeats(List<SeatScreeningDTO> seatScreenings)
     {
-        Console.WriteLine(seatScreenings[0].ID);
         _booking.SeatScreenings = seatScreenings;
     }
 
@@ -65,26 +79,59 @@
         _ticketTypeBookings = ticketTypes;
     }
 
-    public async Task ConfirmBooking() 
+    private async Task ConfirmBooking() 
     {
         var parameters = new DialogParameters();
         parameters.Add("Booking", _booking);
+        parameters.Add("Movie", _movie);
         parameters.Add("TicketTypeBooking", _ticketTypeBookings);
         parameters.Add("Screening", _screening);
-        parameters.Add("Total", 19.99m);
+
+        decimal subtotal = 0M;
+        foreach (var ticket in _ticketTypeBookings) 
+        { 
+            if (ticket.TicketTypeID == 1)
+            {
+                subtotal += _ticketTypes[0].Price;
+            }
+            else if (ticket.TicketTypeID == 2) 
+            {
+                subtotal += _ticketTypes[1].Price;
+            }
+            else if (ticket.TicketTypeID == 3)
+            {
+                subtotal += _ticketTypes[2].Price;
+            }
+        }
+
+        parameters.Add("Total", subtotal);
 
         DialogService.Show<BookingDialog>("Confirm Booking", parameters, new DialogOptions()
         {
-            CloseButton = true,
+            CloseButton = false,
             MaxWidth = MaxWidth.Medium,
             DisableBackdropClick = true,
             FullWidth = true
         });
     }
 
-    public async Task<List<SeatScreeningDTO>> GetSeatScreenings() 
+    private async Task<List<SeatScreeningDTO>> GetSeatScreeningsAsync()
     {
-        return await _client.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "/movie/seats/" + ScreeningID);
+        return await Http.GetFromJsonAsync<List<SeatScreeningDTO>>(API_URL + "movie/seats/" + ID);
     }
 
+    private async Task<List<TicketTypeDTO>> GetTicketTypesAsync()
+    {
+        return await Http.GetFromJsonAsync<List<TicketTypeDTO>>(API_URL + "booking/tickets");
+    }
+
+    private async Task<ScreeningDTO> GetScreeningAsync()
+    {
+        return await Http.GetFromJsonAsync<ScreeningDTO>(API_URL + "movie/screenings/" + ID);
+    }
+
+    private async Task<MovieDTO> GetMovieAsync()
+    {
+        return await Http.GetFromJsonAsync<MovieDTO>(API_URL + "movie/movies/" + _screening.MovieID);
+    }
 }

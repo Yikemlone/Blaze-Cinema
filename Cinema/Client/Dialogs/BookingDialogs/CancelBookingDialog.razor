@@ -1,0 +1,33 @@
+﻿@using Cinema.Shared.DTO
+@inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
+
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper Class="pa-3 ma-3" Elevation="0">
+            <MudText Typo="Typo.body1">Are you sure you want to cancel your booking?</MudText>
+        </MudPaper>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Class="mr-3 mb-3" Variant="Variant.Outlined" Color="Color.Primary" OnClick="Confirm">Yes</MudButton>
+        <MudButton Class="mr-3 mb-3" Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel">No</MudButton>
+    </DialogActions>
+
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private async void Confirm()
+    {
+        navigationManager.NavigateTo("/");
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private async void Cancel()
+    {
+        MudDialog.Close(DialogResult.Cancel());
+    }
+}

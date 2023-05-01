@@ -1,0 +1,233 @@
+﻿@using Cinema.Shared.DTO
+@using FluentValidation
+@using System.Text.RegularExpressions
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager navigationManager
+
+<MudDialog>
+    <DialogContent>
+        <MudPaper Class="pa-3 ma-3" Elevation="0">
+            
+            @if (Booking != null && !_confirmedDetails)
+            {
+                <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.h4" Color="Color.Primary"><b>Movie</b></MudText>
+                    <MudText Typo="Typo.h4">@Movie.Name</MudText>
+                </MudStack>
+             
+                <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.h4" Color="Color.Primary"><b>Room</b></MudText>
+                    <MudText Typo="Typo.h4">@Screening.RoomID</MudText>
+                </MudStack>
+
+                <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.h4" Color="Color.Primary"><b>Tickets</b></MudText>
+                    <MudText Typo="Typo.h4">@TicketTypeBooking.Count</MudText>
+                </MudStack>
+
+                <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.h4" Color="Color.Primary"><b>Date</b></MudText>
+                    <MudText Typo="Typo.h4">@Screening.DateTime.ToString()</MudText>
+                </MudStack>
+
+                <MudStack Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.h4" Color="Color.Primary"><b>Seats</b></MudText>
+                    <MudText Typo="Typo.h4">@_seats</MudText>
+                </MudStack>
+
+                <MudStack Class="mt-10" Row="true" AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.h4" Color="Color.Primary"><b>Total</b></MudText>
+                    <MudText Typo="Typo.h4">€@Total</MudText>
+                </MudStack>
+                    
+            }
+            else if (!_confirmedPayment) 
+            {
+                <MudPaper Elevation="0">
+                    <AuthorizeView Policy="IsCustomer">
+                        <NotAuthorized>
+                            <MudTextField @bind-Value="_userEmail" Required RequiredError="Must enter an email" Label="Email" />
+                        </NotAuthorized>
+                    </AuthorizeView>
+                    <MudForm @ref="_paymentForm" @bind-Errors="_errors">
+                        <MudStack Row="true">
+                            <MudTextField @bind-Value="_name" Required RequiredError="Must enter name on card" Label="Name on Card" />
+                            <MudTextField @bind-Value="_creditCardNr" Required Validation="@_ccValidator.Validation" Label="Card Number" />
+                        </MudStack>
+                        <MudStack Row="true">
+                            <MudTextField @bind-Value="_cvc" Required Validation="@(new Func<string, IEnumerable<string>>(ValidCVC))" Label="CVC" />
+                            <MudTextField @bind-Value="_date" Required Validation="@(new Func<string, IEnumerable<string>>(ValidExpiration))" Label="Expiry Date" />
+                        </MudStack> 
+                    </MudForm>
+                </MudPaper>
+            } else 
+            {
+                <MudText Typo="Typo.h3" Class="mb-16" Color="Color.Primary"><b>Your booking is confirmed!</b></MudText>
+                <MudText Typo="Typo.h4" Color="Color.Primary"><b>Here is your booking reference:</b></MudText>
+                <MudText Typo="Typo.h5"><b>@Booking.BookingRef</b></MudText>
+            }
+        </MudPaper>
+    </DialogContent>
+
+    <DialogActions>
+        @if (!_confirmedDetails)
+        {
+            <MudButton Class="mr-3 mb-3" Variant="Variant.Outlined"  Color="Color.Primary" OnClick="Confirm"><b>Confirm</b></MudButton>
+            <MudButton Class="mr-3 mb-3" Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel">Cancel Booking</MudButton>
+        }
+        else if (!_confirmedPayment) 
+        {
+            <MudButton Class="mr-3 mb-3" Variant="Variant.Outlined" Color="Color.Primary" OnClick="Book"><b>Book Tickets</b></MudButton>
+            <MudButton Class="mr-3 mb-3" Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Cancel">Cancel Booking</MudButton>
+        } else 
+        {
+            <MudButton Class="mr-3 mb-3" Variant="Variant.Outlined" Color="Color.Primary" OnClick="Close">Confirm</MudButton>
+        }
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private const string API_URL = "api/";
+
+    private bool _confirmedDetails;
+    private bool _confirmedPayment;
+    private string _seats = "";
+    private ScreeningDTO _screening;
+    private MudForm? _paymentForm;
+    private string[] _errors = { };
+    private string _creditCardNr = "";
+    private string _cvc = "";
+    private string _name;
+    private string _date = "";
+    private int _adultTickets;
+    private int _childTickets;
+    private string _userEmail;
+
+    private FluentValueValidator<string> _ccValidator = new FluentValueValidator<string>(x => x
+        .NotEmpty()
+        .Length(1, 100)
+        .CreditCard());
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public BookingDTO Booking { get; set; }
+    [Parameter] public List<TicketTypeBookingDTO> TicketTypeBooking { get; set; }
+    [Parameter] public MovieDTO Movie { get; set; }
+    [Parameter] public ScreeningDTO Screening { get; set; }
+    [Parameter] public decimal Total { get; set; }
+    [Parameter] public List<TicketTypeDTO> TicketTypes { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _confirmedDetails = false; 
+        _confirmedPayment = false;
+
+        foreach (var tickType in TicketTypeBooking)
+        {
+            _adultTickets = TicketTypeBooking.Where(tt => tt.TicketTypeID == 1).Count();
+            _childTickets = TicketTypeBooking.Where(tt => tt.TicketTypeID == 2).Count();
+        }
+
+        @foreach (var seat in Booking.SeatScreenings)
+        {
+            _seats += seat.Seat.SeatNumber + " ";
+        }
+    }
+
+    // Dialog methods
+    private async void Confirm()
+    {
+        _confirmedDetails = true;
+    }
+
+    private async void Book() 
+    {
+        _paymentForm.Validate();
+
+        if (_errors.Length > 0) return;
+
+        _confirmedPayment = true;
+
+        await Http.PostAsJsonAsync<ConfirmBookingDTO>(API_URL + "booking/create", new ConfirmBookingDTO
+        { 
+            BookingDTO = Booking, 
+            TicketTypeBookingDTO = TicketTypeBooking,
+            ScreeningDTO = Screening,
+            Email = _userEmail,
+            Movie = Movie.Name,
+            Total = Total
+        });
+    }
+
+    private async void Close()
+    {
+        navigationManager.NavigateTo("/");
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel()
+    {
+        DialogService.ShowAsync<CancelBookingDialog>("Cancel Booking", new DialogOptions()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium,
+            DisableBackdropClick = true
+        });
+    }
+
+    // Validations
+    private IEnumerable<string> ValidCVC(string cvc)
+    { 
+        if (cvc.Length <= 0) yield return "Enter a CVC";
+
+        bool isValid = Regex.Match(_cvc, @"^\d{3}$").Success;
+
+        if (!isValid) 
+        {
+            yield return "Not a valid CVC";
+        }
+    }
+
+    private IEnumerable<string> ValidExpiration(string date)
+    {
+        if (date.Length <= 0) yield return "Enter a expiry date";
+        if (date.Length > 7) yield return "Enter a valid expiry date";
+        if (!date.Contains("/")) yield return "Format must be MM/yyyy";
+
+        string[] dateSplit = Regex.Split(_date, "/");
+        string[] currentDate = Regex.Split(DateTime.Now.ToString("MM/yyyy"), "/");
+        int compareYears = string.Compare(dateSplit[1], currentDate[1]);
+        int compareMonths = string.Compare(dateSplit[0], currentDate[0]);
+
+        if (!Regex.Match(_date, @"^\d{2}/\d{4}$").Success)
+        {
+            if (!Regex.Match(dateSplit[0], @"^[0][1-9]|[1][0-2]$").Success)
+            {
+                if (!(compareYears == 1 || (compareYears == 0 && compareMonths == 1))) // This need to be checked later
+                {
+                    yield return "Not a valid expiration date";
+                }
+            }
+        }
+    }
+
+    public class FluentValueValidator<T> : AbstractValidator<T>
+    {
+        public FluentValueValidator(Action<IRuleBuilderInitial<T, T>> rule)
+        {
+            rule(RuleFor(x => x));
+        }
+
+        private IEnumerable<string> ValidateValue(T arg)
+        {
+            var result = Validate(arg);
+            if (result.IsValid)
+                return new string[0];
+            return result.Errors.Select(e => e.ErrorMessage);
+        }
+
+        public Func<T, IEnumerable<string>> Validation => ValidateValue;
+    }
+}

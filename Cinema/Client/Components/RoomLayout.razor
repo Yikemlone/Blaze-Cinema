@@ -7,14 +7,21 @@
         width: 300px;
         margin: auto;
     }
+
+    .screen {
+        width: 100%;
+        height: 12px;
+        background-color: dimgray;
+    }
+
 </style>
 
 
 @if(SeatScreenings != null) {
 
-    <MudStack Justify="Justify.Center">
+    <MudText Typo="Typo.h3" Class="ml-16 mb-7" Color="Color.Primary" Align="Align.Left"><b>Select Seats</b></MudText>
 
-        <MudText Typo="Typo.h2" Align="Align.Left"><b> Select Seats </b></MudText>
+    <MudStack AlignItems="AlignItems.Center">
 
         <MudGrid Justify="Justify.Center">
             <MudItem xs="12">
@@ -26,8 +33,8 @@
                             </MudItem>
                         }
 
-                    <MudItem>
-                        <p>Screen Here</p>
+                    <MudItem xs="12">
+                        <div class="screen"></div>
                     </MudItem>
 
                 </MudGrid>
@@ -47,6 +54,7 @@
             }
 
         </MudGrid>
+
     </MudStack>
 }
 

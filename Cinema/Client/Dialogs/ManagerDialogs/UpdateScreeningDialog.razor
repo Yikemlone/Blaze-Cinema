@@ -1,4 +1,5 @@
 ﻿@using Cinema.Shared.DTO
+@inject HttpClient Http
 @inject ISnackbar Snackbar
 
 <MudDialog>
@@ -41,7 +42,6 @@
 
 @code {
     private const string API_URL = "api/manager";
-    private HttpClient? _client;
     private List<RoomDTO>? _rooms;
 
     private TimeSpan? _time;
@@ -56,9 +56,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _rooms = await GetRoomsModelAsync();
-
         _time = Screening.DateTime.TimeOfDay;
         _date = Screening.DateTime.Date;
     }
@@ -126,11 +124,6 @@
             var currentScreeningStartTime = screening.DateTime;
             var currentScreeningEndTime = screening.DateTime.AddMinutes(currentMovieDuration);
 
-            // Current screening start and end
-            Console.WriteLine("currentScreeningStartTime: " + currentScreeningStartTime.ToString());
-            Console.WriteLine("currentScreeningEndTime: " + currentScreeningEndTime.ToString());
-            Console.WriteLine(newScreeningStartTime <= currentScreeningEndTime && currentScreeningStartTime <= newScreeningEndTime);
-
             // This will make sure the screening times don't overlap at all
             if (newScreeningStartTime <= currentScreeningEndTime 
                 && currentScreeningStartTime <= newScreeningEndTime 
@@ -145,12 +138,12 @@
 
     private async Task UpdateMovieScreeningAsync()
     {
-        await _client.PostAsJsonAsync<ScreeningDTO>(API_URL + $"/update/", Screening);
+        await Http.PostAsJsonAsync<ScreeningDTO>(API_URL + "/update/", Screening);
         await MudTable.ReloadServerData();
     }
 
     private async Task<List<RoomDTO>> GetRoomsModelAsync()
     {
-        return await _client.GetFromJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
+        return await Http.GetFromJsonAsync<List<RoomDTO>>(API_URL + "/rooms");
     }
 }

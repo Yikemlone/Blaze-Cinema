@@ -1,0 +1,27 @@
+﻿<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-10 mb-16">
+    <MudStack Class="pg-16">
+        <MudDivider DividerType="DividerType.Middle" Class="my-6 mx-0" />
+        <MudStack AlignItems="AlignItems.Center">
+            <MudBreadcrumbs Items="_items" Separator="|"></MudBreadcrumbs>
+        </MudStack>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+            <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Primary" Variant="Variant.Outlined" Title="MudBlazor" Class="MudBlazeIcon" Size="Size.Large" Target="_blank" Href="https://mudblazor.com/" />
+            <MudIconButton Icon="@Icons.Custom.Brands.Facebook" Color="Color.Primary" Variant="Variant.Outlined" Title="Facebook" Class="FaceBookIcon" Size="Size.Large" Target="_blank" Href="https://Facebook.com/" />
+            <MudIconButton Icon="@Icons.Custom.Brands.Instagram" Color="Color.Primary" Variant="Variant.Outlined" Title="Instagram" Class="InstagramIcon" Size="Size.Large" Target="_blank" Href="https://Instagram.com/" />
+            <MudIconButton Icon="@Icons.Custom.Brands.Twitter" Color="Color.Primary" Variant="Variant.Outlined" Title="Twitter" Class="TwitterIcon" Size="Size.Large" Target="_blank" Href="https://Twitter.com/" />
+            <MudIconButton Icon="@Icons.Custom.Brands.TikTok" Color="Color.Primary" Variant="Variant.Outlined" Title="TikTok" Class="TikTokIcon" Size="Size.Large" Target="_blank" Href="https://TikTok.com/" />
+        </MudStack>
+        <MudStack Class="mt-10" AlignItems="AlignItems.Center">
+            <MudText Class="footer" Typo="Typo.subtitle2"> &copy @DateTime.Now.Year Blaze Cinema </MudText>
+        </MudStack>
+    </MudStack>
+</MudContainer>
+
+@code {
+private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+  {
+        new BreadcrumbItem("Contact Details", href: "/contactdetails"),
+        new BreadcrumbItem("Privacy Policy", href: "/privacypolicy"),
+        new BreadcrumbItem("Our Team", href: "/ourteam")
+  };
+}

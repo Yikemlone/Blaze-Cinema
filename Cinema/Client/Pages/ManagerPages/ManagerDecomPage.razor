@@ -1,19 +1,24 @@
 ﻿@page "/manager/decom"
+@attribute [Authorize(Policy = "IsManager")]
 
-<PageTitle>Screenings</PageTitle>
+<PageTitle>Decomission</PageTitle>
 
-<MudPaper Class="pa-3 ma-2" Elevation="1">
-    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
-</MudPaper>
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.ExtraLarge">
 
-<MudPaper Class="justify-center align-content-center pa-10 ma-2" Elevation="1" Outlined="true">
-   
-</MudPaper>
+    <MudPaper Class="pa-4 mt-4" Elevation="1">
+        <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+    </MudPaper>
+
+    <MudPaper Class="justify-center align-content-center pa-16 mt-4" Elevation="1">
+        <RoomTable/>
+
+    </MudPaper>
+
+</MudContainer>
 
 @code {
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
-        new BreadcrumbItem("Home", href: "#", icon: Icons.Material.Filled.Home),
         new BreadcrumbItem("Manager Dashboard", href: "/manager", icon: Icons.Material.Filled.Lock),
         new BreadcrumbItem("Decomission Room", href: "/manager/decom", icon: Icons.Material.Filled.Lock),
     };

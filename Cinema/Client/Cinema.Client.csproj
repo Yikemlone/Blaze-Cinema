@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.5.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.0" />
     <Compile Remove="Dialogs\BookingDialogs\**" />
     <Content Remove="Dialogs\BookingDialogs\**" />
     <EmbeddedResource Remove="Dialogs\BookingDialogs\**" />
@@ -14,13 +16,37 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Dialogs\BookingDialogs\BookingDialog.razor" />
+    <Content Include="Dialogs\BookingDialogs\CancelBookingDialog.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="MudBlazor" Version="6.1.8" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Cinema.DataAccess\Cinema.DataAccess.csproj" />
     <ProjectReference Include="..\Shared\Cinema.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dialogs\ManagerDialogs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\css\bootstrap\bootstrap.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\css\bootstrap\bootstrap.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

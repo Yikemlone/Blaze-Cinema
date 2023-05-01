@@ -1,6 +1,7 @@
 ﻿@using Cinema.Client.Dialogs.AdminDialogs
 @using Cinema.Shared.DTO
 @inherits ComponentBase
+@inject HttpClient Http
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
@@ -19,24 +20,22 @@
 
 </style>
 
-<MudGrid>
+@if (_movies != null) 
+{
     <MudTable 
-        Items="@_movies" 
-        T="MovieDTO" 
-        Breakpoint="Breakpoint.Sm" 
-        Style="width: 100%"
-        @ref="_mudTable" 
-        @bind-SelectedItem="_selected"
-        RowClassFunc="@SelectedRowClassFunc" 
-        OnRowClick="RowClickEvent" 
-        Loading="@(_movies == null ? true : false)"
-        LoadingProgressColor="Color.Secondary"
-        Hover="true" 
-        Dense="true"
-        Bordered="true"
-        FixedHeader="true"
-        HorizontalScrollbar="true"
-        ServerData="ServerReload">
+    Items="@_movies" 
+    T="MovieDTO" 
+    Breakpoint="Breakpoint.Sm" 
+    @ref="_mudTable" 
+    @bind-SelectedItem="_selected"
+    RowClassFunc="@SelectedRowClassFunc" 
+    OnRowClick="RowClickEvent" 
+    Loading="@(_movies == null ? true : false)"
+    LoadingProgressColor="Color.Primary"
+    Hover="true"
+    Dense="true"
+    FixedHeader="true"
+    ServerData="ServerReload">
         
         <ToolBarContent>
             <MudText Typo="Typo.h6">Edit Movie Listings</MudText>
@@ -48,14 +47,14 @@
 
             <MudSpacer />
 
-            <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Secondary">
-                <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Secondary" OnClick="OpenCreateDialog" />
+            <MudTooltip Text="Add" Placement="Placement.Top" Color="Color.Primary">
+                <MudIconButton Icon="@Icons.Material.Outlined.Add" Color="Color.Primary" OnClick="OpenCreateDialog" />
             </MudTooltip>
-            <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Secondary">
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
+            <MudTooltip Text="Edit" Placement="Placement.Top" Color="Color.Primary">
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Primary" Disabled=@_buttonDisabled OnClick="OpenUpdateDialog"/>
             </MudTooltip>
-            <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Secondary">
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Secondary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
+            <MudTooltip Text="Delete" Placement="Placement.Top" Color="Color.Primary">
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Primary" Disabled=@_buttonDisabled OnClick="OpenDeleteDialog" />
             </MudTooltip>
 
         </ToolBarContent>
@@ -71,14 +70,14 @@
                     <div style="white-space: nowrap;">
                         Release Date
                     </div>
-                 </MudTableSortLabel>
+                    </MudTableSortLabel>
             </MudTh>
             <MudTh>
                 <MudTableSortLabel SortLabel="age_rating" T="MovieDTO">
                     <div style="white-space: nowrap;">
                         Age Rating
                     </div>
-                 </MudTableSortLabel>
+                    </MudTableSortLabel>
             </MudTh>
             <MudTh>
                 <MudTableSortLabel SortLabel="duration" T="MovieDTO">
@@ -88,6 +87,8 @@
 
             <MudTh>Trailer</MudTh>
             <MudTh>Description</MudTh>
+            <MudTh>Image</MudTh>
+
         </HeaderContent>
 
         <RowTemplate>
@@ -101,9 +102,10 @@
             <MudTd DataLabel="Duration">@context.Duration</MudTd>
             <MudTd DataLabel="Trailer">@context.Trailer</MudTd>
             <MudTd DataLabel="Description">
-                <div style="white-space: nowrap;">
-                    @context.Description
-                </div>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="@(() => OpenDescriptonDialog(@context.Description))">View Description</MudButton>
+            </MudTd>
+            <MudTd DataLabel="Image">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="@(() => OpenImageDialog(@context.ID.ToString()))">View Image</MudButton>
             </MudTd>
         </RowTemplate>
 
@@ -120,7 +122,12 @@
         </PagerContent>
 
     </MudTable>
-</MudGrid>
+} 
+else
+{
+    <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+}
+
 
 @code {
     private const string API_URL = "api/movie";
@@ -130,33 +137,26 @@
     private int _totalItems;
     private int[] _pageSizeOptions;
 
-    private HttpClient _client;
     private MovieDTO? _selected;
     private MudTable<MovieDTO>? _mudTable;
     private DialogOptions _dialogOptions;
     private IEnumerable<MovieDTO>? _movies;
 
-    // Set up
-    public MovieTable()
+    protected override async Task OnInitializedAsync()
     {
-        _client = new HttpClient() { BaseAddress = new Uri("https://localhost:7016") };
         _buttonDisabled = true;
         _searchString = "";
         _pageSizeOptions = new int[] { 5, 10, 20 };
-        _dialogOptions = new DialogOptions 
-        { 
-            CloseButton = true, 
+        _dialogOptions = new DialogOptions
+        {
+            CloseButton = true,
             MaxWidth = MaxWidth.Medium,
-            FullWidth = true, 
+            FullWidth = true,
             DisableBackdropClick = true
         };
-    }
 
-    protected override async Task OnInitializedAsync()
-    {
         _movies = await GetMoviesAsync();
     }
-
 
     // Table Event Functions
     private void RowClickEvent(TableRowClickEventArgs<MovieDTO> tableRowClickEventArgs)
@@ -224,6 +224,26 @@
         });
     }
 
+    private void OpenDescriptonDialog(string description)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("Description", description);
+
+        DialogService.Show<DescriptionDialog>("Movie Description", parameters, _dialogOptions);
+    }
+
+    private void OpenImageDialog(string imageID) 
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("MovieID", imageID);
+
+        DialogService.Show<MovieImageDialog>("Movie Image", parameters, new DialogOptions()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium,
+            DisableBackdropClick = true
+        });
+    }
 
     // Server Reload Data
     protected async Task<TableData<MovieDTO>> ServerReload(TableState state)
@@ -255,14 +275,17 @@
                 updatedMovies = updatedMovies.OrderByDirection(state.SortDirection, m => m.Duration);
                 break;
         }
-    
+
         _movies = updatedMovies.Skip(state.Page * state.PageSize).Take(state.PageSize);
+        _selected = null;
+        _buttonDisabled = true;
+
         return new TableData<MovieDTO>() { TotalItems = _totalItems, Items = _movies };
     }
 
-    public async Task<List<MovieDTO>> GetMoviesAsync()
+    private async Task<List<MovieDTO>> GetMoviesAsync()
     {
-        return await _client.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
+        return await Http.GetFromJsonAsync<List<MovieDTO>>(API_URL + "/movies");
     }
 
 }
